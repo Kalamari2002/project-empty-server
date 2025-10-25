@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class PlayerDebugging : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] bool logLinearVelocity;
+
     TextMeshProUGUI speedTracker;
     Rigidbody rb;
 
@@ -18,7 +21,9 @@ public class PlayerDebugging : MonoBehaviour
     void Update()
     {
         speedTracker.text = rb.linearVelocity.magnitude.ToString();
-        Debug.Log(rb.linearVelocity.magnitude);
-        
+        if (logLinearVelocity )
+        {
+            Debug.Log(rb.linearVelocity.magnitude);
+        }
     }
 }
