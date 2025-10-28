@@ -4,13 +4,14 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - HotSpots
   - Target
   - Wall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Character
   - Water
   - UI
   - Ground
