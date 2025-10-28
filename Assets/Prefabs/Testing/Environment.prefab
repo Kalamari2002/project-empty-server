@@ -119,8 +119,9 @@ GameObject:
   - component: {fileID: 2880644671496216971}
   - component: {fileID: 164955035251433154}
   - component: {fileID: 9171420397065204504}
-  - component: {fileID: 1621909292560418100}
   - component: {fileID: 5515043772007529133}
+  - component: {fileID: 2153456991864039014}
+  - component: {fileID: 8921603353298273763}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -188,12 +189,12 @@ MonoBehaviour:
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2
-      BranchSizes: 
-    VectorActionSize: 02000000
+      BranchSizes: 0300000003000000
+    VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 029cf0f3fb4c4b142a49a2b4b545907a, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: MoveToTarget
@@ -201,28 +202,6 @@ MonoBehaviour:
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_ObservableAttributeHandling: 0
---- !u!114 &1621909292560418100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1590509144924695989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b261a35be2e2678419f10cae8319a118, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
-  maxStep: 3000
-  targetTransform: {fileID: 569848881165238423}
-  speed: 7
-  floorRenderer: {fileID: 6009322868352221405}
-  failureColor: {r: 0.5698112, g: 0.23975073, b: 0.23975073, a: 0}
-  successColor: {r: 0.31482866, g: 0.5245282, b: 0.2484086, a: 0}
 --- !u!114 &5515043772007529133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +215,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DecisionPeriod: 5
-  TakeActionsBetweenDecisions: 1
+  TakeActionsBetweenDecisions: 0
+--- !u!114 &2153456991864039014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590509144924695989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a249d22190f14444a7678c1d927217f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
+  maxStep: 3000
+  targetTransform: {fileID: 569848881165238423}
+  floorRenderer: {fileID: 6009322868352221405}
+  failureColor: {r: 0.6226415, g: 0.2196867, b: 0.2196867, a: 0}
+  successColor: {r: 0.3227433, g: 0.5622641, b: 0.27052325, a: 0}
+--- !u!114 &8921603353298273763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590509144924695989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f7a3b3431b28a94fad027e8dcfc1bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheck: {fileID: 2319753712283229068}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundSpeed: 90
+  jumpForce: 5
+  airMultiplier: 0.8
+  maxGroundSpeed: 15
+  maxAirSpeed: 20
+  drag: 5
 --- !u!1 &2195108463595435877
 GameObject:
   m_ObjectHideFlags: 0
