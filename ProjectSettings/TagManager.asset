@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - HotSpots
+  - CampingSpot
   layers:
   - Default
   - TransparentFX

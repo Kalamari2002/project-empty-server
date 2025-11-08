@@ -1,50 +1,56 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class BotPatrolingState : BotBaseState
 {
-    public BotPatrolingState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory) { }
+    Transform enemyInSight;
+
+    public BotPatrolingState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory) 
+    {
+        name = "Patroling";
+        isRootState = true;
+        InitializeSubState();
+    }
 
     public override void EnterState() 
     {
+        Debug.Log("Superstate Entered: Patroling State");
         botStateMachine.GetNextHotSpot();
     }
     public override void UpdateState() 
     {
-        CheckSwitchStates();
-        UpdatePath();
-        if (Vector3.Distance(botStateMachine.transform.position, botStateMachine.CurrentHotSpotDestination) <= botStateMachine.MinDistanceToHotSpotRange)
+        botStateMachine.UpdateAgentDestination(botStateMachine.CurrentHotSpotDestination);
+        if (Vector3.Distance(botStateMachine.transform.position, botStateMachine.CurrentHotSpotDestination) <= botStateMachine.StoppingDistance)
         {
             botStateMachine.GetNextHotSpot();
         }
+        
+        CheckSwitchStates();
+    }
+    public override void FixedUpdateState()
+    {
+        botStateMachine.AddForce(botStateMachine.transform.forward * botStateMachine.Speed, ForceMode.Force);
     }
     public override void ExitState() 
     {
-        botStateMachine.CurrentState = botStateFactory.Engage();
-        botStateMachine.CurrentState.EnterState();
+        botStateMachine.SetPriorityEnemy(enemyInSight);
     }
     public override void CheckSwitchStates() 
-    { 
-        if (botStateMachine.PriorityEnemy != null)
+    {
+        enemyInSight = botStateMachine.Vision.EnemyInSight();
+        if (enemyInSight != null)
         {
-            ExitState();
+            SwitchState(botStateFactory.Engage());
         }
     }
-    public override void InitializeSubState() { }
-
-    void UpdatePath()
+    public override void InitializeSubState() 
     {
-        if (Time.time >= botStateMachine.PathUpdateDeadline)
+        if (botStateMachine.Grounded())
         {
-            botStateMachine.PathUpdateDeadline = Time.time + botStateMachine.PathUpdateDelay;
-            if (NavMesh.SamplePosition(botStateMachine.CurrentHotSpotDestination, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-            {
-                botStateMachine.NavAgent.SetDestination(hit.position);
-            }
-            else
-            {
-                botStateMachine.NavAgent.SetDestination(botStateMachine.CurrentHotSpot.position);
-            }
+            SetSubState(botStateFactory.Grounded());
+        }
+        else
+        {
+            SetSubState(botStateFactory.Jump());
         }
     }
 }

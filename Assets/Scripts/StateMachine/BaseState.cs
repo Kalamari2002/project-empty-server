@@ -6,6 +6,12 @@ public abstract class BaseState
     protected BaseState currentSuperState;
     protected BaseState currentSubState;
 
+    protected bool isRootState = false;
+
+    protected string name;
+
+    public BaseState SubState { get { return currentSubState; } }
+
     public BaseState(BaseStateMachine stateMachine, BaseStateFactory stateFactory)
     {
         this.stateMachine = stateMachine;
@@ -14,15 +20,41 @@ public abstract class BaseState
 
     public abstract void EnterState();
     public abstract void UpdateState();
+    public abstract void FixedUpdateState();
     public abstract void ExitState();
     public abstract void CheckSwitchStates();
     public abstract void InitializeSubState();
-    void UpdateStates() { }
-    protected void SwitchStates(BaseState newState) 
+    public void UpdateStates() 
+    {
+        UpdateState();
+        if (currentSubState != null)
+        {
+            currentSubState.UpdateStates();
+        }
+    }
+
+    public void FixedUpdateStates()
+    {
+        FixedUpdateState();
+        if (currentSubState != null)
+        {
+            currentSubState.FixedUpdateStates();
+        }
+    }
+
+    protected void SwitchState(BaseState newState) 
     {
         ExitState();
         newState.EnterState();
-        stateMachine.CurrentState = newState;
+        if (isRootState)
+        {
+            stateMachine.CurrentState = newState;
+        }
+        else if (currentSuperState != null)
+        {
+            currentSuperState.SetSubState(newState);
+        }
+        
     }
     protected void SetSuperState(BaseState newSuperState) 
     {
@@ -32,5 +64,10 @@ public abstract class BaseState
     {
         currentSubState = newSubState;
         newSubState.SetSuperState(this);
+    }
+
+    public override string ToString()
+    {
+        return name;
     }
 }

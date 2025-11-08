@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BaseStateMachine : MonoBehaviour
 {
-    private BaseState currentState;
+    [SerializeField] private BaseState currentState;
 
     // Getters and Setters methods
     public BaseState CurrentState { get { return currentState; } set { currentState = value; } }
@@ -14,8 +14,13 @@ public class BaseStateMachine : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        
+        currentState.UpdateStates();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        currentState.FixedUpdateStates();
     }
 }

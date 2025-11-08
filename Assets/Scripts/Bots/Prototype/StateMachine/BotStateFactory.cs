@@ -15,4 +15,14 @@ public class BotStateFactory : BaseStateFactory
     {
         return new BotEngagedState(botStateMachine, this);
     }
+
+    public BaseState Grounded()
+    {
+        return new BotGroundedState(botStateMachine, this);
+    }
+
+    public BaseState Jump()
+    {
+        return new BotJumpingState(botStateMachine, this);
+    }
 }
