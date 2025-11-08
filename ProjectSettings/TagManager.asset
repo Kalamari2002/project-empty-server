@@ -7,6 +7,7 @@ TagManager:
   - HotSpots
   - Target
   - Wall
+  - Enemy
   layers:
   - Default
   - TransparentFX
