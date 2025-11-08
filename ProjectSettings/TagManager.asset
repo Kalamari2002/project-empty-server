@@ -6,6 +6,9 @@ TagManager:
   tags:
   - HotSpots
   - CampingSpot
+  - Target
+  - Wall
+  - Enemy
   layers:
   - Default
   - TransparentFX
