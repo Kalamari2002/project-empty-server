@@ -1,44 +1,71 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class BotEngagedState : BotBaseState
 {
+    float timeToForgetEnemy;
+    Transform enemyInSight;
+    public BotEngagedState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory) 
+    {
+        name = "Engaged";
+        isRootState = true;
 
-    public BotEngagedState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory) { }
+        // TODO: sub state system is currently NOT working
+        //InitializeSubState();
+    }
 
-    public override void EnterState() { }
+    public override void EnterState() 
+    {
+        Debug.Log("Superstate Entered: Engaged State");
+        timeToForgetEnemy = botStateMachine.TimeToForgetEnemy;
+    }
     public override void UpdateState() 
     {
+        enemyInSight = botStateMachine.Vision.EnemyInSight();
+        botStateMachine.UpdateAgentDestination(botStateMachine.PriorityEnemy.position);
+        if (enemyInSight == null)
+        {
+            timeToForgetEnemy -= Time.deltaTime;
+        }
+        else
+        {
+            timeToForgetEnemy = botStateMachine.TimeToForgetEnemy;
+        }
         CheckSwitchStates();
-        UpdatePath();
     }
+
+    public override void FixedUpdateState()
+    {
+        float distanceToEnemy = Vector3.Distance(botStateMachine.transform.position, botStateMachine.PriorityEnemy.position);
+        if (distanceToEnemy <= botStateMachine.ComfortDistanceToEnemy)
+        {
+            botStateMachine.AddForce(-botStateMachine.transform.forward * (botStateMachine.Speed / 2), ForceMode.Force);
+        }
+        else if (distanceToEnemy >= botStateMachine.StoppingDistance)
+        {
+            botStateMachine.AddForce(botStateMachine.transform.forward * botStateMachine.Speed, ForceMode.Force);
+        }
+    }
+
     public override void ExitState() 
     {
-        botStateMachine.CurrentState = botStateFactory.Patrol();
-        botStateMachine.CurrentState.EnterState();
+        botStateMachine.SetPriorityEnemy(null);
     }
     public override void CheckSwitchStates() 
     { 
-        if (botStateMachine.PriorityEnemy == null)
+        if (timeToForgetEnemy <= 0)
         {
-            ExitState();
+            SwitchState(botStateFactory.Patrol());
         }
     }
-    public override void InitializeSubState() { }
-
-    void UpdatePath()
+    public override void InitializeSubState() 
     {
-        if (Time.time >= botStateMachine.PathUpdateDeadline)
+        if (botStateMachine.Grounded())
         {
-            botStateMachine.PathUpdateDeadline = Time.time + botStateMachine.PathUpdateDelay;
-            if (NavMesh.SamplePosition(botStateMachine.PriorityEnemy.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-            {
-                botStateMachine.NavAgent.SetDestination(hit.position);
-            }
-            else
-            {
-                botStateMachine.NavAgent.SetDestination(botStateMachine.PriorityEnemy.position);
-            }
+            SetSubState(botStateFactory.Grounded());
+        }
+        else
+        {
+            SetSubState(botStateFactory.Jump());
         }
     }
 }

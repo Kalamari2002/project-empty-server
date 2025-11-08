@@ -1,20 +1,30 @@
+using UnityEngine;
+
 public class BotJumpingState : BotBaseState
 {
-    public BotJumpingState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory){}
+    public BotJumpingState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory)
+    {
+        isRootState = false;
+        name = "Jumping";
+    }
 
     public override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        if (botStateMachine.Grounded())
+        {
+            SwitchState(botStateFactory.Grounded());
+        }
     }
 
     public override void EnterState()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Substate Entered: Jump State");
     }
 
     public override void ExitState()
     {
-        throw new System.NotImplementedException();
+        botStateMachine.CurrentState = botStateFactory.Grounded();
+        botStateMachine.CurrentState.EnterState();
     }
 
     public override void InitializeSubState()
@@ -25,5 +35,10 @@ public class BotJumpingState : BotBaseState
     public override void UpdateState()
     {
         CheckSwitchStates();
+    }
+
+    public override void FixedUpdateState()
+    {
+
     }
 }
