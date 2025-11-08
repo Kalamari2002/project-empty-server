@@ -8,7 +8,9 @@ public class BotEngagedState : BotBaseState
     {
         name = "Engaged";
         isRootState = true;
-        InitializeSubState();
+
+        // TODO: sub state system is currently NOT working
+        //InitializeSubState();
     }
 
     public override void EnterState() 
@@ -18,31 +20,6 @@ public class BotEngagedState : BotBaseState
     }
     public override void UpdateState() 
     {
-
-        //Transform enemyInSight = botStateMachine.Vision.EnemyInSight();
-        //if (enemyInSight == null)
-        //{
-        //    timeToForgetEnemy -= Time.deltaTime;
-        //    botStateMachine.UpdateAgentDestination(lastSeenEnemyPostion);
-        //    botStateMachine.AddForce(botStateMachine.transform.forward * botStateMachine.Speed, ForceMode.Force);
-        //}
-        //else
-        //{
-        //    botStateMachine.UpdateAgentDestination(botStateMachine.PriorityEnemy.position);
-        //    float distanceToEnemy = Vector3.Distance(botStateMachine.transform.position, botStateMachine.PriorityEnemy.position);
-        //    if (distanceToEnemy <= botStateMachine.ComfortDistanceToEnemy)
-        //    {
-        //        botStateMachine.AddForce(-botStateMachine.transform.forward * (botStateMachine.Speed / 2), ForceMode.Force);
-        //    }
-        //    else if (distanceToEnemy >= botStateMachine.StoppingDistance)
-        //    {
-        //        botStateMachine.AddForce(botStateMachine.transform.forward * botStateMachine.Speed, ForceMode.Force);
-        //    }
-        //    lastSeenEnemyPostion = enemyInSight.position;
-        //    timeToForgetEnemy = botStateMachine.TimeToForgetEnemy;
-        //}
-
-
         enemyInSight = botStateMachine.Vision.EnemyInSight();
         botStateMachine.UpdateAgentDestination(botStateMachine.PriorityEnemy.position);
         if (enemyInSight == null)

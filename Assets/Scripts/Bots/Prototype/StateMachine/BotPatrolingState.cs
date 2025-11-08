@@ -8,7 +8,9 @@ public class BotPatrolingState : BotBaseState
     {
         name = "Patroling";
         isRootState = true;
-        InitializeSubState();
+
+        // TODO: sub state system is currently NOT working
+        //InitializeSubState();
     }
 
     public override void EnterState() 

@@ -90,8 +90,10 @@ public class BotStateMachine : BaseStateMachine
     // Update is called once per frame
     protected override void Update()
     {
+        // Uncomment to debug State hierarchy on runtime, sub state switching is currently NOT working
+        //Debug.Log("Super State: " + CurrentState + ", Sub State: " + CurrentState.SubState);
+
         grounded = Grounded();
-        Debug.Log("Super State: " + CurrentState + ", Sub State: " + CurrentState.SubState);
         base.Update();
     }
 
