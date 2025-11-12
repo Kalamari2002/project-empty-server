@@ -18,13 +18,12 @@ public class BotJumpingState : BotBaseState
 
     public override void EnterState()
     {
-        Debug.Log("Substate Entered: Jump State");
+        botStateMachine.Rb.linearDamping = 0;
     }
 
     public override void ExitState()
     {
-        botStateMachine.CurrentState = botStateFactory.Grounded();
-        botStateMachine.CurrentState.EnterState();
+
     }
 
     public override void InitializeSubState()
