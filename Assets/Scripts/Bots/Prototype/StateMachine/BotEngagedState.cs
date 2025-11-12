@@ -3,16 +3,19 @@ using UnityEngine;
 public class BotEngagedState : BotBaseState
 {
     float timeToForgetEnemy;
-    float bHoppingDistance = 10;
     Transform enemyInSight;
     float distanceToEnemy;
+    bool goingRight = false;
+    float minTimeToSwitchDirection = 1;
+    float maxTimeToSwitchDirection = 1;
+    float timeToSwitchDirection;
 
     public BotEngagedState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory) 
     {
         name = "Engaged";
         isRootState = true;
-
-        //InitializeSubState();
+        timeToSwitchDirection = Random.Range(minTimeToSwitchDirection, maxTimeToSwitchDirection);
+        goingRight = (Random.Range(0, 2)) == 0 ? false : true;
     }
 
     public override void EnterState() 
@@ -32,6 +35,13 @@ public class BotEngagedState : BotBaseState
             timeToForgetEnemy = botStateMachine.TimeToForgetEnemy;
         }
 
+        timeToSwitchDirection -= Time.deltaTime;
+        if (timeToSwitchDirection <= 0)
+        {
+            goingRight = !goingRight;
+            timeToSwitchDirection = Random.Range(minTimeToSwitchDirection, maxTimeToSwitchDirection);
+        }
+
         CheckSwitchStates();
     }
 
@@ -42,6 +52,8 @@ public class BotEngagedState : BotBaseState
         {
             botStateMachine.AddForce(-botStateMachine.transform.forward * (botStateMachine.Speed / 2), ForceMode.Force);
         }
+        float direction = goingRight ? 1 : -1;
+        botStateMachine.AddForce(botStateMachine.transform.right * direction * (botStateMachine.Speed), ForceMode.Force);
     }
 
     public override void ExitState() 

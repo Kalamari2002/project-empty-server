@@ -31959,7 +31959,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 0
-  m_Acceleration: 50
+  m_Acceleration: 120
   avoidancePriority: 50
   m_AngularSpeed: 0
   m_StoppingDistance: 5
@@ -31983,7 +31983,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpForce: 5
-  speed: 120
+  speed: 50
   linearDrag: 7
   maxGroundSpeed: 15
   maxAirSpeed: 20
@@ -32001,6 +32001,7 @@ MonoBehaviour:
   rotationSpeed: 20
   timeToForgetEnemy: 3
   stoppingDistance: 5
+  engageDistance: 10
   comfortDistanceToEnemy: 4
   vision: {fileID: 1903752025}
 --- !u!54 &1755645001

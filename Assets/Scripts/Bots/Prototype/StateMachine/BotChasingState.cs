@@ -3,7 +3,6 @@ using UnityEngine;
 public class BotChasingState : BotBaseState
 {
     float timeToForgetEnemy;
-    float bHoppingDistance = 10;
     float distanceToEnemy;
     Transform enemyInSight;
 
