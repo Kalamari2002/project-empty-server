@@ -3,33 +3,41 @@ using UnityEngine;
 public class BotPatrolingState : BotBaseState
 {
     Transform enemyInSight;
+    float minTimeToJump = 5;
+    float maxTimeToJump = 10;
+    float timeToJump;
 
     public BotPatrolingState(BotStateMachine stateMachine, BotStateFactory stateFactory) : base(stateMachine, stateFactory) 
     {
         name = "Patroling";
         isRootState = true;
-
-        // TODO: sub state system is currently NOT working
+        timeToJump = Random.Range(minTimeToJump, maxTimeToJump);
         //InitializeSubState();
     }
 
     public override void EnterState() 
     {
-        Debug.Log("Superstate Entered: Patroling State");
+        botStateMachine.SetPriorityEnemy(null);
         botStateMachine.GetNextHotSpot();
     }
-    public override void UpdateState() 
+    public override void UpdateState()
     {
+        timeToJump -= Time.deltaTime;
         botStateMachine.UpdateAgentDestination(botStateMachine.CurrentHotSpotDestination);
         if (Vector3.Distance(botStateMachine.transform.position, botStateMachine.CurrentHotSpotDestination) <= botStateMachine.StoppingDistance)
         {
             botStateMachine.GetNextHotSpot();
         }
-        
+
         CheckSwitchStates();
     }
     public override void FixedUpdateState()
     {
+        if (timeToJump <= 0)
+        {
+            botStateMachine.Jump();
+            timeToJump = Random.Range(minTimeToJump, maxTimeToJump);
+        }
         botStateMachine.AddForce(botStateMachine.transform.forward * botStateMachine.Speed, ForceMode.Force);
     }
     public override void ExitState() 
@@ -41,7 +49,8 @@ public class BotPatrolingState : BotBaseState
         enemyInSight = botStateMachine.Vision.EnemyInSight();
         if (enemyInSight != null)
         {
-            SwitchState(botStateFactory.Engage());
+            float distanceToEnemy = Vector3.Distance(botStateMachine.transform.position, enemyInSight.position);
+            SwitchState(distanceToEnemy < botStateMachine.EngageDistance ? botStateFactory.Engage() : botStateFactory.Chasing());
         }
     }
     public override void InitializeSubState() 

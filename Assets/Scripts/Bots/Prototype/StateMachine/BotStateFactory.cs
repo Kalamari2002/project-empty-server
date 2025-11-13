@@ -25,4 +25,9 @@ public class BotStateFactory : BaseStateFactory
     {
         return new BotJumpingState(botStateMachine, this);
     }
+
+    public BaseState Chasing()
+    {
+        return new BotChasingState(botStateMachine, this);
+    }
 }

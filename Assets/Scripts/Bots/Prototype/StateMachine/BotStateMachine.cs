@@ -9,7 +9,10 @@ public class BotStateMachine : BaseStateMachine
     [SerializeField] float jumpForce;
     [SerializeField] float speed;
     [SerializeField] float linearDrag = 6;
-    [SerializeField] LayerMask GroundLayer;
+    [SerializeField] float maxGroundSpeed = 15;
+    [SerializeField] float maxAirSpeed = 20;
+    [SerializeField] LayerMask groundLayer;
+    // This variable is for debugging only
     [SerializeField] bool grounded;
 
     [Header("AI Settings")]
@@ -23,6 +26,7 @@ public class BotStateMachine : BaseStateMachine
     [SerializeField] float rotationSpeed = 20;
     [SerializeField] float timeToForgetEnemy = 3;
     [SerializeField] float stoppingDistance = 5;
+    [SerializeField] float engageDistance = 5;
     [SerializeField] float comfortDistanceToEnemy = 1;
     float pathUpdateDeadline;
     NavMeshAgent navMeshAgent;
@@ -36,17 +40,15 @@ public class BotStateMachine : BaseStateMachine
     Rigidbody rb;
 
     //Getters and Setters
-    public float MinDistanceToHotSpotRange { get { return minDistanceToHotSpotRange; } }
     public float TimeToForgetEnemy { get { return timeToForgetEnemy; } }
     public float ComfortDistanceToEnemy { get { return comfortDistanceToEnemy; } }
     public float StoppingDistance { get { return stoppingDistance; } set { stoppingDistance = value; } }
+    public float EngageDistance { get { return engageDistance; } }
     public float Speed { get { return speed; } }
     public float LinearDrag { get { return linearDrag; } }
     public float JumpForce { get { return jumpForce; } }
     public Vector3 CurrentHotSpotDestination { get {  return currentHotSpotDestination; } set {  currentHotSpotDestination = value; } }
-    public Transform CurrentHotSpot { get { return currentHotSpot; } set { currentHotSpot = value; } }
     public Transform PriorityEnemy { get { return priorityEnemy; } set {  priorityEnemy = value; } }
-    public NavMeshAgent NavAgent { get { return navMeshAgent; } }
     public BotVision Vision { get { return vision; } }
     public Rigidbody Rb { get { return rb; } }
 
@@ -91,9 +93,10 @@ public class BotStateMachine : BaseStateMachine
     protected override void Update()
     {
         // Uncomment to debug State hierarchy on runtime, sub state switching is currently NOT working
-        //Debug.Log("Super State: " + CurrentState + ", Sub State: " + CurrentState.SubState);
+        Debug.Log("Super State: " + CurrentState + ", Sub State: " + CurrentState.SubState);
 
         grounded = Grounded();
+        rb.linearDamping = Grounded() ? linearDrag : 0;
         base.Update();
     }
 
@@ -146,6 +149,13 @@ public class BotStateMachine : BaseStateMachine
     public void AddForce(Vector3 direction, ForceMode forceMode)
     {
         rb.AddForce(direction, forceMode);
+        LimitSpeed();
+    }
+
+    public void Jump()
+    {
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     public void SetPriorityEnemy(Transform enemy)
@@ -156,6 +166,17 @@ public class BotStateMachine : BaseStateMachine
     public bool Grounded()
     {
         Transform groundCheck = transform.Find("GroundCheck");
-        return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, GroundLayer);
+        return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer);
+    }
+
+    void LimitSpeed()
+    {
+        float speedLimit = Grounded() ? maxGroundSpeed : maxAirSpeed;
+        Vector3 xzVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        if (xzVelocity.magnitude > maxGroundSpeed)
+        {
+            xzVelocity = xzVelocity.normalized * speedLimit;
+            rb.linearVelocity = new Vector3(xzVelocity.x, rb.linearVelocity.y, xzVelocity.z);
+        }
     }
 }

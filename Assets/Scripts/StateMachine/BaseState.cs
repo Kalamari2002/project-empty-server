@@ -1,3 +1,4 @@
+using UnityEngine;
 public abstract class BaseState
 {
     protected BaseStateMachine stateMachine;
@@ -48,20 +49,25 @@ public abstract class BaseState
         newState.EnterState();
         if (isRootState)
         {
+            Debug.Log("Root State switched to: " + newState);
             stateMachine.CurrentState = newState;
         }
         else if (currentSuperState != null)
         {
+            Debug.Log("Sub State switched to: " + newState);
             currentSuperState.SetSubState(newState);
         }
-        
     }
+
     protected void SetSuperState(BaseState newSuperState) 
     {
+        Debug.Log(this + " setting new Super State: " + newSuperState);
         currentSuperState = newSuperState;
     }
+
     protected void SetSubState(BaseState newSubState) 
     {
+        Debug.Log(this + " setting new Sub State: " + newSubState);
         currentSubState = newSubState;
         newSubState.SetSuperState(this);
     }
