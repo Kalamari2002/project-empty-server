@@ -33,6 +33,7 @@ public class BotEngagedState : BotBaseState
         else
         {
             timeToForgetEnemy = botStateMachine.TimeToForgetEnemy;
+            botStateMachine.PrototypeBot.CountDownToShoot();
         }
 
         timeToSwitchDirection -= Time.deltaTime;

@@ -9,6 +9,8 @@ TagManager:
   - Target
   - Wall
   - Enemy
+  - GameManager
+  - SpawnPoints
   layers:
   - Default
   - TransparentFX

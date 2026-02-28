@@ -6,13 +6,13 @@ public abstract class CharacterBase : MonoBehaviour
     [SerializeField] protected int health;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected virtual void Start()
     {
         health = maxHealth;
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         
     }

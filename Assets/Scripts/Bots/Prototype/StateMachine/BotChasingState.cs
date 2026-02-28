@@ -30,8 +30,8 @@ public class BotChasingState : BotBaseState
         else
         {
             timeToForgetEnemy = botStateMachine.TimeToForgetEnemy;
+            botStateMachine.PrototypeBot.CountDownToShoot();
         }
-
         CheckSwitchStates();
     }
 

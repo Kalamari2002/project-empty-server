@@ -28,6 +28,8 @@ public class BotStateMachine : BaseStateMachine
     [SerializeField] float stoppingDistance = 5;
     [SerializeField] float engageDistance = 5;
     [SerializeField] float comfortDistanceToEnemy = 1;
+    [SerializeField] float shootRate = 0.5f;
+    [SerializeField] float timeToShoot;
     float pathUpdateDeadline;
     NavMeshAgent navMeshAgent;
     Transform currentHotSpot;
@@ -35,6 +37,7 @@ public class BotStateMachine : BaseStateMachine
 
     [Header("References")]
     [SerializeField] BotVision vision;
+    [SerializeField] PrototypeBotV2 prototypeBot;
 
     BotStateFactory stateFactory;
     Rigidbody rb;
@@ -51,12 +54,16 @@ public class BotStateMachine : BaseStateMachine
     public Transform PriorityEnemy { get { return priorityEnemy; } set {  priorityEnemy = value; } }
     public BotVision Vision { get { return vision; } }
     public Rigidbody Rb { get { return rb; } }
+    public BotStateFactory StateFactory { get {  return stateFactory; } }
+    public PrototypeBotV2 PrototypeBot {  get { return prototypeBot; } }
 
     private void Awake()
     {
         navMeshAgent = transform.Find("Navigator").GetComponent<NavMeshAgent>();
+        prototypeBot = GetComponent<PrototypeBotV2>();
         rb = GetComponent<Rigidbody>();
         rb.linearDamping = linearDrag;
+        timeToShoot = shootRate;
 
         if (hotSpots.Count == 0)
         {
