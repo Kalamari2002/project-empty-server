@@ -6218,7 +6218,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438250245}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 1156707e1aa5e844eb3cde36e2054a5e, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 9519ee70ea81347439b18538a086dfeb, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -6973,8 +6973,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
-  backOffDistance: 2.5
-  stopDistance: 4
+  backOffDistance: 2
+  stopDistance: 3
+  runningClip: {fileID: 32900000, guid: 1156707e1aa5e844eb3cde36e2054a5e, type: 3}
+  idleClip: {fileID: 32900000, guid: 9519ee70ea81347439b18538a086dfeb, type: 3}
+  videoPlayer: {fileID: 438250251}
 --- !u!143 &540628892
 CharacterController:
   m_ObjectHideFlags: 0
