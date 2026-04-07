@@ -6,9 +6,7 @@ public class EnemyPrototype : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float backOffDistance;
     [SerializeField] float stopDistance;
-    [SerializeField] VideoClip runningClip;
-    [SerializeField] VideoClip idleClip;
-    [SerializeField] VideoPlayer videoPlayer;
+    [SerializeField] Animator rendererAnimator;
 
     [Header("Ragdoll")]
     [SerializeField] GameObject Ragdoll;
@@ -27,6 +25,7 @@ public class EnemyPrototype : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         controller = GetComponent<CharacterController>();
         ragdollCountDown = ragdollDuration;
+        rendererAnimator = transform.Find("SpriteRenderer").GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -53,7 +52,7 @@ public class EnemyPrototype : MonoBehaviour
         ragdollMode = true;
         ragdollCountDown = ragdollDuration;
 
-        videoPlayer.enabled = false;
+        rendererAnimator.gameObject.SetActive(false);
         controller.enabled = false;
     }
 
@@ -68,7 +67,7 @@ public class EnemyPrototype : MonoBehaviour
             Destroy(ActiveRagdoll);
             ActiveRagdoll = null;
             controller.enabled = true;
-            videoPlayer.enabled = true;
+            rendererAnimator.gameObject.SetActive(true);
             ragdollMode = false;
         }
     }
@@ -81,22 +80,19 @@ public class EnemyPrototype : MonoBehaviour
         if (Vector3.Distance(transform.position, Player.transform.position) >= stopDistance)
         {
             controller.SimpleMove(transform.forward * speed);
-            videoPlayer.clip = runningClip;
-            videoPlayer.Play();
-            videoPlayer.playbackSpeed = 1;
+            rendererAnimator.SetBool("Running", true);
+            rendererAnimator.speed = 1;
         }
         else if (Vector3.Distance(transform.position, Player.transform.position) <= backOffDistance)
         {
             controller.SimpleMove(-transform.forward * speed/2);
-            videoPlayer.clip = runningClip;
-            videoPlayer.Play();
-            videoPlayer.playbackSpeed = 1;
+            rendererAnimator.SetBool("Running", true);
+            rendererAnimator.speed = 1;
         }
         else
         {
-            videoPlayer.clip = idleClip;
-            videoPlayer.Play();
-            videoPlayer.playbackSpeed = 0.5f;
+            rendererAnimator.SetBool("Running", false);
+            rendererAnimator.speed = 0.5f;
         }
     }
 }
