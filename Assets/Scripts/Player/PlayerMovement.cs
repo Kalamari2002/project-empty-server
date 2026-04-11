@@ -46,6 +46,12 @@ public class PlayerMovement : MonoBehaviour
         rb.linearDamping = Grounded() ? drag : 0;
 
         LimitSpeed();
+
+        PlayerWallRun wallRun = GetComponent<PlayerWallRun>(); 
+        if(!Grounded() && wallRun.TouchingWall())
+        {
+            wallRun.WallRun();
+        }
     }
 
     void Jump()
