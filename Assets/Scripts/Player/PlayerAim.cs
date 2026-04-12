@@ -28,4 +28,9 @@ public class PlayerAim : MonoBehaviour
         }
         return false;
     }
+
+    public Vector3 cameraForward()
+    {
+        return mainCamera.transform.forward;
+    }
 }

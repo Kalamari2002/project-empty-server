@@ -14,12 +14,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float maxAirSpeed;
     [SerializeField] float drag;
 
+    PlayerWallRun wallRun; 
+    PlayerAim playerAim;
+
     Rigidbody rb;
     Transform orientation;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerAim = GetComponent<PlayerAim>();
+        wallRun = GetComponent<PlayerWallRun>();
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
     }
@@ -44,21 +49,44 @@ public class PlayerMovement : MonoBehaviour
 
         rb.AddForce(directionVector.normalized * groundSpeed * multiplier);
         rb.linearDamping = Grounded() ? drag : 0;
-
+        
+        WallRun(horizontal);
+        
         LimitSpeed();
+    }
+    void WallRun(float horizontal)
+    {
 
-        PlayerWallRun wallRun = GetComponent<PlayerWallRun>(); 
-        if(!Grounded() && wallRun.TouchingWall())
+        if (Grounded())
         {
+            wallRun.SetCanWallRun(false);
+            wallRun.SetIsWallRunning(false);
+            return;
+        }
+
+        wallRun.SetCanWallRun(true);
+
+        if(wallRun.TouchingWall() && (horizontal != 0)){
             wallRun.WallRun();
+            wallRun.SetIsWallRunning(true);
+        }
+        else
+        {
+            wallRun.SetIsWallRunning(false);   
         }
     }
 
     void Jump()
     {
-        if (!Grounded()) return;
+        if (!Grounded() && !wallRun.GetIsWallRunning()) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (wallRun.GetIsWallRunning())
+            {
+                wallRun.WallJump(playerAim.cameraForward());
+                return;
+            }
+            
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
