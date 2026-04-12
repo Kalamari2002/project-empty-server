@@ -31,7 +31,7 @@ public class PlayerHands : MonoBehaviour
     {
         if (!canPunch) return;
         canPunch = false;
-        currentPunch = currentPunch == 2 ? 1 : currentPunch + 1;
+        currentPunch = currentPunch == 3 ? 1 : currentPunch + 1;
         punching = true;
         animator.SetBool("Punching", punching);
         animator.SetInteger("CurrentPunch", currentPunch);
