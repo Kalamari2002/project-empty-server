@@ -9,6 +9,7 @@ TagManager:
   - Target
   - Wall
   - Enemy
+  - Hands
   layers:
   - Default
   - TransparentFX
