@@ -1,8 +1,10 @@
 using UnityEngine;
-using UnityEngine.Video;
 
 public class EnemyPrototype : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] int health = 50;
+    [SerializeField] int damageToKnockBack = 20;
     [SerializeField] float speed;
     [SerializeField] float backOffDistance;
     [SerializeField] float stopDistance;
@@ -18,6 +20,7 @@ public class EnemyPrototype : MonoBehaviour
 
     Transform Player;
     CharacterController controller;
+    CapsuleCollider capsuleCollider;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,6 +29,7 @@ public class EnemyPrototype : MonoBehaviour
         controller = GetComponent<CharacterController>();
         ragdollCountDown = ragdollDuration;
         rendererAnimator = transform.Find("SpriteRenderer").GetComponent<Animator>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     // Update is called once per frame
@@ -33,10 +37,6 @@ public class EnemyPrototype : MonoBehaviour
     {
         Move();
         HandleRagdoll();
-        if (Input.GetMouseButtonDown(0))
-        {
-            SpawnRagdoll();
-        }
     }
 
     void SpawnRagdoll()
@@ -54,6 +54,7 @@ public class EnemyPrototype : MonoBehaviour
 
         rendererAnimator.gameObject.SetActive(false);
         controller.enabled = false;
+        capsuleCollider.enabled = false;
     }
 
     void HandleRagdoll()
@@ -69,6 +70,7 @@ public class EnemyPrototype : MonoBehaviour
             controller.enabled = true;
             rendererAnimator.gameObject.SetActive(true);
             ragdollMode = false;
+            capsuleCollider.enabled = true;
         }
     }
 
@@ -93,6 +95,15 @@ public class EnemyPrototype : MonoBehaviour
         {
             rendererAnimator.SetBool("Running", false);
             rendererAnimator.speed = 0.5f;
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (damage >= damageToKnockBack)
+        {
+            SpawnRagdoll();
         }
     }
 }
