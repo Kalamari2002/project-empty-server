@@ -57,4 +57,8 @@ public class PlayerAim : MonoBehaviour
         playerCamera.localPosition = originalPlayerCameraPosition;
         camShakeRoutine = null;
     }
+    public Vector3 cameraForward()
+    {
+        return mainCamera.transform.forward;
+    }
 }
