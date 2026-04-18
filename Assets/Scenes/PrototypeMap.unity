@@ -8054,7 +8054,8 @@ GameObject:
   - component: {fileID: 540628890}
   - component: {fileID: 540628891}
   - component: {fileID: 540628892}
-  m_Layer: 0
+  - component: {fileID: 540628893}
+  m_Layer: 7
   m_Name: EnemyPrototype
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8089,6 +8090,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06677ad3c4780f54fb41d79127c89ebc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 50
+  damageToKnockBack: 20
   speed: 4
   backOffDistance: 2
   stopDistance: 3
@@ -8122,6 +8125,29 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &540628893
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540628889}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!43 &567463056
 Mesh:
@@ -8800,6 +8826,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   punchResetTime: 0.5
+  punchRange: 5
+  punchBaseDamage: 10
   currentPunch: 0
   punchCountDown: 0
   punching: 0
@@ -21774,7 +21802,7 @@ GameObject:
   - component: {fileID: 992461348}
   - component: {fileID: 992461350}
   - component: {fileID: 992461349}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SpriteRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40471,6 +40499,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: camShakeDuration
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: camShakeMagnitude
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 1634934622893517213, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.06476

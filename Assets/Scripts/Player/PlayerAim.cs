@@ -1,31 +1,60 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerAim : MonoBehaviour
 {
     [SerializeField] Camera mainCamera;
-    [SerializeField] float range;
-    [SerializeField] LayerMask layerMask;
-    
+    [SerializeField] LayerMask enemyLayer;
+    [SerializeField] float camShakeMagnitude = 0.1f;
+    [SerializeField] float camShakeDuration = 0.2f;
+    Coroutine camShakeRoutine;
+    Vector3 originalPlayerCameraPosition;
+    [SerializeField] Transform playerCamera;
+
+    private void Start()
+    {
+        playerCamera = transform.Find("Orientation").Find("Camera");
+        originalPlayerCameraPosition = playerCamera.localPosition;
+    }
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+
+    }
+
+    public void CastHit(float range, int damage)
+    {
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
+        Debug.DrawRay(ray.origin, ray.direction * range, Color.blue);
+        
+        if (Physics.Raycast(ray, out RaycastHit hit, range, enemyLayer))
         {
-            if (HitEnemy())
-                print("HIT!");
-            else
-                print("Miss");
+            Debug.Log("Enemy Hit!");
+            hit.transform.GetComponent<EnemyPrototype>().TakeDamage(damage);
+            ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
         }
     }
 
-    bool HitEnemy()
+    void ShakeCamera(float magnitude, float duration)
     {
-        Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
-        if(Physics.Raycast(ray, out RaycastHit hit, range, layerMask))
+        if (camShakeRoutine != null)
         {
-            return hit.collider.CompareTag("Enemy");
+            StopCoroutine(camShakeRoutine);
         }
-        return false;
+        camShakeRoutine = StartCoroutine(CamShakeRoutine(magnitude, duration));
+    }
+
+    IEnumerator CamShakeRoutine(float magnitude, float duration)
+    {
+        playerCamera.localPosition = originalPlayerCameraPosition;
+        float elapsed = 0;
+        while (elapsed <= duration)
+        {
+            playerCamera.localPosition = originalPlayerCameraPosition + playerCamera.up * Random.Range(-magnitude, magnitude) + playerCamera.right * Random.Range(-magnitude, magnitude);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        playerCamera.localPosition = originalPlayerCameraPosition;
+        camShakeRoutine = null;
     }
 }
