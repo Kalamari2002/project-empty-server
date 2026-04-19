@@ -11,8 +11,7 @@ public class PlayerWallRun : MonoBehaviour
 
     bool canWallRun = true;
     bool isWallRunning = false;
-    [SerializeField] Transform leftCheck;
-    [SerializeField] Transform rightCheck;
+
     [SerializeField] Transform wallCheckOrigin;
     [SerializeField] LayerMask wallLayers;
     [SerializeField] Transform orientation;
