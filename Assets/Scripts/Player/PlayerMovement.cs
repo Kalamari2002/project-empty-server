@@ -66,8 +66,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         wallRun.SetCanWallRun(true);
-
-        if(wallRun.TouchingWall() && (horizontal != 0)){
+        int touchingWall = wallRun.IsTouchingWall();
+        if(touchingWall != 0 && (horizontal == touchingWall)){
             wallRun.WallRun();
             wallRun.SetIsWallRunning(true);
         }
