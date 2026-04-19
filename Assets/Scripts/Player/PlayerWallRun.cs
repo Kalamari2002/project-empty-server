@@ -12,6 +12,7 @@ public class PlayerWallRun : MonoBehaviour
     bool canWallRun = true;
     bool isWallRunning = false;
 
+    [SerializeField] float minBuildUpVel;
     [SerializeField] Transform wallCheckOrigin;
     [SerializeField] LayerMask wallLayers;
     [SerializeField] Transform orientation;
@@ -22,7 +23,7 @@ public class PlayerWallRun : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void FixedUpdate()
+    void DrawWallCheck()
     {
         Debug.DrawRay(wallCheckOrigin.position, orientation.right * WALL_CHECK_DIST, Color.red);
         Debug.DrawRay(wallCheckOrigin.position, -orientation.right * WALL_CHECK_DIST, Color.red);
@@ -45,8 +46,6 @@ public class PlayerWallRun : MonoBehaviour
             wallLayers
         );    
         
-        Debug.Log(hit.normal);
-
         return hit;
     }
 
@@ -86,5 +85,10 @@ public class PlayerWallRun : MonoBehaviour
     public bool GetIsWallRunning()
     {
         return isWallRunning;
+    }
+
+    public float GetMinBuildUpVel()
+    {
+        return minBuildUpVel;
     }
 }

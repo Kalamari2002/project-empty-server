@@ -57,8 +57,8 @@ public class PlayerMovement : MonoBehaviour
     }
     void WallRun(float horizontal)
     {
-
-        if (Grounded())
+        float horizontalVelocity = Vector3.Scale(rb.linearVelocity, new Vector3(1,0,1)).magnitude; 
+        if (Grounded() || horizontalVelocity < wallRun.GetMinBuildUpVel())
         {
             wallRun.SetCanWallRun(false);
             wallRun.SetIsWallRunning(false);
