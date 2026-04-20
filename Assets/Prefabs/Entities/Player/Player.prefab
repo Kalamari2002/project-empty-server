@@ -522,6 +522,7 @@ MonoBehaviour:
   maxGroundSpeed: 15
   maxAirSpeed: 20
   drag: 5
+  crouchDrag: 13
 --- !u!114 &5965988180505858191
 MonoBehaviour:
   m_ObjectHideFlags: 0
