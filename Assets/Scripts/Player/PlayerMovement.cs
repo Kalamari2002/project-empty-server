@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     PlayerWallRun wallRun; 
     PlayerAim playerAim;
+    PlayerCrouch playerCrouch;
 
     Rigidbody rb;
     Transform orientation;
@@ -26,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerAim = GetComponent<PlayerAim>();
         wallRun = GetComponent<PlayerWallRun>();
+        playerCrouch = GetComponent<PlayerCrouch>();
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
     }
@@ -34,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Jump();
+        Crouch();
     }
 
     private void FixedUpdate()
@@ -90,6 +93,17 @@ public class PlayerMovement : MonoBehaviour
             
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    void Crouch()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            playerCrouch.Crouch();
+        } else if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            playerCrouch.StopCrouch();
         }
     }
 
