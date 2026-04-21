@@ -567,7 +567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7912379d51e3e7e44869c9b7093d314a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minBuildUpVel: 9
+  minBuildUpVel: 8
   wallCheckOrigin: {fileID: 1875896232990815028}
   wallLayers:
     serializedVersion: 2
@@ -586,6 +586,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 759467350592687854}
+  collision: {fileID: 2916046406501991316}
+  groundCheck: {fileID: 3144895975389547248}
 --- !u!1 &8362820426947322467
 GameObject:
   m_ObjectHideFlags: 0

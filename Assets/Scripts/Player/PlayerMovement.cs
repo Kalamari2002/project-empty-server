@@ -105,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            playerCrouch.Crouch();
+            playerCrouch.Crouch(Grounded());
             currDrag = crouchDrag;
         } else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
