@@ -555,6 +555,8 @@ MonoBehaviour:
     m_Bits: 0
   camShakeMagnitude: 0.1
   camShakeDuration: 0.2
+  hitStopDuration: 0.05
+  punchImpulse: 40
   playerCamera: {fileID: 0}
 --- !u!114 &4894696837237669104
 MonoBehaviour:

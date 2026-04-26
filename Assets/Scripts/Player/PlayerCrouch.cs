@@ -13,10 +13,14 @@ using UnityEngine.Animations.Rigging;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerCrouch : MonoBehaviour
 {
-    const float CROUCH_OFFSET = 0.6f;
+    const float CROUCH_CAMERA_OFFSET = 0.6f;
     const float CROUCH_COLLISION_HEIGHT = 1.36367f;
-    const float CROUCH_COLLISION_Y = 0.3181652f;
+    const float CROUCH_COLLISION_CENTER_Y = 0.3181652f;
     const float AIR_CROUCH_GROUNDCHECK_Y = -0.248f;
+
+    const float SLIDE_CAMERA_OFFSET = 0.9f;
+    const float SLIDE_COLLISION_HEIGHT = 1.0f;
+    const float SLIDE_COLLISION_CENTER_Y = 0.5f;
 
     float INIT_COLLISION_HEIGHT, INIT_COLLISION_Y, INIT_GROUNDCHECK_Y;
     bool isCrouching = false;
@@ -49,8 +53,8 @@ public class PlayerCrouch : MonoBehaviour
         
         isCrouching = true;
         
-        float yOffset = isGrounded ? -CROUCH_COLLISION_Y : CROUCH_COLLISION_Y;
-        float yCameraOffset = isGrounded ? CROUCH_OFFSET : 0;
+        float yOffset = isGrounded ? -CROUCH_COLLISION_CENTER_Y : CROUCH_COLLISION_CENTER_Y;
+        float yCameraOffset = isGrounded ? CROUCH_CAMERA_OFFSET : 0;
         float yGroundCheckOffset = isGrounded ? INIT_GROUNDCHECK_Y : AIR_CROUCH_GROUNDCHECK_Y;
         
         collision.height = CROUCH_COLLISION_HEIGHT;
@@ -81,11 +85,11 @@ public class PlayerCrouch : MonoBehaviour
         
         isSliding = true;
         
-        float yOffset = -CROUCH_COLLISION_Y;
-        float yCameraOffset = CROUCH_OFFSET;
+        float yOffset = -SLIDE_COLLISION_CENTER_Y;
+        float yCameraOffset = SLIDE_CAMERA_OFFSET;
         float yGroundCheckOffset = INIT_GROUNDCHECK_Y;
         
-        collision.height = CROUCH_COLLISION_HEIGHT;
+        collision.height = SLIDE_COLLISION_HEIGHT;
         collision.center = new Vector3(collision.center.x, yOffset, collision.center.z);
         groundCheck.localPosition = new Vector3(groundCheck.localPosition.x, yGroundCheckOffset, groundCheck.localPosition.z);
 
