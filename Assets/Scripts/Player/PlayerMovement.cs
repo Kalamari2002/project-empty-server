@@ -14,9 +14,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float maxGroundSpeed;
     [SerializeField] float maxAirSpeed;
     [SerializeField] float drag;
+    [SerializeField] float crouchDrag;
+
+    float currDrag;
 
     PlayerWallRun wallRun; 
     PlayerAim playerAim;
+    PlayerCrouch playerCrouch;
 
     Rigidbody rb;
     Transform orientation;
@@ -26,14 +30,18 @@ public class PlayerMovement : MonoBehaviour
     {
         playerAim = GetComponent<PlayerAim>();
         wallRun = GetComponent<PlayerWallRun>();
+        playerCrouch = GetComponent<PlayerCrouch>();
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
+        
+        currDrag = drag;
     }
 
     // Update is called once per frame
     void Update()
     {
         Jump();
+        Crouch();
     }
 
     private void FixedUpdate()
@@ -49,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 directionVector = orientation.forward * vertical + orientation.right * horizontal;
     
         rb.AddForce(directionVector.normalized * (Grounded() ? groundSpeed : airSpeed) * multiplier);
-        rb.linearDamping = Grounded() ? drag : 0;
+        rb.linearDamping = Grounded() ? currDrag : 0;
         
         WallRun(horizontal);
         
@@ -90,6 +98,19 @@ public class PlayerMovement : MonoBehaviour
             
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    void Crouch()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            playerCrouch.Crouch(Grounded());
+            currDrag = crouchDrag;
+        } else if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            playerCrouch.StopCrouch();
+            currDrag = drag;
         }
     }
 
