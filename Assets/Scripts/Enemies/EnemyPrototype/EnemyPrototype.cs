@@ -8,7 +8,7 @@ public class EnemyPrototype : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float backOffDistance;
     [SerializeField] float stopDistance;
-    [SerializeField] Animator rendererAnimator;
+    [SerializeField] Animator animator;
 
     [Header("Ragdoll")]
     [SerializeField] GameObject Ragdoll;
@@ -18,18 +18,22 @@ public class EnemyPrototype : MonoBehaviour
     [SerializeField] GameObject ActiveRagdoll;
     float ragdollCountDown;
 
+    bool inHitstun = false;
+
     Transform Player;
     CharacterController controller;
     CapsuleCollider capsuleCollider;
+    SpriteRenderer spriteRenderer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player").transform;
+        animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
-        ragdollCountDown = ragdollDuration;
-        rendererAnimator = transform.Find("SpriteRenderer").GetComponent<Animator>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        ragdollCountDown = ragdollDuration;
     }
 
     // Update is called once per frame
@@ -51,8 +55,7 @@ public class EnemyPrototype : MonoBehaviour
         ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * ragdollLaunchForce, ForceMode.Impulse);
         ragdollMode = true;
         ragdollCountDown = ragdollDuration;
-
-        rendererAnimator.gameObject.SetActive(false);
+        spriteRenderer.enabled = false;
         controller.enabled = false;
         capsuleCollider.enabled = false;
     }
@@ -68,7 +71,7 @@ public class EnemyPrototype : MonoBehaviour
             Destroy(ActiveRagdoll);
             ActiveRagdoll = null;
             controller.enabled = true;
-            rendererAnimator.gameObject.SetActive(true);
+            spriteRenderer.enabled = true;
             ragdollMode = false;
             capsuleCollider.enabled = true;
         }
@@ -76,34 +79,53 @@ public class EnemyPrototype : MonoBehaviour
 
     void Move()
     {
-        if (Player == null || ragdollMode) { return; }
+        if (Player == null || ragdollMode || inHitstun) { return; }
 
         transform.LookAt(new Vector3(Player.position.x, transform.position.y, Player.position.z));
         if (Vector3.Distance(transform.position, Player.transform.position) >= stopDistance)
         {
             controller.SimpleMove(transform.forward * speed);
-            rendererAnimator.SetBool("Running", true);
-            rendererAnimator.speed = 1;
+            animator.SetBool("Running", true);
+            animator.speed = 1;
         }
         else if (Vector3.Distance(transform.position, Player.transform.position) <= backOffDistance)
         {
             controller.SimpleMove(-transform.forward * speed/2);
-            rendererAnimator.SetBool("Running", true);
-            rendererAnimator.speed = 1;
+            animator.SetBool("Running", true);
+            animator.speed = 1;
         }
         else
         {
-            rendererAnimator.SetBool("Running", false);
-            rendererAnimator.speed = 0.5f;
+            animator.SetBool("Running", false);
+            animator.speed = 0.5f;
         }
     }
 
-    public void TakeDamage(int damage)
+    void ExitHitstun()
     {
+        inHitstun = false;
+        animator.SetBool("Hitstun", inHitstun);
+    }
+
+    public void TakeDamage(int damage, int stunAnimation)
+    {
+        inHitstun = stunAnimation > 0;
+        animator.SetBool("Hitstun", inHitstun);
         health -= damage;
         if (damage >= damageToKnockBack)
         {
             SpawnRagdoll();
+        }
+        switch(stunAnimation)
+        {
+            case 1:
+                animator.speed = 0.5f;
+                animator.Play("EnemyPrototypeHitstun1", -1, 0);
+                break;
+            case 2:
+                animator.speed = 0.5f;
+                animator.Play("EnemyPrototypeHitstun2", -1, 0);
+                break;
         }
     }
 }
