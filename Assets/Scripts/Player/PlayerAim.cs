@@ -7,32 +7,26 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] LayerMask enemyLayer;
     [SerializeField] float camShakeMagnitude = 0.1f;
     [SerializeField] float camShakeDuration = 0.2f;
-    Coroutine camShakeRoutine;
-    Vector3 originalPlayerCameraPosition;
+    [SerializeField] float hitStopDuration = 0.05f;
+    [SerializeField] float punchImpulse = 40;
     [SerializeField] Transform playerCamera;
+
+    Coroutine camShakeRoutine;
+    Transform orientation;
+    Vector3 originalPlayerCameraPosition;
+    Rigidbody rb;
 
     private void Start()
     {
-        playerCamera = transform.Find("Orientation").Find("Camera");
+        rb = GetComponent<Rigidbody>();
+        orientation = transform.Find("Orientation");
+        playerCamera = orientation.Find("Camera");
         originalPlayerCameraPosition = playerCamera.localPosition;
     }
 
     void Update()
     {
 
-    }
-
-    public void CastHit(float range, int damage)
-    {
-        Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
-        Debug.DrawRay(ray.origin, ray.direction * range, Color.blue);
-        
-        if (Physics.Raycast(ray, out RaycastHit hit, range, enemyLayer))
-        {
-            Debug.Log("Enemy Hit!");
-            hit.transform.GetComponent<EnemyPrototype>().TakeDamage(damage);
-            ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
-        }
     }
 
     void ShakeCamera(float magnitude, float duration)
@@ -42,6 +36,11 @@ public class PlayerAim : MonoBehaviour
             StopCoroutine(camShakeRoutine);
         }
         camShakeRoutine = StartCoroutine(CamShakeRoutine(magnitude, duration));
+    }
+
+    void HitStop(float duration)
+    {
+        StartCoroutine(HitStopRoutine(duration));
     }
 
     IEnumerator CamShakeRoutine(float magnitude, float duration)
@@ -57,8 +56,35 @@ public class PlayerAim : MonoBehaviour
         playerCamera.localPosition = originalPlayerCameraPosition;
         camShakeRoutine = null;
     }
+
+    IEnumerator HitStopRoutine(float duration)
+    {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1;
+    }
+
     public Vector3 cameraForward()
     {
         return mainCamera.transform.forward;
+    }
+
+    public void CastHit(float range, int damage, int damageAnimation)
+    {
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
+        Debug.DrawRay(ray.origin, ray.direction * range, Color.blue);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, range, enemyLayer))
+        {
+            Debug.Log("Enemy Hit!");
+            hit.transform.GetComponent<EnemyPrototype>().TakeDamage(damage, damageAnimation);
+            ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
+            HitStop(hitStopDuration * damage / 10);
+        }
+    }
+
+    public void Impulse(float impulse)
+    {
+        rb.AddForce(orientation.forward * impulse, ForceMode.Impulse);
     }
 }
