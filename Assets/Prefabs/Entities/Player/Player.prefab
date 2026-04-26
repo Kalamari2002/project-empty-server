@@ -523,6 +523,7 @@ MonoBehaviour:
   maxAirSpeed: 20
   drag: 5
   crouchDrag: 13
+  slideDrag: 0.4
 --- !u!114 &5965988180505858191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,6 +586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e6c5a7d47211e488ddc8eb5b251132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minBuildUpVel: 8
   cameraTransform: {fileID: 759467350592687854}
   collision: {fileID: 2916046406501991316}
   groundCheck: {fileID: 3144895975389547248}

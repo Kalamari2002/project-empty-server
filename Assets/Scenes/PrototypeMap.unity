@@ -41157,6 +41157,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5252524867374529993, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: slideDrag
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252524867374529993, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: groundSpeed
       value: 70
       objectReference: {fileID: 0}
