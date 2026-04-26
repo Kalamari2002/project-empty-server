@@ -8057,6 +8057,7 @@ GameObject:
   - component: {fileID: 540628891}
   - component: {fileID: 540628892}
   - component: {fileID: 540628893}
+  - component: {fileID: 540628894}
   m_Layer: 7
   m_Name: EnemyPrototype
   m_TagString: Untagged
@@ -8097,7 +8098,7 @@ MonoBehaviour:
   speed: 4
   backOffDistance: 2
   stopDistance: 3
-  rendererAnimator: {fileID: 0}
+  animator: {fileID: 0}
   Ragdoll: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
   ragdollLaunchForce: 200
   ragdollDuration: 5
@@ -8151,6 +8152,28 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &540628894
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540628889}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fd81423a05420d742b5700daa1b14fb8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!43 &567463056
 Mesh:
   m_ObjectHideFlags: 0
@@ -21803,7 +21826,6 @@ GameObject:
   m_Component:
   - component: {fileID: 992461348}
   - component: {fileID: 992461350}
-  - component: {fileID: 992461349}
   m_Layer: 7
   m_Name: SpriteRenderer
   m_TagString: Untagged
@@ -21819,35 +21841,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992461347}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.157, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 540628890}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &992461349
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 992461347}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 635e7a0b75d5be94092d81184f4b3b5c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!212 &992461350
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23724,7 +23724,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 47, y: -29.000183}
+  m_AnchoredPosition: {x: 47, y: -29.000244}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!43 &1163404978
@@ -40773,6 +40773,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: punchImpulse
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: camShakeDuration
       value: 0.01

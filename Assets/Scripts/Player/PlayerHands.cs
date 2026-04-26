@@ -66,7 +66,12 @@ public class PlayerHands : MonoBehaviour
     {
         if (playerAim)
         {
-            playerAim.CastHit(punchRange, currentPunch == 3 ? punchBaseDamage * 2 : punchBaseDamage);
+            playerAim.CastHit(punchRange, currentPunch == 3 ? punchBaseDamage * 2 : punchBaseDamage, currentPunch);
         }
+    }
+
+    void TriggerPlayerImpulse(float impulse)
+    {
+        playerAim.Impulse(impulse);
     }
 }
