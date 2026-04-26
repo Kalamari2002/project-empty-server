@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float maxAirSpeed;
     [SerializeField] float drag;
     [SerializeField] float crouchDrag;
+    [SerializeField] float slideDrag;
 
     float currDrag;
 
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Jump();
-        Crouch();
+        OnCrouchInput();
     }
 
     private void FixedUpdate()
@@ -51,8 +52,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        float horizontal = playerCrouch.GetIsSliding() ? 0 : Input.GetAxisRaw("Horizontal");
+        float vertical = playerCrouch.GetIsSliding() ? 0 : Input.GetAxisRaw("Vertical");
         float multiplier = Grounded() ? 1 : airMultiplier;
         Vector3 directionVector = orientation.forward * vertical + orientation.right * horizontal;
     
@@ -101,17 +102,36 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Crouch()
-    {
+    void OnCrouchInput(){
+        float vertical = playerCrouch.GetIsSliding() ? 0 : Input.GetAxisRaw("Vertical");
+
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            playerCrouch.Crouch(Grounded());
-            currDrag = crouchDrag;
-        } else if (Input.GetKeyUp(KeyCode.LeftControl))
+            float horizontalVelocity = Vector3.Scale(rb.linearVelocity, new Vector3(1,0,1)).magnitude; 
+            if(horizontalVelocity >= playerCrouch.GetMinBuildUpVel() && Grounded() && vertical == 1)
+            {
+                Slide();
+            } else
+            {
+                Crouch();
+            }
+        } else if(Input.GetKeyUp(KeyCode.LeftControl))
         {
-            playerCrouch.StopCrouch();
+            playerCrouch.StandUp();
             currDrag = drag;
         }
+    }
+
+    void Crouch()
+    {
+        playerCrouch.Crouch(Grounded());
+        currDrag = crouchDrag;
+    }
+
+    void Slide()
+    {
+        playerCrouch.Slide();
+        currDrag = slideDrag;
     }
 
     void LimitSpeed()
