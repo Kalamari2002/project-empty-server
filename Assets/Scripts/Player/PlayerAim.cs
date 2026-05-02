@@ -9,6 +9,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float camShakeDuration = 0.2f;
     [SerializeField] float hitStopDuration = 0.05f;
     [SerializeField] float punchImpulse = 40;
+    [SerializeField] float enemyRagdollLaunchForce = 200;
     [SerializeField] Transform playerCamera;
 
     Coroutine camShakeRoutine;
@@ -69,17 +70,39 @@ public class PlayerAim : MonoBehaviour
         return mainCamera.transform.forward;
     }
 
-    public void CastHit(float range, int damage, int damageAnimation)
+    public void CastHit(float punchRange, int damage, int damageAnimation)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
-        Debug.DrawRay(ray.origin, ray.direction * range, Color.blue);
+        Debug.DrawRay(ray.origin, ray.direction * punchRange, Color.blue);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range, enemyLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, punchRange, enemyLayer))
         {
             Debug.Log("Enemy Hit!");
-            hit.transform.GetComponent<EnemyPrototype>().TakeDamage(damage, damageAnimation);
+            EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
+            enemyPrototype.TakeDamage(damage, damageAnimation);
+            if (damageAnimation == 3)
+            {
+                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce);
+            }
             ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
             HitStop(hitStopDuration * damage / 10);
+        }
+    }
+
+    public void CastKickHit(float kickRange, int damage)
+    {
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
+        Debug.DrawRay(ray.origin, ray.direction * kickRange, Color.blue);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, kickRange, enemyLayer))
+        {
+            Debug.Log("Enemy Hit!");
+            EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
+            enemyPrototype.TakeDamage(damage);
+            float camShakeFactor = 20;
+            ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
+            HitStop(hitStopDuration * 2);
+            enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, 0);
         }
     }
 
