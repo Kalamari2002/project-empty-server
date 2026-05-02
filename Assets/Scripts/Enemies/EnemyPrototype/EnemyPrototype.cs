@@ -4,7 +4,6 @@ public class EnemyPrototype : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] int health = 50;
-    [SerializeField] int damageToKnockBack = 20;
     [SerializeField] float speed;
     [SerializeField] float backOffDistance;
     [SerializeField] float stopDistance;
@@ -43,7 +42,7 @@ public class EnemyPrototype : MonoBehaviour
         HandleRagdoll();
     }
 
-    void SpawnRagdoll()
+    public void SpawnRagdoll(float launchForce, float torque)
     {
         if (ActiveRagdoll == null)
         {
@@ -51,8 +50,8 @@ public class EnemyPrototype : MonoBehaviour
             ActiveRagdoll.transform.forward = transform.forward;
         }
         Rigidbody ragdollRb = ActiveRagdoll.GetComponent<Rigidbody>();
-        ragdollRb.AddForce((Player.transform.forward + Vector3.up).normalized * ragdollLaunchForce, ForceMode.Impulse);
-        ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * ragdollLaunchForce, ForceMode.Impulse);
+        ragdollRb.AddForce((Player.transform.forward + Vector3.up).normalized * launchForce, ForceMode.Impulse);
+        ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * torque, ForceMode.Impulse);
         ragdollMode = true;
         ragdollCountDown = ragdollDuration;
         spriteRenderer.enabled = false;
@@ -107,15 +106,16 @@ public class EnemyPrototype : MonoBehaviour
         animator.SetBool("Hitstun", inHitstun);
     }
 
+    public void TakeDamage(int damage)
+    {
+        TakeDamage(damage, 0);
+    }
+
     public void TakeDamage(int damage, int stunAnimation)
     {
         inHitstun = stunAnimation > 0;
         animator.SetBool("Hitstun", inHitstun);
         health -= damage;
-        if (damage >= damageToKnockBack)
-        {
-            SpawnRagdoll();
-        }
         switch(stunAnimation)
         {
             case 1:
