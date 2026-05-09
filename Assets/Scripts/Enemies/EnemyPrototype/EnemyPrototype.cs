@@ -42,7 +42,7 @@ public class EnemyPrototype : MonoBehaviour
         HandleRagdoll();
     }
 
-    public void SpawnRagdoll(float launchForce, float torque)
+    public void SpawnRagdoll(float launchForce, float torque, Vector3 launchDirection)
     {
         if (ActiveRagdoll == null)
         {
@@ -50,7 +50,7 @@ public class EnemyPrototype : MonoBehaviour
             ActiveRagdoll.transform.forward = transform.forward;
         }
         Rigidbody ragdollRb = ActiveRagdoll.GetComponent<Rigidbody>();
-        ragdollRb.AddForce((Player.transform.forward + Vector3.up).normalized * launchForce, ForceMode.Impulse);
+        ragdollRb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
         ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * torque, ForceMode.Impulse);
         ragdollMode = true;
         ragdollCountDown = ragdollDuration;

@@ -194,12 +194,12 @@ Transform:
   m_GameObject: {fileID: 5333804511837069580}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6359999, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3410821131391912088}
-  m_Father: {fileID: 5567704814126278728}
+  m_Father: {fileID: 147343476905857380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &8297509302159673110
 Camera:
@@ -319,6 +319,38 @@ MonoBehaviour:
   orientation: {fileID: 5567704814126278728}
   mouseSensitivity: 300
   verticalClamp: 90
+--- !u!1 &6202186160486810092
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 147343476905857380}
+  m_Layer: 3
+  m_Name: CameraHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &147343476905857380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202186160486810092}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.6359999, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 759467350592687854}
+  m_Father: {fileID: 5567704814126278728}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7101349836560035275
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +589,7 @@ MonoBehaviour:
   camShakeDuration: 0.2
   hitStopDuration: 0.05
   punchImpulse: 40
+  enemyRagdollLaunchForce: 200
   playerCamera: {fileID: 0}
 --- !u!114 &4894696837237669104
 MonoBehaviour:
@@ -589,7 +622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minBuildUpVel: 8
-  cameraTransform: {fileID: 759467350592687854}
+  cameraTransform: {fileID: 147343476905857380}
   collision: {fileID: 2916046406501991316}
   groundCheck: {fileID: 3144895975389547248}
 --- !u!1 &8362820426947322467
@@ -622,7 +655,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4383725367420492228}
-  - {fileID: 759467350592687854}
+  - {fileID: 147343476905857380}
   - {fileID: 3144895975389547248}
   - {fileID: 4533943801939378649}
   - {fileID: 1875896232990815028}

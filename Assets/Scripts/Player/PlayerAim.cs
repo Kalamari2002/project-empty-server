@@ -21,7 +21,7 @@ public class PlayerAim : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
-        playerCamera = orientation.Find("Camera");
+        playerCamera = orientation.Find("CameraHolder").Find("Camera");
         originalPlayerCameraPosition = playerCamera.localPosition;
     }
 
@@ -82,7 +82,7 @@ public class PlayerAim : MonoBehaviour
             enemyPrototype.TakeDamage(damage, damageAnimation);
             if (damageAnimation == 3)
             {
-                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce);
+                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
             }
             ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
             HitStop(hitStopDuration * damage / 10);
@@ -102,12 +102,16 @@ public class PlayerAim : MonoBehaviour
             float camShakeFactor = 20;
             ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
             HitStop(hitStopDuration * 2);
-            enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, 0);
+            enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
         }
     }
 
     public void Impulse(float impulse)
     {
+        if (rb.linearVelocity.magnitude >= 0.01f) 
+        {
+            return;
+        }
         rb.AddForce(orientation.forward * impulse, ForceMode.Impulse);
     }
 }
