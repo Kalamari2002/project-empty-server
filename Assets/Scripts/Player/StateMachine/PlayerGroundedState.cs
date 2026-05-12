@@ -23,7 +23,7 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void FixedUpdateState()
     {
-        _context.PlayerRigidBody.linearDamping = _context.Grounded ? _context.CurrentDrag : 0;
+        _context.PlayerRigidBody.linearDamping = _context.CurrentDrag;
         LimitSpeed();
     }
     public override void ExitState()
@@ -39,14 +39,8 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void InitializeSubState()
     {
-        if (_context.IsDirectionPressed)
-        {
-            SetSubState(_factory.Move());
-        }
-        else
-        {
-            SetSubState(_factory.Idle());
-        }
+        SetSubState(_factory.Move());
+        _currentSubState.EnterState();
     }
 
     void Jump()

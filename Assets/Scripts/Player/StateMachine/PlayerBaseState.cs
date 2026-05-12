@@ -28,12 +28,12 @@ public abstract class PlayerBaseState
     public void UpdateStates()
     {
         UpdateState();
-        _currentSubState?.UpdateState();
+        _currentSubState?.UpdateStates();
     }
     public void FixedUpdateStates()
     {
         FixedUpdateState();
-        _currentSubState?.FixedUpdateState();
+        _currentSubState?.FixedUpdateStates();
     }
     protected void SwitchState(PlayerBaseState newState)
     {
@@ -44,8 +44,8 @@ public abstract class PlayerBaseState
         /**
         * Prevents current state from becoming a substate. For example,
         * we only ever want to set the current state to Grounded, but never
-        * Move or Idle. Otherwise, you'd need to implement the jump logic
-        * for each substate individually.  
+        * Move or Slide. This way the transition to Airborne stays consistent
+        * no matter which substate you're in.
         */
         if (_isRootState)
         {

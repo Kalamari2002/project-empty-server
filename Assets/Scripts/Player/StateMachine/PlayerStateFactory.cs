@@ -6,23 +6,23 @@ public class PlayerStateFactory
     {
         _context = currentContext;
     }
-
-    public PlayerBaseState Idle()
+    public PlayerBaseState Grounded()
     {
-        return new PlayerIdleState(_context, this);
+        return new PlayerGroundedState(_context, this);
     }
     public PlayerBaseState Move()
     {
         return new PlayerMoveState(_context, this);
     }
-    public PlayerBaseState Jump()
+    public PlayerBaseState Run()
     {
-        return new PlayerJumpState(_context, this);
+        return new PlayerRunState(_context, this);
     }
-    public PlayerBaseState Grounded()
+    public PlayerCrouchState Crouch()
     {
-        return new PlayerGroundedState(_context, this);
+        return new PlayerCrouchState(_context, this);
     }
+
     public PlayerAirborneState Airborne()
     {
         return new PlayerAirborneState(_context, this);

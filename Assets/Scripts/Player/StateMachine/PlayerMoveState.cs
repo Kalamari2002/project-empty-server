@@ -1,29 +1,33 @@
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class PlayerMoveState : PlayerBaseState
 {
     public PlayerMoveState(PlayerStateMachine context, PlayerStateFactory factory)
-    : base(context, factory){}
-    
-    public override void EnterState(){}
-    public override void UpdateState()
+    : base(context, factory)
     {
-        CheckSwitchStates();
+        InitializeSubState();
     }
+    
+    public override void EnterState()
+    {
+        Debug.Log("Move");
+    }
+    public override void UpdateState(){}
     public override void FixedUpdateState()
     {
         Move();
     }
     public override void ExitState(){}
-    public override void CheckSwitchStates()
+    public override void CheckSwitchStates(){}
+    public override void InitializeSubState()
     {
-        if (!_context.IsDirectionPressed)
-        {
-            SwitchState(_factory.Idle());
-        }
+        if(_context.IsCrouchPressed)
+            SetSubState(_factory.Crouch());
+        else
+            SetSubState(_factory.Run());
+        _currentSubState.EnterState();
     }
-    public override void InitializeSubState(){}
-
     void Move()
     {
         float horizontal = _context.HorizontalInput;
