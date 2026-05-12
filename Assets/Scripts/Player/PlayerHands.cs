@@ -10,12 +10,17 @@ public class PlayerHands : MonoBehaviour
     [SerializeField] float kickRange = 4;
     [SerializeField] int kickDamage = 5;
 
+    [Header("Grab Settings")]
+    [SerializeField] float grabRange = 5;
+
     [Header("Debugging")]
     [SerializeField] int currentPunch = 0;
+    [SerializeField] int pummel = 0;
     [SerializeField] bool punching = false;
     [SerializeField] bool canPunch = true;
     [SerializeField] bool kicking = false;
     [SerializeField] bool canKick = true;
+    [SerializeField] bool grabbing = false;
 
     PlayerAim playerAim;
     Animator animator;
@@ -43,18 +48,48 @@ public class PlayerHands : MonoBehaviour
         {
             HandlePunch();
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+            HandleGrab();
+        }
     }
 
     void HandlePunch()
     {
-        if (!canPunch || kicking) return;
+        if (!canPunch || kicking) return; 
         canPunch = false;
         canKick = false;
-        currentPunch = currentPunch == 3 ? 1 : currentPunch + 1;
         punching = true;
-        animator.speed = currentPunch == 1 ? 1.5f : 1;
         animator.SetBool("Punching", punching);
-        animator.SetInteger("CurrentPunch", currentPunch);
+        if (!grabbing)
+        {
+            currentPunch = currentPunch == 3 ? 1 : currentPunch + 1;
+            animator.speed = currentPunch == 1 ? 1.5f : 1;
+            animator.SetInteger("CurrentPunch", currentPunch);
+        }
+        else
+        {
+            pummel++;
+            if (pummel == 3)
+            {
+                animator.Play("HandGrabPunchFinal", -1, 0);
+                ResetGrab();
+            }
+            else
+            {
+                animator.Play("HandGrabPunch", -1, 0);
+            }
+        }
+    }
+
+    void HandleGrab()
+    {
+        if (grabbing) return;
+        grabbing = playerAim.CastGrabHit(grabRange);
+        if (grabbing)
+        {
+            animator.Play("HandGrabIdle", -1, 0);
+        }
     }
 
     void EnablePunching()
@@ -69,6 +104,12 @@ public class PlayerHands : MonoBehaviour
         punching = false;
         animator.SetBool("Punching", punching);
         animator.SetInteger("CurrentPunch", currentPunch);
+    }
+
+    void ResetGrab()
+    {
+        grabbing = false;
+        pummel = 0;
     }
 
     void HandleKick()
@@ -112,5 +153,10 @@ public class PlayerHands : MonoBehaviour
     void TriggerPlayerImpulse(float impulse)
     {
         playerAim.Impulse(impulse);
+    }
+
+    void LaunchGrabbedEnemy()
+    {
+        playerAim.LaunchGrabbedEnemy();
     }
 }

@@ -8202,7 +8202,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 50
-  damageToKnockBack: 20
   speed: 4
   backOffDistance: 2
   stopDistance: 3
@@ -40770,6 +40769,10 @@ PrefabInstance:
     - target: {fileID: 3360806625403975947, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
       propertyPath: m_Name
       value: HandsContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335696209042859848, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7407043372055825138, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
       propertyPath: m_Pivot.x

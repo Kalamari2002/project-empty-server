@@ -11,6 +11,8 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float punchImpulse = 40;
     [SerializeField] float enemyRagdollLaunchForce = 200;
     [SerializeField] Transform playerCamera;
+    [SerializeField] bool grabbing = false;
+    [SerializeField] EnemyPrototype grabbedEnemy;
 
     Coroutine camShakeRoutine;
     Transform orientation;
@@ -96,7 +98,7 @@ public class PlayerAim : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, kickRange, enemyLayer))
         {
-            Debug.Log("Enemy Hit!");
+            Debug.Log("Enemy Kicked!");
             EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
             enemyPrototype.TakeDamage(damage);
             float camShakeFactor = 20;
@@ -104,6 +106,30 @@ public class PlayerAim : MonoBehaviour
             HitStop(hitStopDuration * 2);
             enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
         }
+    }
+
+    public bool CastGrabHit(float grabRange)
+    {
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
+        Debug.DrawRay(ray.origin, ray.direction * grabRange, Color.blueViolet);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, grabRange, enemyLayer))
+        {
+            Debug.Log("Enemy Grabbed!");
+            grabbedEnemy = hit.transform.GetComponent<EnemyPrototype>();
+            grabbedEnemy.DisableRendering();
+            grabbing = true;
+            return true;
+        }
+        return false;
+    }
+
+    public void LaunchGrabbedEnemy()
+    {
+        if (grabbedEnemy == null) return;
+        grabbedEnemy.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized, mainCamera.transform.position + cameraForward() * 1.2f);
+        grabbedEnemy = null;
+        grabbing = false;
     }
 
     public void Impulse(float impulse)
