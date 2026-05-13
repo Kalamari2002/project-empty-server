@@ -23,6 +23,7 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float _drag;
     [SerializeField] float _crouchDrag;
     [SerializeField] float _slideDrag;
+    [SerializeField] float _minSpeedToSlide;
 
     float _currDrag;
     float _initGroundCheckY;
@@ -53,6 +54,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float CurrentDrag { get{ return _currDrag; } set{_currDrag = value;}}
     public float GroundSpeed { get{ return _groundSpeed; } }
     public float Drag { get{ return _drag; } }
+    public float SlideDrag { get { return _slideDrag; } }
     public float InitGroundCheckY { get{ return _initGroundCheckY; } }
     public float InitCollisionPosY { get {return _initCollisionPosY; } }
     public float InitCollisionHeight { get {return _initCollisionHeight; } }
@@ -60,12 +62,17 @@ public class PlayerStateMachine : MonoBehaviour
     public float AirSpeed { get{ return _airSpeed; } }
     public float MaxGroundSpeed{ get{ return _maxGroundSpeed; } }
     public float MaxAirSpeed{ get{ return _maxAirSpeed; } }
+    public float MinSpeedToSlide { get { return _minSpeedToSlide; } }
     public float HorizontalInput { get{ return Input.GetAxisRaw("Horizontal"); } }
     public float VerticalInput { get{ return Input.GetAxisRaw("Vertical"); } }
 
     public float CROUCH_CAMERA_OFFSET { get { return 0.6f; } }
     public float CROUCH_COLLISION_HEIGHT { get { return 1.36367f; } }
     public float CROUCH_COLLISION_CENTER_Y { get { return 0.3181652f; } }
+
+    public float SLIDE_CAMERA_OFFSET { get { return 0.9f; } }
+    public float SLIDE_COLLISION_HEIGHT { get { return 1.0f; } } 
+    public float SLIDE_COLLISION_CENTER_Y { get { return 0.5f; } }
 
     public CapsuleCollider CollisionCapsule { get { return collision; } }
 

@@ -13,13 +13,30 @@ public class PlayerMoveState : PlayerBaseState
     {
         Debug.Log("Move");
     }
-    public override void UpdateState(){}
+    public override void UpdateState()
+    {
+        CheckSwitchStates();
+    }
     public override void FixedUpdateState()
     {
         Move();
     }
     public override void ExitState(){}
-    public override void CheckSwitchStates(){}
+    public override void CheckSwitchStates()
+    {
+        if (_context.IsCrouchPressed)
+        {
+            float horizontalVelocity = Vector3.Scale(
+                _context.PlayerRigidBody.linearVelocity, 
+                new Vector3(1,0,1)
+            ).magnitude; 
+            
+            if(horizontalVelocity >= _context.MinSpeedToSlide)
+            {
+                SwitchState(_factory.Slide());
+            }
+        }
+    }
     public override void InitializeSubState()
     {
         if(_context.IsCrouchPressed)

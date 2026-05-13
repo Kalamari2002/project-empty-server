@@ -26,7 +26,7 @@ public class PlayerCrouch : MonoBehaviour
     bool isCrouching = false;
     bool isSliding = false;
 
-    [SerializeField] float minBuildUpVel;
+    [SerializeField] float minSpeedToSlide;
 
     [SerializeField] Transform cameraTransform;
     [SerializeField] CapsuleCollider collision;
@@ -101,7 +101,7 @@ public class PlayerCrouch : MonoBehaviour
     }
 
     public float GetMinBuildUpVel(){
-        return minBuildUpVel;
+        return minSpeedToSlide;
     }
     public bool GetIsSliding()
     {

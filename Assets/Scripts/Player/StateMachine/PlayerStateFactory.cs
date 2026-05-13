@@ -14,6 +14,10 @@ public class PlayerStateFactory
     {
         return new PlayerMoveState(_context, this);
     }
+    public PlayerBaseState Slide()
+    {
+        return new PlayerSlideState(_context, this);   
+    }
     public PlayerBaseState Run()
     {
         return new PlayerRunState(_context, this);

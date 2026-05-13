@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class PlayerCrouchState : PlayerBaseState
+public class PlayerSlideState : PlayerBaseState
 {
-    public PlayerCrouchState(PlayerStateMachine context, PlayerStateFactory factory)
+    public PlayerSlideState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory){}
     public override void EnterState()
     {
-        Debug.Log("Crouch");
-        _context.CurrentDrag = _context.CrouchDrag;
-        Crouch();
+        Debug.Log("Slide");
+        _context.CurrentDrag = _context.SlideDrag;
+        LieDown();
     }
     public override void UpdateState()
     {
@@ -21,23 +21,28 @@ public class PlayerCrouchState : PlayerBaseState
     }
     public override void CheckSwitchStates()
     {
-        if (!_context.IsCrouchPressed)
+        //TODO: If press jump go airborne
+        float minSpeedToStopSlide = 3.8f;
+        if (
+            !_context.IsCrouchPressed 
+            || _context.PlayerRigidBody.linearVelocity.magnitude <= minSpeedToStopSlide
+        )
         {
-            SwitchState(_factory.Run());
+            SwitchState(_factory.Move());
         }
     }
     public override void InitializeSubState(){}
 
-    void Crouch()
+    void LieDown()
     {
         CapsuleCollider collision = _context.CollisionCapsule;
-        collision.height = _context.CROUCH_COLLISION_HEIGHT;
+        collision.height = _context.SLIDE_COLLISION_HEIGHT;
         collision.center = new Vector3(
             collision.center.x, 
-            -_context.CROUCH_COLLISION_CENTER_Y, 
+            -_context.SLIDE_COLLISION_CENTER_Y, 
             collision.center.z
         );
-        
+
         Transform groundCheck = _context.GroundCollision;
         groundCheck.localPosition = new Vector3(
             groundCheck.localPosition.x, 
@@ -49,7 +54,7 @@ public class PlayerCrouchState : PlayerBaseState
         Vector3 initCameraPos = _context.InitCameraPos;
         cameraTransform.localPosition = new Vector3(
             initCameraPos.x, 
-            initCameraPos.y - _context.CROUCH_CAMERA_OFFSET, 
+            initCameraPos.y - _context.SLIDE_CAMERA_OFFSET, 
             initCameraPos.z
         );
     }
