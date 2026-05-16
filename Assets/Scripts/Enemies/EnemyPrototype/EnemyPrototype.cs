@@ -44,16 +44,26 @@ public class EnemyPrototype : MonoBehaviour
 
     public void SpawnRagdoll(float launchForce, float torque, Vector3 launchDirection)
     {
+        SpawnRagdoll(launchForce, torque, launchDirection, transform.position);
+    }
+
+    public void SpawnRagdoll(float launchForce, float torque, Vector3 launchDirection, Vector3 spawnPoint)
+    {
         if (ActiveRagdoll == null)
         {
-            ActiveRagdoll = Instantiate(Ragdoll, transform.position, Quaternion.identity);
-            ActiveRagdoll.transform.forward = transform.forward;
+            ActiveRagdoll = Instantiate(Ragdoll, spawnPoint, Quaternion.identity);
+            ActiveRagdoll.transform.forward = -launchDirection;
         }
         Rigidbody ragdollRb = ActiveRagdoll.GetComponent<Rigidbody>();
         ragdollRb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
         ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * torque, ForceMode.Impulse);
         ragdollMode = true;
         ragdollCountDown = ragdollDuration;
+        DisableRendering();
+    }
+
+    public void DisableRendering()
+    {
         spriteRenderer.enabled = false;
         controller.enabled = false;
         capsuleCollider.enabled = false;
@@ -78,7 +88,7 @@ public class EnemyPrototype : MonoBehaviour
 
     void Move()
     {
-        if (Player == null || ragdollMode || inHitstun) { return; }
+        if (Player == null || ragdollMode || inHitstun || !controller.enabled) { return; }
 
         transform.LookAt(new Vector3(Player.position.x, transform.position.y, Player.position.z));
         if (Vector3.Distance(transform.position, Player.transform.position) >= stopDistance)

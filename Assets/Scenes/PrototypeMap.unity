@@ -337,6 +337,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 27508406}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &35601311 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3144895975389547248, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+  m_PrefabInstance: {fileID: 8001380932321977288}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &38576092
 Mesh:
   m_ObjectHideFlags: 0
@@ -8202,7 +8207,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 50
-  damageToKnockBack: 20
   speed: 4
   backOffDistance: 2
   stopDistance: 3
@@ -40771,6 +40775,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HandsContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 7335696209042859848, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7407043372055825138, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -40865,6 +40873,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 35601311}
+    - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: punchImpulse
       value: 30
       objectReference: {fileID: 0}
@@ -40879,6 +40891,14 @@ PrefabInstance:
     - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: enemyLayer.m_Bits
       value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1419486856170676426, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: goombaStompRotationThreshold
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1634934622893517213, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -40920,6 +40940,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2916046406501991316, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 5252524867374529993, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: drag
       value: 5
@@ -40955,7 +40979,7 @@ PrefabInstance:
       objectReference: {fileID: 147472150}
     - target: {fileID: 2846594166316540840, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
       propertyPath: m_VersionIndex
-      value: 2093
+      value: 2096
       objectReference: {fileID: 0}
     - target: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
       propertyPath: m_Name
