@@ -13,6 +13,11 @@ public class PlayerHands : MonoBehaviour
     [Header("Grab Settings")]
     [SerializeField] float grabRange = 5;
 
+    [Header("Feedback Settings")]
+    [SerializeField] float camShakeMagnitude = 0.1f;
+    [SerializeField] float camShakeDuration = 0.2f;
+    [SerializeField] float hitStopDuration = 0.05f;
+
     [Header("Debugging")]
     [SerializeField] int currentPunch = 0;
     [SerializeField] int pummel = 0;
@@ -52,6 +57,7 @@ public class PlayerHands : MonoBehaviour
         {
             HandleGrab();
         }
+        HandleRelease();
     }
 
     void HandlePunch()
@@ -92,6 +98,14 @@ public class PlayerHands : MonoBehaviour
         }
     }
 
+    void HandleRelease()
+    {
+        if (!grabbing || punching || kicking || Input.GetMouseButton(1)) return;
+        playerAim.ReleaseGrabbedEnemy();
+        animator.Play("HandIdle", -1, 0);
+        ResetGrab();
+    }
+
     void EnablePunching()
     {
         canPunch = true;
@@ -119,7 +133,8 @@ public class PlayerHands : MonoBehaviour
         canKick = false;
         kicking = true;
         animator.SetBool("Kicking", kicking);
-        animator.Play("Kick", -1, 0);
+        animator.Play(grabbing ? "HandGrabKick" : "Kick", -1, 0);
+        ResetGrab();
     }
 
     void EnableKicking()
@@ -158,5 +173,20 @@ public class PlayerHands : MonoBehaviour
     void LaunchGrabbedEnemy()
     {
         playerAim.LaunchGrabbedEnemy();
+    }
+
+    void KickLaunchGrabbedEnemy()
+    {
+        playerAim.KickLaunchGrabbedEnemy();
+    }
+
+    void ShakeCamera(float magnitude)
+    {
+        playerAim.ShakeCamera(magnitude, magnitude * 2);
+    }
+
+    void HitStop(float duration)
+    {
+        playerAim.HitStop(duration);
     }
 }

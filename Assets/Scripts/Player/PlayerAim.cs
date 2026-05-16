@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PlayerAim : MonoBehaviour
 {
+    [SerializeField] Transform groundCheck;
+    [SerializeField] LayerMask groundLayer;
     [SerializeField] Camera mainCamera;
     [SerializeField] LayerMask enemyLayer;
     [SerializeField] float camShakeMagnitude = 0.1f;
@@ -10,9 +12,11 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float hitStopDuration = 0.05f;
     [SerializeField] float punchImpulse = 40;
     [SerializeField] float enemyRagdollLaunchForce = 200;
+    [SerializeField] float goombaStompRotationThreshold;
+    [SerializeField] float goombaStompLaunchForce = 10;
     [SerializeField] Transform playerCamera;
-    [SerializeField] bool grabbing = false;
     [SerializeField] EnemyPrototype grabbedEnemy;
+
 
     Coroutine camShakeRoutine;
     Transform orientation;
@@ -30,9 +34,10 @@ public class PlayerAim : MonoBehaviour
     void Update()
     {
 
+        Debug.Log(Mathf.Rad2Deg * mainCamera.transform.localRotation.x);
     }
 
-    void ShakeCamera(float magnitude, float duration)
+    public void ShakeCamera(float magnitude, float duration)
     {
         if (camShakeRoutine != null)
         {
@@ -41,7 +46,7 @@ public class PlayerAim : MonoBehaviour
         camShakeRoutine = StartCoroutine(CamShakeRoutine(magnitude, duration));
     }
 
-    void HitStop(float duration)
+    public void HitStop(float duration)
     {
         StartCoroutine(HitStopRoutine(duration));
     }
@@ -105,6 +110,7 @@ public class PlayerAim : MonoBehaviour
             ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
             HitStop(hitStopDuration * 2);
             enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
+            GoombaStomp();
         }
     }
 
@@ -118,7 +124,6 @@ public class PlayerAim : MonoBehaviour
             Debug.Log("Enemy Grabbed!");
             grabbedEnemy = hit.transform.GetComponent<EnemyPrototype>();
             grabbedEnemy.DisableRendering();
-            grabbing = true;
             return true;
         }
         return false;
@@ -126,10 +131,38 @@ public class PlayerAim : MonoBehaviour
 
     public void LaunchGrabbedEnemy()
     {
+        LaunchGrabbedEnemy(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
+    }
+
+    public void KickLaunchGrabbedEnemy()
+    {
+        LaunchGrabbedEnemy(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
+        GoombaStomp();
+    }
+
+    public void LaunchGrabbedEnemy(float launchForce, float torque, Vector3 direction)
+    {
         if (grabbedEnemy == null) return;
-        grabbedEnemy.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized, mainCamera.transform.position + cameraForward() * 1.2f);
+        grabbedEnemy.SpawnRagdoll(launchForce, torque, direction, GrabPoint());
         grabbedEnemy = null;
-        grabbing = false;
+    }
+
+    public void ReleaseGrabbedEnemy()
+    {
+        if (grabbedEnemy == null) return;
+        grabbedEnemy.SpawnRagdoll(10, 0, cameraForward(), GrabPoint()); 
+        grabbedEnemy = null;
+    }
+
+    Vector3 GrabPoint()
+    {
+        return mainCamera.transform.position + cameraForward() * 1.2f - mainCamera.transform.up * 0.5f;
+    }
+
+    void GoombaStomp()
+    {
+        if (Mathf.Rad2Deg * mainCamera.transform.localRotation.x < goombaStompRotationThreshold || Grounded()) return;
+        rb.AddForce(Vector3.up * goombaStompLaunchForce, ForceMode.Impulse);
     }
 
     public void Impulse(float impulse)
@@ -139,5 +172,10 @@ public class PlayerAim : MonoBehaviour
             return;
         }
         rb.AddForce(orientation.forward * impulse, ForceMode.Impulse);
+    }
+
+    bool Grounded()
+    {
+        return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer);
     }
 }
