@@ -588,8 +588,8 @@ MonoBehaviour:
   _drag: 5
   _crouchDrag: 13
   _slideDrag: 0.4
-  _minSpeedToSlide: 8
-  _minSpeedToWallRun: 8
+  _minSpeedToSlide: 10
+  _minSpeedToWallRun: 10
 --- !u!114 &5965988180505858191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -615,6 +615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db76d745ee791e41bc92e3c6bab4c62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundCheck: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
   mainCamera: {fileID: 8297509302159673110}
   enemyLayer:
     serializedVersion: 2
@@ -624,7 +628,10 @@ MonoBehaviour:
   hitStopDuration: 0.05
   punchImpulse: 40
   enemyRagdollLaunchForce: 200
+  goombaStompRotationThreshold: 0
+  goombaStompLaunchForce: 10
   playerCamera: {fileID: 0}
+  grabbedEnemy: {fileID: 0}
 --- !u!114 &4894696837237669104
 MonoBehaviour:
   m_ObjectHideFlags: 0
