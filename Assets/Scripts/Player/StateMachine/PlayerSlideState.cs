@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class PlayerSlideState : PlayerBaseState
 {
+    const float SLIDE_CAMERA_OFFSET = 0.9f;
+
+    const float SLIDE_COLLISION_CENTER_Y = 0.5f;
+
     public PlayerSlideState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory){}
     public override void EnterState()
@@ -36,25 +40,24 @@ public class PlayerSlideState : PlayerBaseState
     void LieDown()
     {
         CapsuleCollider collision = _context.CollisionCapsule;
+        if(collision.height < _context.InitCollisionHeight)
+        {
+            collision.height = _context.SLIDE_COLLISION_HEIGHT;
+            return;
+        }
+
         collision.height = _context.SLIDE_COLLISION_HEIGHT;
         collision.center = new Vector3(
             collision.center.x, 
-            -_context.SLIDE_COLLISION_CENTER_Y, 
+            -SLIDE_COLLISION_CENTER_Y, 
             collision.center.z
-        );
-
-        Transform groundCheck = _context.GroundCollision;
-        groundCheck.localPosition = new Vector3(
-            groundCheck.localPosition.x, 
-            _context.InitGroundCheckY, 
-            groundCheck.localPosition.z
         );
         
         Transform cameraTransform = _context.CameraTransform;
         Vector3 initCameraPos = _context.InitCameraPos;
         cameraTransform.localPosition = new Vector3(
             initCameraPos.x, 
-            initCameraPos.y - _context.SLIDE_CAMERA_OFFSET, 
+            initCameraPos.y - SLIDE_CAMERA_OFFSET, 
             initCameraPos.z
         );
     }

@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class PlayerRunState : PlayerBaseState
 {
+    float _crouchTimer;
     public PlayerRunState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory){}
     public override void EnterState()
     {
         Debug.Log("Run");
         _context.CurrentDrag = _context.Drag;
-        StandUp();
+        _context.StandUp();
     }
     public override void UpdateState()
     {
@@ -25,27 +26,12 @@ public class PlayerRunState : PlayerBaseState
                 new Vector3(1,0,1)
             ).magnitude; 
             
-            if(horizontalSpeed < _context.MinSpeedToSlide)
+            if(horizontalSpeed < _context.MinSpeedToSlide && _crouchTimer <= 0)
+            {
                 SwitchState(_factory.Crouch());
+            }
         }
     }
     public override void InitializeSubState(){}
 
-    void StandUp()
-    {
-        CapsuleCollider collision = _context.CollisionCapsule;
-
-        collision.center = new Vector3(collision.center.x, _context.InitCollisionPosY, collision.center.z);
-        collision.height = _context.InitCollisionHeight;
-
-        Transform cameraTransform = _context.CameraTransform;
-        cameraTransform.localPosition = _context.InitCameraPos;
-
-        Transform groundCheck = _context.GroundCollision;
-        groundCheck.localPosition = new Vector3(
-            groundCheck.localPosition.x, 
-            _context.InitGroundCheckY, 
-            groundCheck.localPosition.z
-        );
-    }
 }

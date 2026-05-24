@@ -35,4 +35,12 @@ public class PlayerStateFactory
     {
         return new PlayerFreefallState(_context, this);
     }
+    public PlayerWallRunState WallRun()
+    {
+        return new PlayerWallRunState(_context, this);
+    }
+    public PlayerAirCrouchState AirCrouch()
+    {
+        return new PlayerAirCrouchState(_context, this);
+    }
 }

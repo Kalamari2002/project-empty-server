@@ -539,6 +539,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundCheck: {fileID: 3144895975389547248}
   cameraTransform: {fileID: 759467350592687854}
+  wallCheckOrigin: {fileID: 1875896232990815028}
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 256
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -553,6 +557,7 @@ MonoBehaviour:
   _crouchDrag: 13
   _slideDrag: 0.4
   _minSpeedToSlide: 8
+  _minSpeedToWallRun: 8
 --- !u!114 &5965988180505858191
 MonoBehaviour:
   m_ObjectHideFlags: 0

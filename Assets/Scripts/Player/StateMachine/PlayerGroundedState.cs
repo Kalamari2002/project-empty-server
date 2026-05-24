@@ -28,7 +28,6 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void ExitState()
     {
-        
     }
     public override void CheckSwitchStates()
     {

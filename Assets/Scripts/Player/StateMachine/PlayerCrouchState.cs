@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerCrouchState : PlayerBaseState
 {
+    const float CROUCH_CAMERA_Y_OFFSET = 0.5f; 
+
     public PlayerCrouchState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory){}
     public override void EnterState()
@@ -31,25 +33,33 @@ public class PlayerCrouchState : PlayerBaseState
     void Crouch()
     {
         CapsuleCollider collision = _context.CollisionCapsule;
-        collision.height = _context.CROUCH_COLLISION_HEIGHT;
-        collision.center = new Vector3(
-            collision.center.x, 
-            -_context.CROUCH_COLLISION_CENTER_Y, 
-            collision.center.z
-        );
+        if(collision.height == _context.CROUCH_COLLISION_HEIGHT) // If we're already crouched, skip
+            return;
         
+        collision.height = _context.CROUCH_COLLISION_HEIGHT;
+
+        bool wasAirCrouching = collision.center.y > _context.InitCollisionPosY;
+        if(wasAirCrouching) // If we were air crouching, don't adjust the groundCheck or collision capsule position
+            return;
+
         Transform groundCheck = _context.GroundCollision;
         groundCheck.localPosition = new Vector3(
             groundCheck.localPosition.x, 
             _context.InitGroundCheckY, 
             groundCheck.localPosition.z
         );
-        
+
+        collision.center = new Vector3(
+            collision.center.x, 
+            -_context.CROUCH_COLLISION_CENTER_Y, 
+            collision.center.z
+        );   
+
         Transform cameraTransform = _context.CameraTransform;
         Vector3 initCameraPos = _context.InitCameraPos;
         cameraTransform.localPosition = new Vector3(
             initCameraPos.x, 
-            initCameraPos.y - _context.CROUCH_CAMERA_OFFSET, 
+            collision.center.y + CROUCH_CAMERA_Y_OFFSET, 
             initCameraPos.z
         );
     }

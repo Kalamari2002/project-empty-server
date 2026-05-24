@@ -23,8 +23,8 @@ public class PlayerMoveState : PlayerBaseState
     }
     public override void ExitState(){}
     public override void CheckSwitchStates()
-    {
-        if (_context.IsCrouchPressed)
+    {   
+        if (_context.IsCrouchPressed && _context.VerticalInput == 1.0f)
         {
             float horizontalVelocity = Vector3.Scale(
                 _context.PlayerRigidBody.linearVelocity, 
