@@ -477,6 +477,7 @@ GameObject:
   - component: {fileID: 1634934622893517213}
   - component: {fileID: 2025614298287622961}
   - component: {fileID: 5252524867374529993}
+  - component: {fileID: 1088077972582368465}
   - component: {fileID: 5965988180505858191}
   - component: {fileID: 1419486856170676426}
   - component: {fileID: 4894696837237669104}
@@ -538,7 +539,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8142240636484815424}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 614460200dd4fe74990c58c51f09b7b8, type: 3}
   m_Name: 
@@ -556,6 +557,39 @@ MonoBehaviour:
   drag: 5
   crouchDrag: 13
   slideDrag: 0.4
+--- !u!114 &1088077972582368465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142240636484815424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bcd3e13a0b5b604489ef8236cc06ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheck: {fileID: 3144895975389547248}
+  cameraTransform: {fileID: 759467350592687854}
+  wallCheckOrigin: {fileID: 1875896232990815028}
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  collision: {fileID: 2916046406501991316}
+  _groundSpeed: 70
+  _airSpeed: 6
+  _jumpForce: 5
+  _airMultiplier: 0.8
+  _maxGroundSpeed: 15
+  _maxAirSpeed: 20
+  _drag: 5
+  _crouchDrag: 13
+  _slideDrag: 0.4
+  _minSpeedToSlide: 10
+  _minSpeedToWallRun: 10
 --- !u!114 &5965988180505858191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,6 +615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db76d745ee791e41bc92e3c6bab4c62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundCheck: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
   mainCamera: {fileID: 8297509302159673110}
   enemyLayer:
     serializedVersion: 2
@@ -590,7 +628,10 @@ MonoBehaviour:
   hitStopDuration: 0.05
   punchImpulse: 40
   enemyRagdollLaunchForce: 200
+  goombaStompRotationThreshold: 0
+  goombaStompLaunchForce: 10
   playerCamera: {fileID: 0}
+  grabbedEnemy: {fileID: 0}
 --- !u!114 &4894696837237669104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,8 +662,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e6c5a7d47211e488ddc8eb5b251132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minBuildUpVel: 8
-  cameraTransform: {fileID: 147343476905857380}
+  minSpeedToSlide: 0
+  cameraTransform: {fileID: 759467350592687854}
   collision: {fileID: 2916046406501991316}
   groundCheck: {fileID: 3144895975389547248}
 --- !u!1 &8362820426947322467
