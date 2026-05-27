@@ -7,6 +7,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Camera mainCamera;
     [SerializeField] LayerMask enemyLayer;
+    [SerializeField] LayerMask enemyRagdoll;
     [SerializeField] float camShakeMagnitude = 0.1f;
     [SerializeField] float camShakeDuration = 0.2f;
     [SerializeField] float hitStopDuration = 0.05f;
@@ -16,7 +17,6 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float goombaStompLaunchForce = 10;
     [SerializeField] Transform playerCamera;
     [SerializeField] EnemyPrototype grabbedEnemy;
-
 
     Coroutine camShakeRoutine;
     Transform orientation;
@@ -34,7 +34,6 @@ public class PlayerAim : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(Mathf.Rad2Deg * mainCamera.transform.localRotation.x);
     }
 
     public void ShakeCamera(float magnitude, float duration)
@@ -84,12 +83,20 @@ public class PlayerAim : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, punchRange, enemyLayer))
         {
-            Debug.Log("Enemy Hit!");
-            EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
-            enemyPrototype.TakeDamage(damage, damageAnimation);
-            if (damageAnimation == 3)
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
+                Debug.Log("Enemy Hit!"); EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
+                enemyPrototype.TakeDamage(damage, damageAnimation);
+                if (damageAnimation == 3)
+                {
+                    enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
+                }
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
+            {
+                Debug.Log("Enemy Ragdoll Hit!");
+                hit.transform.GetComponent<Rigidbody>().AddForce(enemyRagdollLaunchForce * (cameraForward() + Vector3.up).normalized, ForceMode.Impulse);
+                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
             }
             ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
             HitStop(hitStopDuration * damage / 10);
@@ -103,14 +110,23 @@ public class PlayerAim : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, kickRange, enemyLayer))
         {
-            Debug.Log("Enemy Kicked!");
-            EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
-            enemyPrototype.TakeDamage(damage);
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                Debug.Log("Enemy Kicked!");
+                EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
+                enemyPrototype.TakeDamage(damage);
+                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
+                GoombaStomp();
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
+            {
+                Debug.Log("Enemy Ragdoll Kicked!");
+                hit.transform.GetComponent<Rigidbody>().AddForce(enemyRagdollLaunchForce * 1.5f * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
+                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+            }
             float camShakeFactor = 20;
             ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
             HitStop(hitStopDuration * 2);
-            enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
-            GoombaStomp();
         }
     }
 
@@ -121,9 +137,18 @@ public class PlayerAim : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, grabRange, enemyLayer))
         {
-            Debug.Log("Enemy Grabbed!");
-            grabbedEnemy = hit.transform.GetComponent<EnemyPrototype>();
-            grabbedEnemy.DisableRendering();
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                Debug.Log("Enemy Grabbed!");
+                grabbedEnemy = hit.transform.GetComponent<EnemyPrototype>();
+                grabbedEnemy.DisableRendering();
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
+            {
+                Debug.Log("Enemy Ragdoll Grabbed!");
+                grabbedEnemy = hit.transform.root.GetComponent<EnemyRagdoll>().GetParentEnemy();
+                grabbedEnemy.DestroyActiveRagdoll();
+            }
             return true;
         }
         return false;

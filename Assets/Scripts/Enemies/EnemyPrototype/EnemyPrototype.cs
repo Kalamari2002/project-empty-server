@@ -52,6 +52,7 @@ public class EnemyPrototype : MonoBehaviour
         if (ActiveRagdoll == null)
         {
             ActiveRagdoll = Instantiate(Ragdoll, spawnPoint, Quaternion.identity);
+            ActiveRagdoll.GetComponent<EnemyRagdoll>().SetUp(this);
             ActiveRagdoll.transform.forward = -launchDirection;
         }
         Rigidbody ragdollRb = ActiveRagdoll.GetComponent<Rigidbody>();
@@ -72,7 +73,7 @@ public class EnemyPrototype : MonoBehaviour
     void HandleRagdoll()
     {
         if (!ragdollMode) return;
-        ragdollCountDown -= Time.deltaTime;
+        //ragdollCountDown -= Time.deltaTime;
         if (ragdollCountDown <= 0)
         {
             transform.position = new Vector3(ActiveRagdoll.transform.position.x, transform.position.y, ActiveRagdoll.transform.position.z);
@@ -84,6 +85,23 @@ public class EnemyPrototype : MonoBehaviour
             ragdollMode = false;
             capsuleCollider.enabled = true;
         }
+    }
+
+    public void WakeUpFromRagdoll()
+    {
+        transform.position = new Vector3(ActiveRagdoll.transform.position.x, transform.position.y, ActiveRagdoll.transform.position.z);
+        ragdollCountDown = ragdollDuration;
+        DestroyActiveRagdoll();
+        controller.enabled = true;
+        spriteRenderer.enabled = true;
+        ragdollMode = false;
+        capsuleCollider.enabled = true;
+    }
+
+    public void DestroyActiveRagdoll()
+    {
+        Destroy(ActiveRagdoll);
+        ActiveRagdoll = null;
     }
 
     void Move()
