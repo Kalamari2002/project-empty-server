@@ -118,7 +118,7 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState.FixedUpdateStates();
     }
 
-    void Jump()
+    public void Jump()
     {
         if (!Grounded) return;
         if (Input.GetKeyDown(KeyCode.Space))

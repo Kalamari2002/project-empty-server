@@ -13,6 +13,7 @@ public class PlayerRunState : PlayerBaseState
     }
     public override void UpdateState()
     {
+        _context.Jump();
         CheckSwitchStates();
     }
     public override void FixedUpdateState(){}
