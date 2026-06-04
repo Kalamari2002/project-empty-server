@@ -15,7 +15,7 @@ public class PlayerSlideState : PlayerBaseState
     }
     public override void EnterState()
     {
-        Debug.Log("Slide");
+        _context.OnEnterState("Slide");
         _context.CurrentDrag = _context.SlideDrag;
         LieDown();
     }

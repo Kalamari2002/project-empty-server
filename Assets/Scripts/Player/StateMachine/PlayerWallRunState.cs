@@ -10,7 +10,7 @@ public class PlayerWallRunState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("WallRun");
+        _context.OnEnterState("WallRun");
     }
     public override void UpdateState()
     {

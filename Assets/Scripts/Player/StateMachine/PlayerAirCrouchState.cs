@@ -11,8 +11,8 @@ public class PlayerAirCrouchState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("Air Crouch");
         Crouch();
+        _context.OnEnterState("AirCrouch");
     }
     public override void UpdateState()
     {
@@ -33,9 +33,7 @@ public class PlayerAirCrouchState : PlayerBaseState
     void Crouch()
     {
         CapsuleCollider collision = _context.CollisionCapsule;
-        // if(collision.height == _context.CROUCH_COLLISION_HEIGHT)
-        //     return;
-        
+
         collision.height = _context.CROUCH_COLLISION_HEIGHT;
         Transform groundCheck = _context.GroundCollision;
         groundCheck.localPosition = new Vector3(

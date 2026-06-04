@@ -1,38 +1,60 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
-public class PlayerDebugging : MonoBehaviour
+public class PlayerDebugging : MonoBehaviour, Subscriber
 {
     [Header("Settings")]
     [SerializeField] bool logLinearVelocity;
-
+    LinkedList<string> stateHistory;
     TextMeshProUGUI speedTracker;
-    TextMeshProUGUI canWallRun;
-    TextMeshProUGUI isWallRunning;
+    TextMeshProUGUI stateTracker;
     Rigidbody rb;
-    PlayerWallRun wr;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        wr = GetComponent<PlayerWallRun>();
         speedTracker = GameObject.Find("Speed Tracker").GetComponent<TextMeshProUGUI>();
-        canWallRun = GameObject.Find("CanWallRun").GetComponent<TextMeshProUGUI>();
-        isWallRunning = GameObject.Find("IsWallRunning").GetComponent<TextMeshProUGUI>();
+        stateTracker = GameObject.Find("State Tracker").GetComponent<TextMeshProUGUI>();
+        stateHistory = new LinkedList<string>();
+        FindFirstObjectByType<GameStateManager>().AddSubscriber(this);     
     }
 
-    // Update is called once per frame
     void Update()
     {
         speedTracker.text = rb.linearVelocity.magnitude.ToString();
-        isWallRunning.text = "IsWallRunning: " + wr.GetIsWallRunning().ToString();
-        canWallRun.text = "CanWallRun: " + wr.GetCanWallRun().ToString();
         
         if (logLinearVelocity )
         {
             Debug.Log(rb.linearVelocity.magnitude);
+        }
+
+        stateTracker.text = GetStateHistory();
+    }
+
+    string GetStateHistory()
+    {
+        string history = "";
+        foreach (string state in stateHistory)
+        {
+            history += state + " > ";
+        }
+        return history;
+    }
+
+    public void notify(EventMessage message)
+    {
+        switch (message.title)
+        {
+            case GameStateMessages.PLAYER_ENTER_STATE_MESSAGE_TITLE:
+                string stateName = (string)message.arguments[0];
+                stateHistory.AddLast(stateName);
+                break;
+            case GameStateMessages.PLAYER_EXIT_STATE_MESSAGE_TITLE:
+                stateHistory.RemoveLast();
+                break;
         }
     }
 }

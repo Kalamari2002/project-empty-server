@@ -12,7 +12,7 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("Grounded");
+        _context.OnEnterState("Grounded");
     }
     public override void UpdateState()
     {

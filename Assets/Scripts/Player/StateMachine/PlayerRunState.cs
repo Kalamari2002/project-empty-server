@@ -7,7 +7,7 @@ public class PlayerRunState : PlayerBaseState
     :base(context, factory){}
     public override void EnterState()
     {
-        Debug.Log("Run");
+        _context.OnEnterState("Run");
         _context.CurrentDrag = _context.Drag;
         _context.StandUp();
     }

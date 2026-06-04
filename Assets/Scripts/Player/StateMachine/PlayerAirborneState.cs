@@ -12,7 +12,7 @@ public class PlayerAirborneState : PlayerBaseState
     public override void EnterState()
     {
         _context.CurrentDrag = 0;
-        Debug.Log("Airborne");
+        _context.OnEnterState("Airborne");
     }
     public override void UpdateState()
     {

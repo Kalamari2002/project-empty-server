@@ -13,7 +13,7 @@ public class PlayerFreefallState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("Freefall");
+        _context.OnEnterState("Freefall");
     }
     public override void UpdateState()
     {
