@@ -6,14 +6,12 @@ public class PlayerGroundedState : PlayerBaseState
     public PlayerGroundedState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
-        InitializeSubState();
+        StateName = "Grounded";
         _isRootState = true;
+        InitializeSubState();
     }
 
-    public override void EnterState()
-    {
-        _context.OnEnterState("Grounded");
-    }
+    public override void EnterState(){}
     public override void UpdateState()
     {
         CheckSwitchStates();
@@ -23,9 +21,7 @@ public class PlayerGroundedState : PlayerBaseState
         _context.PlayerRigidBody.linearDamping = _context.CurrentDrag;
         LimitSpeed();
     }
-    public override void ExitState()
-    {
-    }
+    public override void ExitState(){}
     public override void CheckSwitchStates()
     {
         if (!_context.Grounded)

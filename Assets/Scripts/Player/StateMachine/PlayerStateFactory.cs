@@ -31,6 +31,10 @@ public class PlayerStateFactory
     {
         return new PlayerAirborneState(_context, this);
     }
+    public PlayerAirMoveState AirMove()
+    {
+        return new PlayerAirMoveState(_context, this);
+    }
     public PlayerFreefallState Freefall()
     {
         return new PlayerFreefallState(_context, this);

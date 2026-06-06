@@ -11,11 +11,11 @@ public class PlayerSlideState : PlayerBaseState
     public PlayerSlideState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
+        StateName = "Slide";
         _jumpCooldown = JUMP_COOLDOWN_AFTER_SLIDE;
     }
     public override void EnterState()
     {
-        _context.OnEnterState("Slide");
         _context.CurrentDrag = _context.SlideDrag;
         LieDown();
     }
@@ -29,10 +29,7 @@ public class PlayerSlideState : PlayerBaseState
         CheckSwitchStates();
     }
     public override void FixedUpdateState(){}
-    public override void ExitState()
-    {
-
-    }
+    public override void ExitState(){}
     public override void CheckSwitchStates()
     {
         float minSpeedToStopSlide = 3.8f;

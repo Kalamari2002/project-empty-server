@@ -12,7 +12,8 @@ public class PlayerDebugging : MonoBehaviour, Subscriber
     TextMeshProUGUI stateTracker;
     Rigidbody rb;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    PlayerStateMachine playerStateMachine;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -20,6 +21,7 @@ public class PlayerDebugging : MonoBehaviour, Subscriber
         stateTracker = GameObject.Find("State Tracker").GetComponent<TextMeshProUGUI>();
         stateHistory = new LinkedList<string>();
         FindFirstObjectByType<GameStateManager>().AddSubscriber(this);     
+        playerStateMachine = GetComponent<PlayerStateMachine>();
     }
 
     void Update()
@@ -32,16 +34,19 @@ public class PlayerDebugging : MonoBehaviour, Subscriber
         }
 
         stateTracker.text = GetStateHistory();
+        Debug.Log(GetStateHistory());
     }
 
     string GetStateHistory()
     {
-        string history = "";
-        foreach (string state in stateHistory)
-        {
-            history += state + " > ";
-        }
-        return history;
+        PlayerBaseState activeState = playerStateMachine.CurrentState.GetActiveState();
+        return activeState.StateName;
+        // string history = "";
+        // foreach (string state in stateHistory)
+        // {
+        //     history += state + " > ";
+        // }
+        // return history;
     }
 
     public void notify(EventMessage message)
@@ -53,7 +58,8 @@ public class PlayerDebugging : MonoBehaviour, Subscriber
                 stateHistory.AddLast(stateName);
                 break;
             case GameStateMessages.PLAYER_EXIT_STATE_MESSAGE_TITLE:
-                stateHistory.RemoveLast();
+                if(stateHistory.Count > 1)            
+                    stateHistory.RemoveLast();
                 break;
         }
     }

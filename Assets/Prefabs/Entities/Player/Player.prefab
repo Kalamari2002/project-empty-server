@@ -551,7 +551,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   collision: {fileID: 2916046406501991316}
-  _groundSpeed: 70
+  _groundSpeed: 60
   _airSpeed: 6
   _jumpForce: 5
   _airMultiplier: 0.8

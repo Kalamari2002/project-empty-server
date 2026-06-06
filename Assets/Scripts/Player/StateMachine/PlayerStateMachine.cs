@@ -90,11 +90,6 @@ public class PlayerStateMachine : MonoBehaviour
 
     public PlayerAim Aim { get { return playerAim; } }
 
-    void Awake()
-    {
-        _gameStateManager = FindFirstObjectByType<GameStateManager>();
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -103,6 +98,8 @@ public class PlayerStateMachine : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
         
+        _gameStateManager = FindFirstObjectByType<GameStateManager>();
+
         _currDrag = _drag;
         _initGroundCheckY =  groundCheck.localPosition.y;
         _initCollisionPosY = collision.center.y;
@@ -177,7 +174,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     public void OnExitState(string stateName)
     {
-        // _gameStateManager.PlayerExitState(stateName);
+        _gameStateManager.PlayerExitState(stateName);
     }
 
 }

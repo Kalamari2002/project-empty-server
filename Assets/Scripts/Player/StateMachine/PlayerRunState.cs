@@ -4,10 +4,12 @@ public class PlayerRunState : PlayerBaseState
 {
     float _crouchTimer;
     public PlayerRunState(PlayerStateMachine context, PlayerStateFactory factory)
-    :base(context, factory){}
+    :base(context, factory)
+    {
+        StateName = "Run";
+    }
     public override void EnterState()
     {
-        _context.OnEnterState("Run");
         _context.CurrentDrag = _context.Drag;
         _context.StandUp();
     }

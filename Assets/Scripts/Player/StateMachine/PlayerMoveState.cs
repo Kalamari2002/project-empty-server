@@ -1,4 +1,3 @@
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class PlayerMoveState : PlayerBaseState
@@ -6,13 +5,11 @@ public class PlayerMoveState : PlayerBaseState
     public PlayerMoveState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
+        StateName = "Move";
         InitializeSubState();
     }
     
-    public override void EnterState()
-    {
-        _context.OnEnterState("Move");
-    }
+    public override void EnterState(){}
     public override void UpdateState()
     {
         CheckSwitchStates();

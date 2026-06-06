@@ -7,12 +7,12 @@ public class PlayerAirCrouchState : PlayerBaseState
     public PlayerAirCrouchState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
+        StateName = "AirCrouch";
     }
 
     public override void EnterState()
     {
         Crouch();
-        _context.OnEnterState("AirCrouch");
     }
     public override void UpdateState()
     {
@@ -25,8 +25,10 @@ public class PlayerAirCrouchState : PlayerBaseState
     }
     public override void CheckSwitchStates()
     {
-        if(!_context.IsCrouchPressed)
-            ExitState();
+        if (!_context.IsCrouchPressed)
+        {
+            SwitchState(_factory.Freefall());
+        }
     }
     public override void InitializeSubState(){}
 
