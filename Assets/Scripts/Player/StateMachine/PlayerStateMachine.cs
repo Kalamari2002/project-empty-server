@@ -167,14 +167,4 @@ public class PlayerStateMachine : MonoBehaviour
         );
     }
 
-    public void OnEnterState(string stateName)
-    {
-        _gameStateManager.PlayerEnterState(stateName);
-    }
-
-    public void OnExitState(string stateName)
-    {
-        _gameStateManager.PlayerExitState(stateName);
-    }
-
 }
