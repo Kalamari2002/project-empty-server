@@ -72,7 +72,7 @@ public abstract class PlayerBaseState
         newSubState.SetSuperState(this);
     }
 
-    public PlayerBaseState GetActiveState()
+    public PlayerBaseState GetDeepestActiveState()
     {
         if(!_isRootState)
             return null;
