@@ -3,29 +3,35 @@ using UnityEngine;
 public class PlayerSlideState : PlayerBaseState
 {
     const float SLIDE_CAMERA_OFFSET = 0.9f;
-
     const float SLIDE_COLLISION_CENTER_Y = 0.5f;
+    const float JUMP_COOLDOWN_AFTER_SLIDE = .9f;
+    
+    float _jumpCooldown = 0;
 
     public PlayerSlideState(PlayerStateMachine context, PlayerStateFactory factory)
-    :base(context, factory){}
+    :base(context, factory)
+    {
+        StateName = "Slide";
+        _jumpCooldown = JUMP_COOLDOWN_AFTER_SLIDE;
+    }
     public override void EnterState()
     {
-        Debug.Log("Slide");
         _context.CurrentDrag = _context.SlideDrag;
         LieDown();
     }
     public override void UpdateState()
     {
+        if (_jumpCooldown <= 0)
+        {
+            _context.Jump();
+        }
+        _jumpCooldown -= Time.deltaTime;
         CheckSwitchStates();
     }
     public override void FixedUpdateState(){}
-    public override void ExitState()
-    {
-
-    }
+    public override void ExitState(){}
     public override void CheckSwitchStates()
     {
-        //TODO: If press jump go airborne
         float minSpeedToStopSlide = 3.8f;
         if (
             !_context.IsCrouchPressed 

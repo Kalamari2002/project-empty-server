@@ -4,15 +4,18 @@ public class PlayerRunState : PlayerBaseState
 {
     float _crouchTimer;
     public PlayerRunState(PlayerStateMachine context, PlayerStateFactory factory)
-    :base(context, factory){}
+    :base(context, factory)
+    {
+        StateName = "Run";
+    }
     public override void EnterState()
     {
-        Debug.Log("Run");
         _context.CurrentDrag = _context.Drag;
         _context.StandUp();
     }
     public override void UpdateState()
     {
+        _context.Jump();
         CheckSwitchStates();
     }
     public override void FixedUpdateState(){}

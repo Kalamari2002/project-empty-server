@@ -3,7 +3,6 @@
 * Contains variables needed for different states to work
 */
 using UnityEngine;
-
 public class PlayerStateMachine : MonoBehaviour
 {
 
@@ -37,17 +36,19 @@ public class PlayerStateMachine : MonoBehaviour
 
     Rigidbody rb;
     Transform orientation;
-
     PlayerAim playerAim;
 
     PlayerBaseState _currentState;
     PlayerStateFactory _states;
+
+    GameStateManager _gameStateManager;
 
     public PlayerBaseState CurrentState { get{return _currentState;} set{_currentState = value;} }
 
     public Rigidbody PlayerRigidBody { get{ return rb; } }
     public Transform PlayerOrientation { get{ return orientation; } }
     public Transform WallCheckOrigin { get { return wallCheckOrigin; } }
+
     public bool Grounded { get{ return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer); }}
     public bool PressedJump { get { return Input.GetKeyDown(KeyCode.Space); } } 
     public bool IsDirectionPressed { get { return Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0; } }
@@ -73,7 +74,6 @@ public class PlayerStateMachine : MonoBehaviour
     public float VerticalInput { get{ return Input.GetAxisRaw("Vertical"); } }
     public float MinSpeedToWallRun { get { return _minSpeedToWallRun; } }
 
-
     public float CROUCH_COLLISION_HEIGHT { get { return 1.36367f; } }
     public float CROUCH_COLLISION_CENTER_Y { get { return 0.3181652f; } }
     public float CROUCH_COOLDOWN { get { return .5f; } }
@@ -93,10 +93,13 @@ public class PlayerStateMachine : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
         playerAim = GetComponent<PlayerAim>();
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
         
+        _gameStateManager = FindFirstObjectByType<GameStateManager>();
+
         _currDrag = _drag;
         _initGroundCheckY =  groundCheck.localPosition.y;
         _initCollisionPosY = collision.center.y;
@@ -106,6 +109,7 @@ public class PlayerStateMachine : MonoBehaviour
         _states = new PlayerStateFactory(this);
         _currentState = _states.Grounded();
         _currentState.EnterState();
+
     }
 
     // Update is called once per frame
@@ -118,7 +122,7 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState.FixedUpdateStates();
     }
 
-    void Jump()
+    public void Jump()
     {
         if (!Grounded) return;
         if (Input.GetKeyDown(KeyCode.Space))

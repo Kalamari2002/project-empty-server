@@ -8,7 +8,7 @@ public class PlayerCrouchState : PlayerBaseState
     :base(context, factory){}
     public override void EnterState()
     {
-        Debug.Log("Crouch");
+        StateName = "Crouch";
         _context.CurrentDrag = _context.CrouchDrag;
         Crouch();
     }
@@ -19,7 +19,6 @@ public class PlayerCrouchState : PlayerBaseState
     public override void FixedUpdateState(){}
     public override void ExitState()
     {
-
     }
     public override void CheckSwitchStates()
     {

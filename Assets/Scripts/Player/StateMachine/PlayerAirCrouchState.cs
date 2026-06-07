@@ -7,11 +7,11 @@ public class PlayerAirCrouchState : PlayerBaseState
     public PlayerAirCrouchState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
+        StateName = "AirCrouch";
     }
 
     public override void EnterState()
     {
-        Debug.Log("Air Crouch");
         Crouch();
     }
     public override void UpdateState()
@@ -25,17 +25,17 @@ public class PlayerAirCrouchState : PlayerBaseState
     }
     public override void CheckSwitchStates()
     {
-        if(!_context.IsCrouchPressed)
-            ExitState();
+        if (!_context.IsCrouchPressed)
+        {
+            SwitchState(_factory.Freefall());
+        }
     }
     public override void InitializeSubState(){}
 
     void Crouch()
     {
         CapsuleCollider collision = _context.CollisionCapsule;
-        // if(collision.height == _context.CROUCH_COLLISION_HEIGHT)
-        //     return;
-        
+
         collision.height = _context.CROUCH_COLLISION_HEIGHT;
         Transform groundCheck = _context.GroundCollision;
         groundCheck.localPosition = new Vector3(

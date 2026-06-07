@@ -2,23 +2,18 @@ using UnityEngine;
 
 public class PlayerGroundedState : PlayerBaseState
 {
+
     public PlayerGroundedState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
-        InitializeSubState();
+        StateName = "Grounded";
         _isRootState = true;
+        InitializeSubState();
     }
 
-    public override void EnterState()
-    {
-        Debug.Log("Grounded");
-    }
+    public override void EnterState(){}
     public override void UpdateState()
     {
-        if (_context.PressedJump)
-        {
-            Jump();
-        }
         CheckSwitchStates();
     }
     public override void FixedUpdateState()
@@ -26,9 +21,7 @@ public class PlayerGroundedState : PlayerBaseState
         _context.PlayerRigidBody.linearDamping = _context.CurrentDrag;
         LimitSpeed();
     }
-    public override void ExitState()
-    {
-    }
+    public override void ExitState(){}
     public override void CheckSwitchStates()
     {
         if (!_context.Grounded)
@@ -40,14 +33,6 @@ public class PlayerGroundedState : PlayerBaseState
     {
         SetSubState(_factory.Move());
         _currentSubState.EnterState();
-    }
-
-    void Jump()
-    {
-        Rigidbody rb = _context.PlayerRigidBody;
-
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        rb.AddForce(Vector3.up * _context.JumpForce, ForceMode.Impulse);
     }
 
     void LimitSpeed()

@@ -6,13 +6,13 @@ public class PlayerAirborneState : PlayerBaseState
     : base(context, factory)
     {
         _isRootState = true;
+        StateName = "Airborne";
         InitializeSubState();
     }
 
     public override void EnterState()
     {
         _context.CurrentDrag = 0;
-        Debug.Log("Airborne");
     }
     public override void UpdateState()
     {
@@ -37,7 +37,7 @@ public class PlayerAirborneState : PlayerBaseState
     }
     public override void InitializeSubState()
     {
-        SetSubState(_factory.Freefall());
+        SetSubState(_factory.AirMove());
     }
     void LimitSpeed()
     {

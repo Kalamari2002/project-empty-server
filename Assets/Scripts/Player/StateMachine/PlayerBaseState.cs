@@ -11,11 +11,13 @@ public abstract class PlayerBaseState
     protected PlayerStateMachine _context;
     protected PlayerStateFactory _factory;
     protected PlayerBaseState _currentSuperState, _currentSubState;
-    
+    string _stateName;
+    public string StateName { get { return _stateName; } set { _stateName = value; } }
     public PlayerBaseState(PlayerStateMachine context, PlayerStateFactory factory)
     {
         _context = context;
         _factory = factory;
+        _stateName = "";
     }
     
     public abstract void EnterState();
@@ -68,5 +70,19 @@ public abstract class PlayerBaseState
     {
         _currentSubState = newSubState;
         newSubState.SetSuperState(this);
+    }
+
+    public PlayerBaseState GetDeepestActiveState()
+    {
+        if(!_isRootState)
+            return null;
+        return ActiveStateHelper(this);
+    }
+
+    PlayerBaseState ActiveStateHelper(PlayerBaseState currentState)
+    {
+        if(currentState._currentSubState == null)
+            return currentState;
+        return ActiveStateHelper(currentState._currentSubState);
     }
 }

@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class PlayerWallRunState : PlayerBaseState
 {
-    const float FORWARD_FORCE = 3f; 
-    public float AWAY_FORCE = 5f; 
+    const float FORWARD_FORCE = 2.0f; 
+    public float AWAY_FORCE = 4f; 
 
     public PlayerWallRunState(PlayerStateMachine context, PlayerStateFactory factory)
-    :base(context, factory){}
-
-    public override void EnterState()
+    :base(context, factory)
     {
-        Debug.Log("WallRun");
+        StateName = "WallRun";
     }
+
+    public override void EnterState(){}
     public override void UpdateState()
     {
         CheckSwitchStates();
@@ -44,7 +44,7 @@ public class PlayerWallRunState : PlayerBaseState
         
         Rigidbody rb = _context.PlayerRigidBody;
         rb.AddForce(wallNormal * AWAY_FORCE, ForceMode.Impulse);
-        rb.AddForce(Vector3.up * _context.UP_FORCE, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * (_context.UP_FORCE / 1.2f), ForceMode.Impulse);
         rb.AddForce(direction * FORWARD_FORCE, ForceMode.Impulse);
     }
     void Jump()
