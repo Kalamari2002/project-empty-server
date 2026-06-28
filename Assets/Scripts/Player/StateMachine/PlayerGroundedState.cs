@@ -7,7 +7,7 @@ public class PlayerGroundedState : PlayerBaseState
     : base(context, factory)
     {
         StateName = "Grounded";
-        _isRootState = true;
+        isRootState = true;
         InitializeSubState();
     }
 
@@ -32,7 +32,7 @@ public class PlayerGroundedState : PlayerBaseState
     public override void InitializeSubState()
     {
         SetSubState(_factory.Move());
-        _currentSubState.EnterState();
+        currentSubState.EnterState();
     }
 
     void LimitSpeed()

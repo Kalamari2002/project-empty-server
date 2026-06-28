@@ -23,7 +23,7 @@ public class PlayerAirMoveState : PlayerBaseState
             float horizontalVelocity = Vector3.Scale(_context.PlayerRigidBody.linearVelocity, new Vector3(1,0,1)).magnitude;
             if(horizontalVelocity >= _context.MinSpeedToWallRun && _context.IsTouchingWall() == _context.HorizontalInput)
             {
-                _currentSubState.ExitState();
+                currentSubState.ExitState();
                 SwitchState(_factory.WallRun());
             } 
         }
@@ -34,6 +34,6 @@ public class PlayerAirMoveState : PlayerBaseState
             SetSubState(_factory.AirCrouch());
         else
             SetSubState(_factory.Freefall());
-        _currentSubState.EnterState();
+        currentSubState.EnterState();
     }
 }

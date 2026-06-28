@@ -34,7 +34,7 @@ public class PlayerDebugging : MonoBehaviour
 
     string GetStateHistory()
     {
-        PlayerBaseState activeState = playerStateMachine.CurrentState.GetDeepestActiveState();
-        return activeState.StateName;
+        BaseState activeState = playerStateMachine.CurrentState.GetDeepestActiveState();
+        return activeState.ToString();
     }
 }

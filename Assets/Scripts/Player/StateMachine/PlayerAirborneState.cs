@@ -5,7 +5,7 @@ public class PlayerAirborneState : PlayerBaseState
     public PlayerAirborneState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
-        _isRootState = true;
+        isRootState = true;
         StateName = "Airborne";
         InitializeSubState();
     }
@@ -26,7 +26,7 @@ public class PlayerAirborneState : PlayerBaseState
     }
     public override void ExitState()
     {
-        _currentSubState?.ExitState();
+        currentSubState?.ExitState();
     }
     public override void CheckSwitchStates()
     {

@@ -1,49 +1,49 @@
-public class PlayerStateFactory
+public class PlayerStateFactory : BaseStateFactory
 {
     PlayerStateMachine _context;
 
-    public PlayerStateFactory(PlayerStateMachine currentContext)
+    public PlayerStateFactory(PlayerStateMachine currentContext) : base(currentContext)
     {
         _context = currentContext;
     }
-    public PlayerBaseState Grounded()
+    public BaseState Grounded()
     {
         return new PlayerGroundedState(_context, this);
     }
-    public PlayerBaseState Move()
+    public BaseState Move()
     {
         return new PlayerMoveState(_context, this);
     }
-    public PlayerBaseState Slide()
+    public BaseState Slide()
     {
         return new PlayerSlideState(_context, this);   
     }
-    public PlayerBaseState Run()
+    public BaseState Run()
     {
         return new PlayerRunState(_context, this);
     }
-    public PlayerCrouchState Crouch()
+    public BaseState Crouch()
     {
         return new PlayerCrouchState(_context, this);
     }
 
-    public PlayerAirborneState Airborne()
+    public BaseState Airborne()
     {
         return new PlayerAirborneState(_context, this);
     }
-    public PlayerAirMoveState AirMove()
+    public BaseState AirMove()
     {
         return new PlayerAirMoveState(_context, this);
     }
-    public PlayerFreefallState Freefall()
+    public BaseState Freefall()
     {
         return new PlayerFreefallState(_context, this);
     }
-    public PlayerWallRunState WallRun()
+    public BaseState WallRun()
     {
         return new PlayerWallRunState(_context, this);
     }
-    public PlayerAirCrouchState AirCrouch()
+    public BaseState AirCrouch()
     {
         return new PlayerAirCrouchState(_context, this);
     }

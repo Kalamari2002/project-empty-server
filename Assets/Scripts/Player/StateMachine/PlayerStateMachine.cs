@@ -3,7 +3,7 @@
 * Contains variables needed for different states to work
 */
 using UnityEngine;
-public class PlayerStateMachine : MonoBehaviour
+public class PlayerStateMachine : BaseStateMachine
 {
 
     [Header("References")]
@@ -38,12 +38,9 @@ public class PlayerStateMachine : MonoBehaviour
     Transform orientation;
     PlayerAim playerAim;
 
-    PlayerBaseState _currentState;
     PlayerStateFactory _states;
 
     GameStateManager _gameStateManager;
-
-    public PlayerBaseState CurrentState { get{return _currentState;} set{_currentState = value;} }
 
     public Rigidbody PlayerRigidBody { get{ return rb; } }
     public Transform PlayerOrientation { get{ return orientation; } }
@@ -91,7 +88,7 @@ public class PlayerStateMachine : MonoBehaviour
     public PlayerAim Aim { get { return playerAim; } }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
 
         playerAim = GetComponent<PlayerAim>();
@@ -107,19 +104,9 @@ public class PlayerStateMachine : MonoBehaviour
         _initCameraPos = cameraTransform.localPosition;
         
         _states = new PlayerStateFactory(this);
-        _currentState = _states.Grounded();
-        _currentState.EnterState();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        _currentState.UpdateStates();
-    }
-    void FixedUpdate()
-    {
-        _currentState.FixedUpdateStates();
+        CurrentState = _states.Grounded();
+        CurrentState.EnterState();
+        Debug.Log(CurrentState);
     }
 
     public void Jump()
