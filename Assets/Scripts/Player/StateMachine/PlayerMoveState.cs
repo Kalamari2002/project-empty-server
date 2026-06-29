@@ -23,15 +23,7 @@ public class PlayerMoveState : PlayerBaseState
     {   
         if (_context.IsCrouchPressed && _context.VerticalInput == 1.0f)
         {
-            float horizontalVelocity = Vector3.Scale(
-                _context.PlayerRigidBody.linearVelocity, 
-                new Vector3(1,0,1)
-            ).magnitude; 
-            
-            if(horizontalVelocity >= _context.MinSpeedToSlide)
-            {
-                SwitchState(_factory.Slide());
-            }
+            SwitchState(_factory.Slide());
         }
     }
     public override void InitializeSubState()
