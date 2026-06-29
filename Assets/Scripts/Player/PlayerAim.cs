@@ -29,6 +29,7 @@ public class PlayerAim : MonoBehaviour
         orientation = transform.Find("Orientation");
         playerCamera = orientation.Find("CameraHolder").Find("Camera");
         originalPlayerCameraPosition = playerCamera.localPosition;
+        Debug.Log("Original Cam Pos: " + originalPlayerCameraPosition);
     }
 
     void Update()
@@ -53,6 +54,7 @@ public class PlayerAim : MonoBehaviour
     IEnumerator CamShakeRoutine(float magnitude, float duration)
     {
         playerCamera.localPosition = originalPlayerCameraPosition;
+        Debug.Log("Shaking Cam Started: " + playerCamera.localPosition);
         float elapsed = 0;
         while (elapsed <= duration)
         {
@@ -61,6 +63,7 @@ public class PlayerAim : MonoBehaviour
             yield return null;
         }
         playerCamera.localPosition = originalPlayerCameraPosition;
+        Debug.Log("Shaking Cam Started: " + playerCamera.localPosition);
         camShakeRoutine = null;
     }
 

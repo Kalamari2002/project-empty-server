@@ -47,6 +47,13 @@ public abstract class BaseState
     {
         ExitState();
         newState.EnterState();
+
+        /**
+        * Prevents current state from becoming a substate. For example,
+        * we only ever want to set the current state to Grounded, but never
+        * Move or Slide. This way the transition to Airborne stays consistent
+        * no matter which substate you're in.
+        */
         if (isRootState)
         {
             Debug.Log("Root State switched to: " + newState);
@@ -54,6 +61,11 @@ public abstract class BaseState
         }
         else if (currentSuperState != null)
         {
+            /**
+            * If this is a substate, then we want its superstate's  
+            * substate to change from this one to the new one. Pretty
+            * much transfering states.
+            */
             Debug.Log("Sub State switched to: " + newState);
             currentSuperState.SetSubState(newState);
         }
@@ -70,6 +82,20 @@ public abstract class BaseState
         Debug.Log(this + " setting new Sub State: " + newSubState);
         currentSubState = newSubState;
         newSubState.SetSuperState(this);
+    }
+
+    public BaseState GetDeepestActiveState()
+    {
+        if (!isRootState)
+            return null;
+        return ActiveStateHelper(this);
+    }
+
+    BaseState ActiveStateHelper(BaseState currentState)
+    {
+        if (currentState.currentSubState == null)
+            return currentState;
+        return ActiveStateHelper(currentState.currentSubState);
     }
 
     public override string ToString()

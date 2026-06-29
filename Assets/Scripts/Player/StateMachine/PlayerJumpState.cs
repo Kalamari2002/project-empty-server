@@ -6,7 +6,7 @@ public class PlayerJumpState : PlayerBaseState
     : base(context, factory)
     {
         InitializeSubState();
-        _isRootState = true;
+        isRootState = true;
     }
 
     public override void EnterState(){

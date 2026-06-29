@@ -40,7 +40,7 @@ public class PlayerMoveState : PlayerBaseState
             SetSubState(_factory.Crouch());
         else
             SetSubState(_factory.Run());
-        _currentSubState.EnterState();
+        currentSubState.EnterState();
     }
     void Move()
     {
