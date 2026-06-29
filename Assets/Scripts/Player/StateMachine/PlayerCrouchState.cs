@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerCrouchState : PlayerBaseState
 {
-    const float CROUCH_CAMERA_Y_OFFSET = 0.3f; 
+    const float CROUCH_CAMERA_Y_OFFSET = 0.335f; 
 
     public PlayerCrouchState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory){}
@@ -58,7 +58,7 @@ public class PlayerCrouchState : PlayerBaseState
         Vector3 initCameraPos = _context.InitCameraPos;
         cameraTransform.localPosition = new Vector3(
             initCameraPos.x, 
-            collision.center.y - CROUCH_CAMERA_Y_OFFSET, 
+            collision.center.y + CROUCH_CAMERA_Y_OFFSET, 
             initCameraPos.z
         );
     }
