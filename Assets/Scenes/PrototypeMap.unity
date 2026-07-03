@@ -40935,6 +40935,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2211647097206558750, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: horizontalClamp
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 2916046406501991316, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
       value: 640
@@ -40950,6 +40954,18 @@ PrefabInstance:
     - target: {fileID: 5252524867374529993, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: groundSpeed
       value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567704814126278728, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567704814126278728, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567704814126278728, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8142240636484815424, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: m_Name
