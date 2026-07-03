@@ -319,6 +319,7 @@ MonoBehaviour:
   orientation: {fileID: 5567704814126278728}
   mouseSensitivity: 300
   verticalClamp: 90
+  horizontalClamp: 15
 --- !u!1 &6202186160486810092
 GameObject:
   m_ObjectHideFlags: 0

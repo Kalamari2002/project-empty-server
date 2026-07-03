@@ -37,6 +37,7 @@ public class PlayerStateMachine : BaseStateMachine
     Rigidbody rb;
     Transform orientation;
     PlayerAim playerAim;
+    PlayerCamera playerCamera;
 
     PlayerStateFactory _states;
 
@@ -45,6 +46,7 @@ public class PlayerStateMachine : BaseStateMachine
     public Rigidbody PlayerRigidBody { get{ return rb; } }
     public Transform PlayerOrientation { get{ return orientation; } }
     public Transform WallCheckOrigin { get { return wallCheckOrigin; } }
+    public PlayerCamera PlayerCamera { get { return playerCamera; } }
 
     public bool Grounded { get{ return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer); }}
     public bool PressedJump { get { return Input.GetKeyDown(KeyCode.Space); } } 
@@ -94,6 +96,7 @@ public class PlayerStateMachine : BaseStateMachine
         playerAim = GetComponent<PlayerAim>();
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
+        playerCamera = GetComponentInChildren<PlayerCamera>();
         
         _gameStateManager = FindFirstObjectByType<GameStateManager>();
 
