@@ -21,7 +21,13 @@ public class PlayerMoveState : PlayerBaseState
     public override void ExitState(){}
     public override void CheckSwitchStates()
     {   
-        if (_context.IsCrouchPressed && _context.VerticalInput == 1.0f)
+        float horizontalVelocity = Vector3.Scale(_context.PlayerRigidBody.linearVelocity, new Vector3(1,0,1)).magnitude;
+
+        if (
+            _context.IsCrouchPressed 
+            && _context.VerticalInput == 1.0f
+            && horizontalVelocity >= _context.MinSpeedToSlide
+        )
         {
             SwitchState(_factory.Slide());
         }
@@ -41,7 +47,12 @@ public class PlayerMoveState : PlayerBaseState
         Transform orientation = _context.PlayerOrientation;
         Vector3 directionVector = orientation.forward * vertical + orientation.right * horizontal;
         Rigidbody rb = _context.PlayerRigidBody;
-
-        rb.AddForce(directionVector.normalized * _context.GroundSpeed);
+        
+        float nonForwardMultiplier = 0.65f;
+        rb.AddForce(
+            directionVector.normalized 
+            * _context.GroundSpeed 
+            * ((vertical < 0 && horizontal == 0) ? nonForwardMultiplier : 1.0f)
+        );
     }
 }

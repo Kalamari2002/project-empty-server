@@ -561,7 +561,7 @@ MonoBehaviour:
   _drag: 5
   _crouchDrag: 13
   _slideDrag: 0.4
-  _minSpeedToSlide: 8
+  _minSpeedToSlide: 3.5
   _minSpeedToWallRun: 8
 --- !u!114 &5965988180505858191
 MonoBehaviour:
