@@ -7,7 +7,7 @@ public class PlayerAirCrouchState : PlayerBaseState
     public PlayerAirCrouchState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "AirCrouch";
+        name = "AirCrouch";
     }
 
     public override void EnterState()

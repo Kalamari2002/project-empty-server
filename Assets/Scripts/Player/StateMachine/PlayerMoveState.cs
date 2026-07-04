@@ -5,7 +5,7 @@ public class PlayerMoveState : PlayerBaseState
     public PlayerMoveState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
-        StateName = "Move";
+        name = "Move";
         InitializeSubState();
     }
     

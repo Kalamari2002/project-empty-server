@@ -9,7 +9,7 @@ public class PlayerWallRunState : PlayerBaseState
     public PlayerWallRunState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "WallRun";
+        name = "WallRun";
         RaycastHit leftHit = _context.WallRayCast(-1);
         RaycastHit rightHit = _context.WallRayCast(1);
         wallNormal = leftHit.collider ? leftHit.normal : rightHit.normal;

@@ -6,7 +6,7 @@ public class PlayerGroundedState : PlayerBaseState
     public PlayerGroundedState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
-        StateName = "Grounded";
+        name = "Grounded";
         isRootState = true;
         InitializeSubState();
     }

@@ -6,7 +6,7 @@ public class PlayerRunState : PlayerBaseState
     public PlayerRunState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "Run";
+        name = "Run";
     }
     public override void EnterState()
     {

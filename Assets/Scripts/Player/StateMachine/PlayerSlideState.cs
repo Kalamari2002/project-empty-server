@@ -11,7 +11,7 @@ public class PlayerSlideState : PlayerBaseState
     public PlayerSlideState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "Slide";
+        name = "Slide";
         _jumpCooldown = JUMP_COOLDOWN_AFTER_SLIDE;
     }
     public override void EnterState()
