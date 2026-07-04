@@ -7,7 +7,7 @@ public class PlayerFreefallState : PlayerBaseState
     public PlayerFreefallState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "Freefall";
+        name = "Freefall";
         _crouchTimer = -1.0f;
     }
 

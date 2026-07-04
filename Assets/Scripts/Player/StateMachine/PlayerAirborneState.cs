@@ -10,7 +10,7 @@ public class PlayerAirborneState : PlayerBaseState
     : base(context, factory)
     {
         isRootState = true;
-        StateName = "Airborne";
+        name = "Airborne";
         _lastWallRunSurface = null;
         InitializeSubState();
     }

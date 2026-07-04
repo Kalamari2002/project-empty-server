@@ -56,7 +56,7 @@ public abstract class BaseState
         */
         if (isRootState)
         {
-            Debug.Log("Root State switched to: " + newState);
+            Debug.Log("Root State switched to: " + newState.name);
             stateMachine.CurrentState = newState;
         }
         else if (currentSuperState != null)
@@ -66,20 +66,20 @@ public abstract class BaseState
             * substate to change from this one to the new one. Pretty
             * much transfering states.
             */
-            Debug.Log("Sub State switched to: " + newState);
+            Debug.Log("Sub State switched to: " + newState.name);
             currentSuperState.SetSubState(newState);
         }
     }
 
     protected void SetSuperState(BaseState newSuperState) 
     {
-        Debug.Log(this + " setting new Super State: " + newSuperState);
+        Debug.Log(this + " setting new Super State: " + newSuperState.name);
         currentSuperState = newSuperState;
     }
 
     protected void SetSubState(BaseState newSubState) 
     {
-        Debug.Log(this + " setting new Sub State: " + newSubState);
+        Debug.Log(this + " setting new Sub State: " + newSubState.name);
         currentSubState = newSubState;
         newSubState.SetSuperState(this);
     }

@@ -5,7 +5,7 @@ public class PlayerAirMoveState : PlayerBaseState
     public PlayerAirMoveState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "AirMove";
+        name = "AirMove";
         InitializeSubState();
     }
 
