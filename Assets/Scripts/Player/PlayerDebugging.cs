@@ -29,7 +29,7 @@ public class PlayerDebugging : MonoBehaviour
         }
 
         stateTracker.text = GetStateHistory();
-        Debug.Log(GetStateHistory());
+        // Debug.Log(GetStateHistory());
     }
 
     string GetStateHistory()

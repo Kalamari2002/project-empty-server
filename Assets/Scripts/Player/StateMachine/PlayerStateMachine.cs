@@ -128,6 +128,12 @@ public class PlayerStateMachine : BaseStateMachine
         if(WallRayCast(1).collider) return 1;
         return 0;
     }
+    public int IsTouchingWall(float distance)
+    {
+        if(WallRayCast(-1, distance).collider) return -1;
+        if(WallRayCast(1, distance).collider) return 1;
+        return 0;
+    }
     
     public RaycastHit WallRayCast(int dir)
     {
@@ -138,6 +144,18 @@ public class PlayerStateMachine : BaseStateMachine
             dir * PlayerOrientation.right,
             out RaycastHit hit,
             WALL_CHECK_DIST,
+            WallLayers
+        );    
+        
+        return hit;
+    }
+    public RaycastHit WallRayCast(int dir, float distance)
+    {
+        Physics.Raycast(
+            WallCheckOrigin.position,
+            dir * PlayerOrientation.right,
+            out RaycastHit hit,
+            distance,
             WallLayers
         );    
         
