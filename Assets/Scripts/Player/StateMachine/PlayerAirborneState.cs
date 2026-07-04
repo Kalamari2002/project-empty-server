@@ -2,11 +2,16 @@ using UnityEngine;
 
 public class PlayerAirborneState : PlayerBaseState
 {
+
+    GameObject _lastWallRunSurface; // god i fucking hate the name of this variable.
+    public GameObject LastWallRunSurface { get { return _lastWallRunSurface; } set { _lastWallRunSurface = value; } }
+
     public PlayerAirborneState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
         isRootState = true;
         StateName = "Airborne";
+        _lastWallRunSurface = null;
         InitializeSubState();
     }
 
@@ -22,7 +27,6 @@ public class PlayerAirborneState : PlayerBaseState
     {
         _context.PlayerRigidBody.linearDamping = 0;
         LimitSpeed();
-        Move();
     }
     public override void ExitState()
     {
@@ -51,15 +55,5 @@ public class PlayerAirborneState : PlayerBaseState
             rb.linearVelocity = new Vector3(xzVelocity.x, rb.linearVelocity.y, xzVelocity.z);
         }
     }
-    void Move()
-    {
-        float horizontal = _context.HorizontalInput;
-        float vertical = _context.VerticalInput;
-        float multiplier = _context.AirMultiplier;
-        Transform orientation = _context.PlayerOrientation;
-        Vector3 directionVector = orientation.forward * vertical + orientation.right * horizontal;
-        Rigidbody rb = _context.PlayerRigidBody;
 
-        rb.AddForce(directionVector.normalized * _context.AirSpeed * multiplier);
-    }
 }

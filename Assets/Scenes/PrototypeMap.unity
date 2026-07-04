@@ -40937,7 +40937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2211647097206558750, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: horizontalClamp
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2916046406501991316, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
