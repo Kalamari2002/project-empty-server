@@ -8,7 +8,8 @@ public class PlayerCamera : MonoBehaviour
     [Header("Settings")]
     [SerializeField] float mouseSensitivity = 100f;
     [SerializeField] float verticalClamp = 90f;
-    [SerializeField] float horizontalClamp = 180f;
+    float maxHorizontalClamp = 0f;
+    float minHorizontalClamp = 0f;
     private float xRotation = 0f;
     private float yRotation = 0f;
 
@@ -28,8 +29,9 @@ public class PlayerCamera : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
 
         yRotation += mouseX;
-        float positiveAngle = yRotation <= -90f ? yRotation + 360f : yRotation % 360f;
-        yRotation = horizontalClamp == 0 ? positiveAngle : Mathf.Clamp(positiveAngle, -horizontalClamp, horizontalClamp);
+        yRotation = (maxHorizontalClamp == minHorizontalClamp) 
+            ? yRotation % 360f 
+            : Mathf.Clamp(yRotation, minHorizontalClamp, maxHorizontalClamp) % 360f;
         
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         orientation.localRotation = Quaternion.Euler(0f, yRotation, 0f);
@@ -37,14 +39,20 @@ public class PlayerCamera : MonoBehaviour
         // Debug.Log("Rotation Y: " + yRotation);
     }
 
-    public void HorizontalClamp(float clamp)
+    public void SetHorizontalClamp(float min, float max)
     {
-        horizontalClamp = clamp % 360f;
+        minHorizontalClamp = min % 360f;
+        maxHorizontalClamp = max % 360f;
     }
-
     public void RemoveHorizontalClamp()
     {
-        horizontalClamp = 0;
+        minHorizontalClamp = 0;
+        maxHorizontalClamp = 0;
+    }
+
+    public float GetYRotation()
+    {
+        return yRotation;
     }
 
     public void SetYRotation(float yRotation)
