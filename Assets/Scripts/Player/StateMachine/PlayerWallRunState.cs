@@ -14,6 +14,8 @@ public class PlayerWallRunState : PlayerBaseState
         RaycastHit rightHit = _context.WallRayCast(1);
         wallNormal = leftHit.collider ? leftHit.normal : rightHit.normal;
         adjacentNormal = Vector3.Cross(wallNormal, Vector3.up).normalized;
+
+        SetClamp();
     }
 
     public override void EnterState(){}
@@ -29,6 +31,7 @@ public class PlayerWallRunState : PlayerBaseState
     }
     public override void ExitState()
     {
+        _context.PlayerCamera.RemoveHorizontalClamp();
     }
     public override void CheckSwitchStates()
     {
@@ -46,7 +49,6 @@ public class PlayerWallRunState : PlayerBaseState
     public override void InitializeSubState(){}
     void WallRun()
     {
-        float vertical = _context.VerticalInput;
         float multiplier = _context.AirMultiplier;
         Transform orientation = _context.PlayerOrientation;
         Vector3 directionVector = orientation.forward - wallNormal;
@@ -67,5 +69,23 @@ public class PlayerWallRunState : PlayerBaseState
     {
         if(_context.PressedJump)
             WallJump(_context.Aim.cameraForward());
+    }
+
+    void SetClamp()
+    {
+        const float CLAMP_ANGLE = 73f;
+        Quaternion adjacentLookDir = Quaternion.LookRotation(adjacentNormal, Vector3.up);
+        float adjacentLookAngle = adjacentLookDir.eulerAngles.y;
+        float oppositeLookAngle = (adjacentLookAngle + 180f) % 360f;
+
+        float yRotation = Mathf.Abs(_context.PlayerCamera.GetYRotation());
+        if(yRotation >= oppositeLookAngle - CLAMP_ANGLE && yRotation <= oppositeLookAngle + CLAMP_ANGLE)
+        {
+            adjacentLookAngle = oppositeLookAngle;
+        }
+        // Debug.Log("LookAngle: " + adjacentLookAngle + " | Clamp Range: " + (adjacentLookAngle - CLAMP_ANGLE) + ", " + (adjacentLookAngle + CLAMP_ANGLE));
+        int yRotationSign = _context.PlayerCamera.GetYRotation() < 0 ? -1 : 1;
+        float clampBase = adjacentLookAngle * yRotationSign;
+        _context.PlayerCamera.SetHorizontalClamp(clampBase - CLAMP_ANGLE, clampBase + CLAMP_ANGLE);   
     }
 }
