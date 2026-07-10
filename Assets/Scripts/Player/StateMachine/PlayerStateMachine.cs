@@ -13,6 +13,7 @@ public class PlayerStateMachine : BaseStateMachine
     [SerializeField] LayerMask wallLayers;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] CapsuleCollider collision;
+    [SerializeField] Animator orientationAnimator;
 
     [Header ("Movement Settings")]
     [SerializeField] float _groundSpeed;
@@ -84,7 +85,7 @@ public class PlayerStateMachine : BaseStateMachine
     public Transform GroundCollision { get { return groundCheck; } } 
     public Transform CameraTransform { get { return cameraTransform; } }
     public Vector3 InitCameraPos { get { return _initCameraPos; } }
-
+    public Animator OrientationAnimator { get { return orientationAnimator; } }
     public LayerMask WallLayers { get { return wallLayers; } }
 
     public PlayerAim Aim { get { return playerAim; } }
