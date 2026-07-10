@@ -319,7 +319,6 @@ MonoBehaviour:
   orientation: {fileID: 5567704814126278728}
   mouseSensitivity: 300
   verticalClamp: 90
-  horizontalClamp: 15
 --- !u!1 &6202186160486810092
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,6 +551,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   collision: {fileID: 2916046406501991316}
+  orientationAnimator: {fileID: 2982298283658833489}
   _groundSpeed: 60
   _airSpeed: 6
   _jumpForce: 5
@@ -617,6 +617,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5567704814126278728}
+  - component: {fileID: 2982298283658833489}
   m_Layer: 3
   m_Name: Orientation
   m_TagString: Untagged
@@ -644,6 +645,28 @@ Transform:
   - {fileID: 1875896232990815028}
   m_Father: {fileID: 1634934622893517213}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2982298283658833489
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8362820426947322467}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 781abe7ce940f0d48be4f53db08fb07e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &9007997696092631391
 PrefabInstance:
   m_ObjectHideFlags: 0
