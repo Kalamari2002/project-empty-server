@@ -21,13 +21,12 @@ public class PlayerAirCrouchState : PlayerBaseState
     public override void FixedUpdateState(){}
     public override void ExitState()
     {
-        // _context.StandUp();
     }
     public override void CheckSwitchStates()
     {
         if (!_context.IsCrouchPressed)
         {
-            _context.OrientationAnimator.SetTrigger("AirStandUp");
+            _context.OrientationAnimator.Play("AirStandUp");
             _context.OrientationAnimator.SetBool("AirCrouched", false);
             SwitchState(_factory.Freefall());
         }
@@ -36,24 +35,8 @@ public class PlayerAirCrouchState : PlayerBaseState
 
     void Crouch()
     {
-        _context.OrientationAnimator.SetTrigger("AirCrouch");
-        _context.OrientationAnimator.SetBool("AirCrouched", true);
-        // CapsuleCollider collision = _context.CollisionCapsule;
-
-        // collision.height = _context.CROUCH_COLLISION_HEIGHT;
-        // Transform groundCheck = _context.GroundCollision;
-        // groundCheck.localPosition = new Vector3(
-        //     groundCheck.localPosition.x, 
-        //     AIR_CROUCH_GROUNDCHECK_Y, 
-        //     groundCheck.localPosition.z
-        // );
-
-        // _context.CameraTransform.localPosition = _context.InitCameraPos;
-
-        // collision.center = new Vector3(
-        //     collision.center.x, 
-        //     _context.CROUCH_COLLISION_CENTER_Y, 
-        //     collision.center.z
-        // );
+        Animator animator = _context.OrientationAnimator;
+        animator.Play("AirCrouch");
+        animator.SetBool("AirCrouched", true);
     }
 }

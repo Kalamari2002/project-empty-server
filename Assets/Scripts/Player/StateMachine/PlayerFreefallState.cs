@@ -18,15 +18,10 @@ public class PlayerFreefallState : PlayerBaseState
     public override void ExitState(){}
     public override void CheckSwitchStates()
     {
-        Crouch();
-    }
-    public override void InitializeSubState(){}
-    void Crouch()
-    {
-
-        if (_context.PressedCrouch)
+        if (_context.PressedCrouch && _context.OrientationAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             SwitchState(_factory.AirCrouch());
         }
     }
+    public override void InitializeSubState(){}
 }
