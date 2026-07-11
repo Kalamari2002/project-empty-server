@@ -11,7 +11,10 @@ public class PlayerGroundedState : PlayerBaseState
         InitializeSubState();
     }
 
-    public override void EnterState(){}
+    public override void EnterState()
+    {
+        _context.OrientationAnimator.SetBool("Grounded", true);
+    }
     public override void UpdateState()
     {
         CheckSwitchStates();
@@ -21,7 +24,11 @@ public class PlayerGroundedState : PlayerBaseState
         _context.PlayerRigidBody.linearDamping = _context.CurrentDrag;
         LimitSpeed();
     }
-    public override void ExitState(){}
+    public override void ExitState()
+    {
+        _context.OrientationAnimator.SetBool("Sliding", false);
+        currentSubState?.ExitState();
+    }
     public override void CheckSwitchStates()
     {
         if (!_context.Grounded)

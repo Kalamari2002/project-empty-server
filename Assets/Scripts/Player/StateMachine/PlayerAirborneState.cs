@@ -18,6 +18,7 @@ public class PlayerAirborneState : PlayerBaseState
     public override void EnterState()
     {
         _context.CurrentDrag = 0;
+        _context.OrientationAnimator.SetBool("Grounded", false);
     }
     public override void UpdateState()
     {

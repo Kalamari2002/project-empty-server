@@ -9,7 +9,9 @@ public class PlayerMoveState : PlayerBaseState
         InitializeSubState();
     }
     
-    public override void EnterState(){}
+    public override void EnterState()
+    {
+    }
     public override void UpdateState()
     {
         CheckSwitchStates();
