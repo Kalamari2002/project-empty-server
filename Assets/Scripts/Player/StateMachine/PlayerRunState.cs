@@ -27,7 +27,7 @@ public class PlayerRunState : PlayerBaseState
                 new Vector3(1,0,1)
             ).magnitude; 
             
-            if(horizontalSpeed < _context.MinSpeedToSlide && _context.OrientationAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            if(horizontalSpeed < _context.MinSpeedToSlide)
             {
                 SwitchState(_factory.Crouch());
             }

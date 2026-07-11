@@ -113,6 +113,12 @@ public class PlayerStateMachine : BaseStateMachine
         Debug.Log(CurrentState);
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        orientationAnimator.SetBool("CrouchPressed", IsCrouchPressed);
+    }
+
     public void Jump()
     {
         if (!Grounded) return;
@@ -161,19 +167,6 @@ public class PlayerStateMachine : BaseStateMachine
         );    
         
         return hit;
-    }
-    public void StandUp()
-    {
-        collision.center = new Vector3(collision.center.x, InitCollisionPosY, collision.center.z);
-        collision.height = InitCollisionHeight;
-
-        cameraTransform.localPosition = InitCameraPos;
-
-        groundCheck.localPosition = new Vector3(
-            groundCheck.localPosition.x, 
-            InitGroundCheckY, 
-            groundCheck.localPosition.z
-        );
     }
 
 }
