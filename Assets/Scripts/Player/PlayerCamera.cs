@@ -35,8 +35,6 @@ public class PlayerCamera : MonoBehaviour
         
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         orientation.localRotation = Quaternion.Euler(0f, yRotation, 0f);
-
-        // Debug.Log("Rotation Y: " + yRotation);
     }
 
     public void SetHorizontalClamp(float min, float max)
