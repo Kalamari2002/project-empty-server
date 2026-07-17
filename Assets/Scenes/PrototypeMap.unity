@@ -40846,11 +40846,43 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8685143945239059102, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3360806625403975947, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1924925051341553304}
   m_SourcePrefab: {fileID: 100100000, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+--- !u!1 &1924925051341553303 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3360806625403975947, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+  m_PrefabInstance: {fileID: 1924925051341553302}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1924925051341553304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1924925051341553303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba9fca1e104ed3f4d8118c68ea90d5be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchRange: 5
+  punchBaseDamage: 10
+  kickRange: 4
+  kickDamage: 5
+  grabRange: 5
+  camShakeMagnitude: 0.1
+  camShakeDuration: 0.2
+  hitStopDuration: 0.05
 --- !u!1001 &8001380932321977288
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40859,6 +40891,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 978219371158355710, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 1088077972582368465, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: cameraTransform
       value: 
@@ -40951,6 +40987,10 @@ PrefabInstance:
       propertyPath: groundSpeed
       value: 70
       objectReference: {fileID: 0}
+    - target: {fileID: 5333804511837069580, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 8142240636484815424, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: m_Name
       value: Player
@@ -40974,7 +41014,7 @@ PrefabInstance:
       objectReference: {fileID: 147472150}
     - target: {fileID: 2846594166316540840, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
       propertyPath: m_VersionIndex
-      value: 2186
+      value: 2189
       objectReference: {fileID: 0}
     - target: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
       propertyPath: m_Name

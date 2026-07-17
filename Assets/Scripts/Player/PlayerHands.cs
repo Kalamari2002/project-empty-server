@@ -157,36 +157,36 @@ public class PlayerHands : MonoBehaviour
         }
     }
 
-    void CastKickHit()
-    {
-        if (playerAim)
-        {
-            playerAim.CastKickHit(kickRange, kickDamage);
-        }
-    }
+    //void CastKickHit()
+    //{
+    //    if (playerAim)
+    //    {
+    //        playerAim.CastKickHit(kickRange, kickDamage);
+    //    }
+    //}
 
     void TriggerPlayerImpulse(float impulse)
     {
         playerAim.Impulse(impulse);
     }
 
-    void LaunchGrabbedEnemy()
-    {
-        playerAim.LaunchGrabbedEnemy();
-    }
+    //void LaunchGrabbedEnemy()
+    //{
+    //    playerAim.LaunchGrabbedEnemy();
+    //}
 
-    void KickLaunchGrabbedEnemy()
-    {
-        playerAim.KickLaunchGrabbedEnemy();
-    }
+    //void KickLaunchGrabbedEnemy()
+    //{
+    //    playerAim.KickLaunchGrabbedEnemy();
+    //}
 
-    void ShakeCamera(float magnitude)
-    {
-        playerAim.ShakeCamera(magnitude, magnitude * 2);
-    }
+    //void ShakeCamera(float magnitude)
+    //{
+    //    playerAim.ShakeCamera(magnitude, magnitude * 2);
+    //}
 
-    void HitStop(float duration)
-    {
-        playerAim.HitStop(duration);
-    }
+    //void HitStop(float duration)
+    //{
+    //    playerAim.HitStop(duration);
+    //}
 }
