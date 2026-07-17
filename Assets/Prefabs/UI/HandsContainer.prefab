@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 5908890085015113875}
   - component: {fileID: 8685143945239059102}
   - component: {fileID: 1057634232211880738}
+  - component: {fileID: 196056230487785357}
   m_Layer: 5
   m_Name: HandsContainer
   m_TagString: Untagged
@@ -106,7 +107,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3360806625403975947}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae1f8c80a04ee56469d9e6ff5c0d9633, type: 3}
   m_Name: 
@@ -115,11 +116,17 @@ MonoBehaviour:
   punchBaseDamage: 10
   kickRange: 4
   kickDamage: 5
+  grabRange: 5
+  camShakeMagnitude: 0.1
+  camShakeDuration: 0.2
+  hitStopDuration: 0.05
   currentPunch: 0
+  pummel: 0
   punching: 0
   canPunch: 1
   kicking: 0
   canKick: 1
+  grabbing: 0
 --- !u!212 &1057634232211880738
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -175,6 +182,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &196056230487785357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3360806625403975947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba9fca1e104ed3f4d8118c68ea90d5be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchRange: 5
+  punchBaseDamage: 10
+  kickRange: 4
+  kickDamage: 5
+  grabRange: 5
+  camShakeMagnitude: 0.1
+  camShakeDuration: 0.2
+  hitStopDuration: 0.05
 --- !u!1 &3581112629418227384
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +452,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8457756210332341881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
