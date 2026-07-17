@@ -2,16 +2,14 @@ using UnityEngine;
 
 public class PlayerRunState : PlayerBaseState
 {
-    float _crouchTimer;
     public PlayerRunState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "Run";
+        name = "Run";
     }
     public override void EnterState()
     {
         _context.CurrentDrag = _context.Drag;
-        _context.StandUp();
     }
     public override void UpdateState()
     {
@@ -29,7 +27,7 @@ public class PlayerRunState : PlayerBaseState
                 new Vector3(1,0,1)
             ).magnitude; 
             
-            if(horizontalSpeed < _context.MinSpeedToSlide && _crouchTimer <= 0)
+            if(horizontalSpeed < _context.MinSpeedToSlide)
             {
                 SwitchState(_factory.Crouch());
             }

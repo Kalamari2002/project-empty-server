@@ -1,28 +1,23 @@
-using UnityEngine;
-
+/**
+* If you're surprised by the sheer amount of nothing happening
+* in this state, it's cause the actual crouching is handled by
+* the animator.
+*/
 public class PlayerAirCrouchState : PlayerBaseState
 {
-    const float AIR_CROUCH_GROUNDCHECK_Y = -0.248f;
-
     public PlayerAirCrouchState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
     {
-        StateName = "AirCrouch";
+        name = "AirCrouch";
     }
 
-    public override void EnterState()
-    {
-        Crouch();
-    }
+    public override void EnterState(){}
     public override void UpdateState()
     {
         CheckSwitchStates();
     }
     public override void FixedUpdateState(){}
-    public override void ExitState()
-    {
-        _context.StandUp();
-    }
+    public override void ExitState(){}
     public override void CheckSwitchStates()
     {
         if (!_context.IsCrouchPressed)
@@ -31,25 +26,4 @@ public class PlayerAirCrouchState : PlayerBaseState
         }
     }
     public override void InitializeSubState(){}
-
-    void Crouch()
-    {
-        CapsuleCollider collision = _context.CollisionCapsule;
-
-        collision.height = _context.CROUCH_COLLISION_HEIGHT;
-        Transform groundCheck = _context.GroundCollision;
-        groundCheck.localPosition = new Vector3(
-            groundCheck.localPosition.x, 
-            AIR_CROUCH_GROUNDCHECK_Y, 
-            groundCheck.localPosition.z
-        );
-
-        _context.CameraTransform.localPosition = _context.InitCameraPos;
-
-        collision.center = new Vector3(
-            collision.center.x, 
-            _context.CROUCH_COLLISION_CENTER_Y, 
-            collision.center.z
-        );
-    }
 }

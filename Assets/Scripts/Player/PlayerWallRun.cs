@@ -62,8 +62,8 @@ public class PlayerWallRun : MonoBehaviour
         RaycastHit rightHit = WallRayCast(1);
         
         Vector3 wallNormal = leftHit.collider ? leftHit.normal : rightHit.normal;
-        
-        rb.AddForce(wallNormal * AWAy_FORCE, ForceMode.Impulse);
+        Vector3 perpendicularDirection = new Vector3(wallNormal.x, 0, -wallNormal.z).normalized;
+        rb.AddForce(perpendicularDirection * AWAy_FORCE, ForceMode.Impulse);
         rb.AddForce(Vector3.up * UP_FORCE, ForceMode.Impulse);
         rb.AddForce(direction * FORWARD_FORCE, ForceMode.Impulse);
     }

@@ -13,6 +13,7 @@ public class PlayerStateMachine : BaseStateMachine
     [SerializeField] LayerMask wallLayers;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] CapsuleCollider collision;
+    [SerializeField] Animator orientationAnimator;
 
     [Header ("Movement Settings")]
     [SerializeField] float _groundSpeed;
@@ -37,6 +38,7 @@ public class PlayerStateMachine : BaseStateMachine
     Rigidbody rb;
     Transform orientation;
     PlayerAim playerAim;
+    PlayerCamera playerCamera;
 
     PlayerStateFactory _states;
 
@@ -45,6 +47,7 @@ public class PlayerStateMachine : BaseStateMachine
     public Rigidbody PlayerRigidBody { get{ return rb; } }
     public Transform PlayerOrientation { get{ return orientation; } }
     public Transform WallCheckOrigin { get { return wallCheckOrigin; } }
+    public PlayerCamera PlayerCamera { get { return playerCamera; } }
 
     public bool Grounded { get{ return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer); }}
     public bool PressedJump { get { return Input.GetKeyDown(KeyCode.Space); } } 
@@ -82,7 +85,7 @@ public class PlayerStateMachine : BaseStateMachine
     public Transform GroundCollision { get { return groundCheck; } } 
     public Transform CameraTransform { get { return cameraTransform; } }
     public Vector3 InitCameraPos { get { return _initCameraPos; } }
-
+    public Animator OrientationAnimator { get { return orientationAnimator; } }
     public LayerMask WallLayers { get { return wallLayers; } }
 
     public PlayerAim Aim { get { return playerAim; } }
@@ -94,6 +97,7 @@ public class PlayerStateMachine : BaseStateMachine
         playerAim = GetComponent<PlayerAim>();
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
+        playerCamera = GetComponentInChildren<PlayerCamera>();
         
         _gameStateManager = FindFirstObjectByType<GameStateManager>();
 
@@ -107,6 +111,12 @@ public class PlayerStateMachine : BaseStateMachine
         CurrentState = _states.Grounded();
         CurrentState.EnterState();
         Debug.Log(CurrentState);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        orientationAnimator.SetBool("CrouchPressed", IsCrouchPressed);
     }
 
     public void Jump()
@@ -125,6 +135,12 @@ public class PlayerStateMachine : BaseStateMachine
         if(WallRayCast(1).collider) return 1;
         return 0;
     }
+    public int IsTouchingWall(float distance)
+    {
+        if(WallRayCast(-1, distance).collider) return -1;
+        if(WallRayCast(1, distance).collider) return 1;
+        return 0;
+    }
     
     public RaycastHit WallRayCast(int dir)
     {
@@ -140,18 +156,17 @@ public class PlayerStateMachine : BaseStateMachine
         
         return hit;
     }
-    public void StandUp()
+    public RaycastHit WallRayCast(int dir, float distance)
     {
-        collision.center = new Vector3(collision.center.x, InitCollisionPosY, collision.center.z);
-        collision.height = InitCollisionHeight;
-
-        cameraTransform.localPosition = InitCameraPos;
-
-        groundCheck.localPosition = new Vector3(
-            groundCheck.localPosition.x, 
-            InitGroundCheckY, 
-            groundCheck.localPosition.z
-        );
+        Physics.Raycast(
+            WallCheckOrigin.position,
+            dir * PlayerOrientation.right,
+            out RaycastHit hit,
+            distance,
+            WallLayers
+        );    
+        
+        return hit;
     }
 
 }
