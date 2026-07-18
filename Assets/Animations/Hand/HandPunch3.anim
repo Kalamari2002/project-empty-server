@@ -668,35 +668,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.23333333
-    functionName: CastHit
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.25
-    functionName: TriggerPlayerImpulse
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 10
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.26666668
-    functionName: ResetKick
+    functionName: CastPunchThreeHit
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.81666666
-    functionName: EnablePunching
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.4
-    functionName: ResetPunch
+    functionName: EnablePunch
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

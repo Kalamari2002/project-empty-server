@@ -126,6 +126,7 @@ public class PlayerAim : MonoBehaviour
                 Debug.Log("Enemy Ragdoll Kicked!");
                 hit.transform.GetComponent<Rigidbody>().AddForce(enemyRagdollLaunchForce * 1.5f * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
                 hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+                GoombaStomp();
             }
             float camShakeFactor = 20;
             ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
