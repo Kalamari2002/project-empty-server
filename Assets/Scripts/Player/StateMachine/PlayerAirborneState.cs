@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerAirborneState : PlayerBaseState
 {
-
+    float _fallDamageThreshold = -9f;
+    float _fallDamageMultiplier = 1.0f;
     GameObject _lastWallRunSurface; // god i fucking hate the name of this variable.
     public GameObject LastWallRunSurface { get { return _lastWallRunSurface; } set { _lastWallRunSurface = value; } }
 
@@ -37,6 +38,7 @@ public class PlayerAirborneState : PlayerBaseState
     {
         if (_context.Grounded)
         {
+            FallDamage();
             SwitchState(_factory.Grounded());
         }
     }
@@ -54,6 +56,14 @@ public class PlayerAirborneState : PlayerBaseState
         {
             xzVelocity = xzVelocity.normalized * speedLimit;
             rb.linearVelocity = new Vector3(xzVelocity.x, rb.linearVelocity.y, xzVelocity.z);
+        }
+    }
+    void FallDamage()
+    {
+        if (_context.PlayerRigidBody.linearVelocity.y < _fallDamageThreshold)
+        {
+            int damage = Mathf.RoundToInt(Mathf.Abs(_context.PlayerRigidBody.linearVelocity.y) * _fallDamageMultiplier);
+            _context.TakeDamage(damage);
         }
     }
 
