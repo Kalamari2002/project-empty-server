@@ -8,6 +8,7 @@ public class PlayerDebugging : MonoBehaviour
     TextMeshProUGUI speedTracker;
     TextMeshProUGUI yRotationTracker;
     TextMeshProUGUI stateTracker;
+    TextMeshProUGUI healthTracker;
     Rigidbody rb;
 
     PlayerStateMachine playerStateMachine;
@@ -18,6 +19,7 @@ public class PlayerDebugging : MonoBehaviour
         speedTracker = GameObject.Find("Speed Tracker").GetComponent<TextMeshProUGUI>();
         yRotationTracker = GameObject.Find("YRotation Tracker").GetComponent<TextMeshProUGUI>();
         stateTracker = GameObject.Find("State Tracker").GetComponent<TextMeshProUGUI>();
+        healthTracker = GameObject.Find("Health Tracker").GetComponent<TextMeshProUGUI>();
         playerStateMachine = GetComponent<PlayerStateMachine>();
     }
 
@@ -31,7 +33,8 @@ public class PlayerDebugging : MonoBehaviour
         }
 
         stateTracker.text = GetStateHistory();
-        // Debug.Log(GetStateHistory());
+        healthTracker.text = "Health: " + playerStateMachine.CurrentHealth.ToString();
+        // Debug.Log(GetStateHistory())
     }
 
     string GetStateHistory()
