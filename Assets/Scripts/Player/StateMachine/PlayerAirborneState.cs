@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class PlayerAirborneState : PlayerBaseState
 {
-    float _fallDamageThreshold = -9f;
-    float _fallDamageMultiplier = 1.0f;
+    const float MIN_VELOCITY_TO_ROLL = -6f;
+    const float FALL_DAMAGE_THRESHOLD = -9f;
+    const float FALL_DAMAGE_MULTIPLIER = 1.0f;
+    const float ROLL_WINDOW = 0.4f;
+    const float ROLL_ATTEMPT_RESET_TIME = 0.7f;
+    
+    float timeSinceCrouchPressed;
     GameObject _lastWallRunSurface; // god i fucking hate the name of this variable.
     public GameObject LastWallRunSurface { get { return _lastWallRunSurface; } set { _lastWallRunSurface = value; } }
 
@@ -13,6 +18,7 @@ public class PlayerAirborneState : PlayerBaseState
         isRootState = true;
         name = "Airborne";
         _lastWallRunSurface = null;
+        timeSinceCrouchPressed = -1;
         InitializeSubState();
     }
 
@@ -23,6 +29,7 @@ public class PlayerAirborneState : PlayerBaseState
     }
     public override void UpdateState()
     {
+        CheckRollCooldown();
         CheckSwitchStates();
     }
     public override void FixedUpdateState()
@@ -38,7 +45,7 @@ public class PlayerAirborneState : PlayerBaseState
     {
         if (_context.Grounded)
         {
-            FallDamage();
+            OnLanding();
             SwitchState(_factory.Grounded());
         }
     }
@@ -58,13 +65,38 @@ public class PlayerAirborneState : PlayerBaseState
             rb.linearVelocity = new Vector3(xzVelocity.x, rb.linearVelocity.y, xzVelocity.z);
         }
     }
+    void CheckRollCooldown()
+    {
+        if(_context.PressedCrouch && timeSinceCrouchPressed < 0)
+            timeSinceCrouchPressed = 0;
+
+        if(timeSinceCrouchPressed >= 0)
+            timeSinceCrouchPressed += Time.deltaTime;
+        
+        if(timeSinceCrouchPressed >= ROLL_ATTEMPT_RESET_TIME)
+            timeSinceCrouchPressed = -1;
+    }
+    void OnLanding()
+    {
+        float linearVelocityY = _context.PlayerRigidBody.linearVelocity.y;
+        bool succeededRoll = 
+            _context.IsCrouchPressed 
+            && linearVelocityY < MIN_VELOCITY_TO_ROLL 
+            && timeSinceCrouchPressed > 0 
+            && timeSinceCrouchPressed <= ROLL_WINDOW;
+
+        if(succeededRoll)
+        {
+            _context.RollOnGrounded = true;
+            return;
+        }
+        if (linearVelocityY < FALL_DAMAGE_THRESHOLD)
+            FallDamage();
+    }
     void FallDamage()
     {
-        if (_context.PlayerRigidBody.linearVelocity.y < _fallDamageThreshold)
-        {
-            int damage = Mathf.RoundToInt(Mathf.Abs(_context.PlayerRigidBody.linearVelocity.y) * _fallDamageMultiplier);
-            _context.TakeDamage(damage);
-        }
+        int damage = Mathf.RoundToInt(Mathf.Abs(_context.PlayerRigidBody.linearVelocity.y) * FALL_DAMAGE_MULTIPLIER);
+        _context.TakeDamage(damage);
     }
 
 }

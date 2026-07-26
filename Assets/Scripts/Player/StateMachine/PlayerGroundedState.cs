@@ -26,7 +26,6 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void ExitState()
     {
-        _context.OrientationAnimator.SetBool("Sliding", false);
         currentSubState?.ExitState();
     }
     public override void CheckSwitchStates()
@@ -38,7 +37,15 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void InitializeSubState()
     {
-        SetSubState(_factory.Move());
+        if(_context.RollOnGrounded)
+        {
+            SetSubState(_factory.Roll());
+            _context.RollOnGrounded = false;
+        }
+        else
+        {
+            SetSubState(_factory.Move());
+        }
         currentSubState.EnterState();
     }
 
