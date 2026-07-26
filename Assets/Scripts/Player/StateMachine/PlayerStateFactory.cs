@@ -26,7 +26,10 @@ public class PlayerStateFactory : BaseStateFactory
     {
         return new PlayerCrouchState(_context, this);
     }
-
+    public BaseState Roll()
+    {
+        return new PlayerRollState(_context, this);
+    }
     public BaseState Airborne()
     {
         return new PlayerAirborneState(_context, this);
