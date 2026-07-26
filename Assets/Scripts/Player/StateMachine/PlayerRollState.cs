@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerRollState : PlayerBaseState
 {
     float ROLL_SPEED;
-    float _rollDuration = 0.3f;
+    float _rollDuration = .45f;
     public PlayerRollState(PlayerStateMachine context, PlayerStateFactory factory)
     : base(context, factory)
     {
