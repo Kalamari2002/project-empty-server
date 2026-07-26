@@ -8,8 +8,9 @@ public class PlayerCamera : MonoBehaviour
     [Header("Settings")]
     [SerializeField] float mouseSensitivity = 100f;
     [SerializeField] float verticalClamp = 90f;
-    float maxHorizontalClamp = 0f;
-    float minHorizontalClamp = 0f;
+    bool isHorizontallyBounded = false;
+    float clockWiseBound = 0f;
+    float counterClockWiseBound = 0f;
     private float xRotation = 0f;
     private float yRotation = 0f;
 
@@ -27,25 +28,31 @@ public class PlayerCamera : MonoBehaviour
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
-
-        yRotation += mouseX;
-        yRotation = (maxHorizontalClamp == minHorizontalClamp) 
-            ? yRotation % 360f 
-            : Mathf.Clamp(yRotation, minHorizontalClamp, maxHorizontalClamp) % 360f;
-        
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        
+        if(isHorizontallyBounded)
+        {
+            if(
+                (mouseX > 0f && yRotation + mouseX >= clockWiseBound) 
+                || (mouseX < 0f && yRotation + mouseX <= counterClockWiseBound)
+            ) return;
+        }
+
+        yRotation += mouseX; // This thing can grow indefinitely. It'll become a god.
         orientation.localRotation = Quaternion.Euler(0f, yRotation, 0f);
     }
 
-    public void SetHorizontalClamp(float min, float max)
+    public void SetHorizontalBounds(float counterClockWise, float clockWise)
     {
-        minHorizontalClamp = min % 360f;
-        maxHorizontalClamp = max % 360f;
+        counterClockWiseBound = counterClockWise;
+        clockWiseBound = clockWise;
+        isHorizontallyBounded = true;
     }
-    public void RemoveHorizontalClamp()
+    public void RemoveHorizontalBounds()
     {
-        minHorizontalClamp = 0;
-        maxHorizontalClamp = 0;
+        counterClockWiseBound = 0;
+        clockWiseBound = 0;
+        isHorizontallyBounded = false;
     }
 
     public float GetYRotation()
@@ -56,5 +63,11 @@ public class PlayerCamera : MonoBehaviour
     public void SetYRotation(float yRotation)
     {
         this.yRotation = yRotation;
+    }
+
+    public void MakeRotationPositive()
+    {
+        if (yRotation >= 0f) return;
+        yRotation = (yRotation + 360f) % 360f;
     }
 }
