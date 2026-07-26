@@ -15,7 +15,7 @@ public class PlayerWallRunState : PlayerBaseState
         wallNormal = leftHit.collider ? leftHit.normal : rightHit.normal;
         adjacentNormal = Vector3.Cross(wallNormal, Vector3.up).normalized;
 
-        SetClamp();
+        SetBounds();
     }
 
     public override void EnterState(){}
@@ -31,7 +31,7 @@ public class PlayerWallRunState : PlayerBaseState
     }
     public override void ExitState()
     {
-        _context.PlayerCamera.RemoveHorizontalClamp();
+        _context.PlayerCamera.RemoveHorizontalBounds();
     }
     public override void CheckSwitchStates()
     {
@@ -47,6 +47,7 @@ public class PlayerWallRunState : PlayerBaseState
         }
     }
     public override void InitializeSubState(){}
+    
     void WallRun()
     {
         float multiplier = _context.AirMultiplier;
@@ -65,27 +66,28 @@ public class PlayerWallRunState : PlayerBaseState
         rb.AddForce(direction * FORWARD_FORCE, ForceMode.Impulse);
         SwitchState(_factory.AirMove()); 
     }
+    
     void Jump()
     {
         if(_context.PressedJump)
             WallJump(_context.Aim.cameraForward());
     }
 
-    void SetClamp()
+    void SetBounds()
     {
         const float CLAMP_ANGLE = 73f;
-        Quaternion adjacentLookDir = Quaternion.LookRotation(adjacentNormal, Vector3.up);
-        float adjacentLookAngle = adjacentLookDir.eulerAngles.y;
-        float oppositeLookAngle = (adjacentLookAngle + 180f) % 360f;
+        Quaternion adjacentLookDir = Quaternion.LookRotation(adjacentNormal, Vector3.up); // The direction that goes along the wall
+        
+        float yRotation = _context.PlayerCamera.GetYRotation();     // Current camera rotation in world space
+        float adjacentLookAngle = adjacentLookDir.eulerAngles.y;    // The world angle of the direction that goes along the wall in one direction
+        
+        float angleDiff = yRotation - adjacentLookAngle;
+        float halfRotations = Mathf.Round(angleDiff / 180f);        // Used to "rotate" the adjacentLookAngle so that the current camera rotation is within bound range
+        
+        float baseLookAngle = adjacentLookAngle + (halfRotations * 180f); // The "rotated" adjacentLookAngle
+        float clockWiseBound = baseLookAngle + CLAMP_ANGLE;
+        float counterClockWiseBound = baseLookAngle - CLAMP_ANGLE;
 
-        float yRotation = Mathf.Abs(_context.PlayerCamera.GetYRotation());
-        if(yRotation >= oppositeLookAngle - CLAMP_ANGLE && yRotation <= oppositeLookAngle + CLAMP_ANGLE)
-        {
-            adjacentLookAngle = oppositeLookAngle;
-        }
-        // Debug.Log("LookAngle: " + adjacentLookAngle + " | Clamp Range: " + (adjacentLookAngle - CLAMP_ANGLE) + ", " + (adjacentLookAngle + CLAMP_ANGLE));
-        int yRotationSign = _context.PlayerCamera.GetYRotation() < 0 ? -1 : 1;
-        float clampBase = adjacentLookAngle * yRotationSign;
-        _context.PlayerCamera.SetHorizontalClamp(clampBase - CLAMP_ANGLE, clampBase + CLAMP_ANGLE);   
+        _context.PlayerCamera.SetHorizontalBounds(counterClockWiseBound, clockWiseBound);
     }
 }
