@@ -40895,6 +40895,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 128262756}
     m_Modifications:
+    - target: {fileID: 196056230487785357, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+      propertyPath: airPunchLaunchForce
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3360806625403975947, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
       propertyPath: m_Name
       value: HandsContainer
