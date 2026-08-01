@@ -34,6 +34,9 @@ public class PlayerStateMachine : BaseStateMachine
     float _kickChargeTime = 0;
     bool _canPunch = true;
     bool _dropKicking = false;
+    [Header ("Helth")]
+    [SerializeField] int _maxHealth = 100;
+    int _currentHealth;
 
     float _currDrag;
     float _initGroundCheckY;
@@ -85,6 +88,7 @@ public class PlayerStateMachine : BaseStateMachine
     public float MaxKickChargeTime { get { return _maxKickChargeTime; } }
     public bool CanPunch { get { return _canPunch; } set { _canPunch = value; } }
     public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
+    public float CurrentHealth { get { return _currentHealth; } }
 
     public float CROUCH_COLLISION_HEIGHT { get { return 1.36367f; } }
     public float CROUCH_COLLISION_CENTER_Y { get { return 0.3181652f; } }
@@ -123,6 +127,7 @@ public class PlayerStateMachine : BaseStateMachine
         CurrentState = _states.Grounded();
         CurrentState.EnterState();
         Debug.Log(CurrentState);
+        _currentHealth = _maxHealth;
     }
 
     protected override void Update()
@@ -199,6 +204,29 @@ public class PlayerStateMachine : BaseStateMachine
         );    
         
         return hit;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        _currentHealth -= damage;
+        if (_currentHealth <= 0)
+        {
+            Debug.Log("Player is dead");
+        }
+    }
+
+    public void Heal(int healAmount)
+    {
+        _currentHealth += healAmount;
+        if (_currentHealth > _maxHealth)
+        {
+            _currentHealth = _maxHealth;
+        }
+    }
+
+    public void ResetHealth()
+    {
+        _currentHealth = _maxHealth;
     }
 
 }
