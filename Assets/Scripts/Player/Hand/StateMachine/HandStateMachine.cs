@@ -2,13 +2,20 @@ using UnityEngine;
 
 public class HandStateMachine : BaseStateMachine
 {
+    [Header("General Combat Settings")]
+    [SerializeField] int hitActiveFrames = 7;
+
     [Header("Punch Settings")]
     [SerializeField] float punchRange = 5;
     [SerializeField] int punchBaseDamage = 10;
+    [SerializeField] float airPunchLaunchForce = 20;
 
     [Header("Kick Settings")]
     [SerializeField] float kickRange = 4;
     [SerializeField] int kickDamage = 5;
+    [SerializeField] float kickLaunchForce = 5;
+    [SerializeField] float maxKickChargeTime = 1;
+    float _kickChargeTime;
 
     [Header("Grab Settings")]
     [SerializeField] float grabRange = 5;
@@ -18,16 +25,27 @@ public class HandStateMachine : BaseStateMachine
     [SerializeField] float camShakeDuration = 0.2f;
     [SerializeField] float hitStopDuration = 0.05f;
 
+    bool _dropKicking = false;
+    bool _grabbing = false;
+    int _grabPunchAnimation = 1;
+
     Animator animator;
     PlayerAim playerAim;
-
     PlayerStateMachine playerStateMachine;
     HandStateFactory _states;
-
-    bool _canPunch = true;
+    Transform playerCameraTransform;
 
     public bool Grounded { get { return playerStateMachine.Grounded; } }
-    public bool CanPunch { get { return _canPunch; } set { _canPunch = value; } }
+    public bool CanPunch { get { return playerStateMachine.CanPunch; } set {
+                Debug.Log("CHANGING CAN PUNCH FROM: " + playerStateMachine.CanPunch + ", TO: " + value);
+                playerStateMachine.CanPunch = value; } 
+    }
+    public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
+    public float KickLaunchForce { get { return kickLaunchForce; } }
+    public float KickChargeTime { get { return _kickChargeTime; } }
+    public float MaxKickChargeTime { get { return maxKickChargeTime; } }
+    public bool Grabbing { get { return _grabbing; } set { _grabbing = value; } }
+    public int GrabPunchAnimation { get { return _grabPunchAnimation; } set { _grabPunchAnimation = value; } }
 
     public Animator Animator { get { return animator; } }
 
@@ -36,30 +54,57 @@ public class HandStateMachine : BaseStateMachine
     {
         animator = GetComponent<Animator>();
 
-        _states = new HandStateFactory(this);
-        CurrentState = _states.Grounded();
-        CurrentState.EnterState();
-
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         playerStateMachine = player.GetComponent<PlayerStateMachine>();
         playerAim = player.GetComponent<PlayerAim>();
+        playerCameraTransform = playerStateMachine.CameraTransform.Find("Camera");
+
+        _states = new HandStateFactory(this);
+        CurrentState = _states.Grounded();
+        CurrentState.EnterState();
     }
+
+    protected override void Update()
+    {
+        base.Update();
+        HandleKickCharge();
+    }
+
+    void HandleKickCharge()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _kickChargeTime += Time.deltaTime;
+            _kickChargeTime = Mathf.Clamp(_kickChargeTime, 0, maxKickChargeTime);
+        }
+        else
+        {
+            _kickChargeTime = 0;
+        }
+    }
+
+    void AddAirPunchImpulse()
+    {
+        AddPlayerImpulse(airPunchLaunchForce, playerCameraTransform.forward);
+    }
+
+    void AddPlayerImpulse(float magnitude, Vector3 direction)
+    {
+        playerStateMachine.AddImpulse(magnitude, direction);
+    }
+
     void CastPunchOneHit()
     {
         if (playerAim)
         {
-            playerAim.CastHit(punchRange, punchBaseDamage, 1);
-        }
-        else
-        {
-            Debug.LogError("playerAim NOT FOUND");
+            StartCoroutine(playerAim.CastHitRoutine(punchRange, punchBaseDamage, 1, hitActiveFrames));
         }
     }
     void CastPunchTwoHit()
     {
         if (playerAim)
         {
-            playerAim.CastHit(punchRange, punchBaseDamage, 2);
+            StartCoroutine(playerAim.CastHitRoutine(punchRange, punchBaseDamage, 2, hitActiveFrames));
         }
     }
 
@@ -67,7 +112,7 @@ public class HandStateMachine : BaseStateMachine
     {
         if (playerAim)
         {
-            playerAim.CastHit(punchRange, punchBaseDamage * 2, 3);
+            StartCoroutine(playerAim.CastHitRoutine(punchRange, punchBaseDamage * 2, 3, hitActiveFrames));
         }
     }
 
@@ -75,34 +120,25 @@ public class HandStateMachine : BaseStateMachine
     {
         if (playerAim)
         {
-            playerAim.CastKickHit(kickRange, kickDamage);
+            StartCoroutine(playerAim.CastKickHitRoutine(kickRange, kickDamage, hitActiveFrames));
         }
     }
 
     void EnablePunch()
     {
-        _canPunch = true;
+        playerStateMachine.CanPunch = true;
     }
 
     void DisablePunch()
     {
-        _canPunch = false;
-    }
-
-    public bool CastGrabHit()
-    {
-        return playerAim.CastGrabHit(grabRange);
+        playerStateMachine.CanPunch = false;
     }
 
     void LaunchGrabbedEnemy()
     {
         playerAim.LaunchGrabbedEnemy();
     }
-
-    public void ReleaseGrab()
-    {
-        playerAim.ReleaseGrabbedEnemy();
-    }
+    
     void ShakeCamera(float magnitude)
     {
         playerAim.ShakeCamera(magnitude, magnitude * 2);
@@ -116,6 +152,26 @@ public class HandStateMachine : BaseStateMachine
     void KickLaunchGrabbedEnemy()
     {
         playerAim.KickLaunchGrabbedEnemy();
+    }
+
+    void SetGrabbingFalse()
+    {
+        _grabbing = false;
+    }
+
+    public void ReleaseGrab()
+    {
+        playerAim.ReleaseGrabbedEnemy();
+    }
+
+    public bool CastGrabHit()
+    {
+        return playerAim.CastGrabHit(grabRange);
+    }
+
+    public int IsTouchingWall()
+    {
+        return playerStateMachine.IsTouchingWall();
     }
 
 }

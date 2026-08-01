@@ -1,22 +1,22 @@
 using UnityEngine;
 
-public class HandKickState : HandBaseState
+public class HandDropKickLandState : HandBaseState
 {
     float _animationDuration;
 
-    public HandKickState(HandStateMachine context, HandStateFactory factory)
+    public HandDropKickLandState(HandStateMachine context, HandStateFactory factory)
     : base(context, factory)
     {
-        StateName = "PunchOne";
+        StateName = "DropKickLand";
         InitializeSubState();
     }
 
     public override void EnterState()
     {
-        Debug.Log("Hand entered Kick state");
+        Debug.Log("Hand entered Drop Kick Land state");
         _context.CanPunch = false;
         _context.Animator.speed = 1;
-        _context.Animator.Play("Kick", -1, 0);
+        _context.Animator.Play("DropKickLand", -1, 0);
         _animationDuration = _context.Animator.GetCurrentAnimatorClipInfo(0).Length;
     }
     public override void UpdateState()
@@ -27,21 +27,12 @@ public class HandKickState : HandBaseState
     public override void FixedUpdateState()
     {
     }
-    public override void ExitState() { }
+    public override void ExitState() 
+    {
+        _context.DropKicking = false;
+    }
     public override void CheckSwitchStates()
     {
-        if (_context.CanPunch)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                SwitchState(_factory.PunchOne());
-            }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                SwitchState(_factory.Kick());
-            }
-        }
-
         if (_animationDuration <= 0)
         {
             SwitchState(_factory.Move());

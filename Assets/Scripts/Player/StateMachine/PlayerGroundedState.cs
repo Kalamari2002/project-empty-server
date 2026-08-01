@@ -38,7 +38,14 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void InitializeSubState()
     {
-        SetSubState(_factory.Move());
+        if (_context.DropKicking)
+        {
+            SetSubState(_factory.DropKickLand());
+        }
+        else
+        {
+            SetSubState(_factory.Move());
+        }
         currentSubState.EnterState();
     }
 

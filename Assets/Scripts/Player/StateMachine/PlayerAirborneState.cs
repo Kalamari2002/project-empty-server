@@ -37,6 +37,7 @@ public class PlayerAirborneState : PlayerBaseState
     {
         if (_context.Grounded)
         {
+            Debug.Log("ENTERING GROUNDED STATE");
             SwitchState(_factory.Grounded());
         }
     }

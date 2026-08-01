@@ -28,6 +28,13 @@ public class PlayerStateMachine : BaseStateMachine
     [SerializeField] float _minSpeedToSlide;
     [SerializeField] float _minSpeedToWallRun;
 
+    [Header ("Combat Settings")]
+    [SerializeField] float _kickLaunchForce = 5;
+    [SerializeField] float _maxKickChargeTime = 1;
+    float _kickChargeTime = 0;
+    bool _canPunch = true;
+    bool _dropKicking = false;
+
     float _currDrag;
     float _initGroundCheckY;
     float _initCollisionPosY;
@@ -73,6 +80,11 @@ public class PlayerStateMachine : BaseStateMachine
     public float HorizontalInput { get{ return Input.GetAxisRaw("Horizontal"); } }
     public float VerticalInput { get{ return Input.GetAxisRaw("Vertical"); } }
     public float MinSpeedToWallRun { get { return _minSpeedToWallRun; } }
+    public float KickLaunchForce { get { return _kickLaunchForce; } }
+    public float KickChargeTime { get { return _kickChargeTime; } }
+    public float MaxKickChargeTime { get { return _maxKickChargeTime; } }
+    public bool CanPunch { get { return _canPunch; } set { _canPunch = value; } }
+    public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
 
     public float CROUCH_COLLISION_HEIGHT { get { return 1.36367f; } }
     public float CROUCH_COLLISION_CENTER_Y { get { return 0.3181652f; } }
@@ -117,7 +129,23 @@ public class PlayerStateMachine : BaseStateMachine
     {
         base.Update();
         orientationAnimator.SetBool("CrouchPressed", IsCrouchPressed);
+        HandleKickCharge();
     }
+
+    void HandleKickCharge()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _kickChargeTime += Time.deltaTime;
+            _kickChargeTime = Mathf.Clamp(_kickChargeTime, 0, _maxKickChargeTime);
+            Debug.Log("Kick Charge Time: " + _kickChargeTime);
+        }
+        else
+        {
+            _kickChargeTime = 0;
+        }
+    }
+
 
     public void Jump()
     {
@@ -140,6 +168,10 @@ public class PlayerStateMachine : BaseStateMachine
         if(WallRayCast(-1, distance).collider) return -1;
         if(WallRayCast(1, distance).collider) return 1;
         return 0;
+    }
+    public void AddImpulse(float magnitude, Vector3 direction)
+    {
+        rb.AddForce(direction * magnitude, ForceMode.Impulse);
     }
     
     public RaycastHit WallRayCast(int dir)

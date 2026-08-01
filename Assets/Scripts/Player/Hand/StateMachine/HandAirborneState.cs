@@ -18,8 +18,10 @@ public class HandAirborneState : HandBaseState
     {
         CheckSwitchStates();
     }
+    public override void FixedUpdateState() { }
     public override void ExitState()
     {
+        Debug.Log("Airborne Substate called: " + currentSubState?.ToString());
         currentSubState?.ExitState();
     }
     public override void CheckSwitchStates()
@@ -31,8 +33,14 @@ public class HandAirborneState : HandBaseState
     }
     public override void InitializeSubState()
     {
-        SetSubState(_factory.AirMove());
+        if (_context.Grabbing)
+        {
+            SetSubState(_factory.Grab());
+        }
+        else
+        {
+            SetSubState(_factory.AirMove());
+        }
+        currentSubState.EnterState();
     }
-
-    public override void FixedUpdateState(){}
 }

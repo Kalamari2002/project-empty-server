@@ -47,4 +47,14 @@ public class PlayerStateFactory : BaseStateFactory
     {
         return new PlayerAirCrouchState(_context, this);
     }
+
+    public BaseState DropKick()
+    {
+        return new PlayerAirDropKickState(_context, this);
+    }
+
+    public BaseState DropKickLand()
+    {
+        return new PlayerAirDropKickLandState(_context, this);
+    }
 }
