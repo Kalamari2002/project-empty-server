@@ -36,6 +36,11 @@ public class PlayerAirMoveState : PlayerBaseState
                 SwitchState(_factory.WallRun());
             } 
         }
+        else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0 && _context.KickChargeTime >= _context.MaxKickChargeTime)
+        {
+            Debug.Log("ENTERING DROP KICK STATE");
+            SwitchState(_factory.DropKick());
+        }
     }
     public override void InitializeSubState()
     {

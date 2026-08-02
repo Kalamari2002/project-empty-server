@@ -37,6 +37,26 @@ public class HandStateFactory : BaseStateFactory
         return new HandKickState(_context, this);
     }
 
+    public BaseState AirKick()
+    {
+        return new HandAirKickState(_context, this);
+    }
+
+    public BaseState DropKick()
+    {
+        return new HandDropKickState(_context, this);
+    }
+
+    public BaseState AirPunch()
+    {
+        return new HandAirPunchState(_context, this);
+    }
+
+    public BaseState DropKickLand()
+    {
+        return new HandDropKickLandState(_context, this);
+    }
+
     public BaseState Grab()
     {
         return new HandGrabState(_context, this);

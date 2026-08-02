@@ -563,6 +563,8 @@ MonoBehaviour:
   _slideDrag: 0.4
   _minSpeedToSlide: 3.5
   _minSpeedToWallRun: 8
+  _kickLaunchForce: 5
+  _maxKickChargeTime: 1
 --- !u!114 &5965988180505858191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -608,6 +610,7 @@ MonoBehaviour:
   goombaStompLaunchForce: 10
   playerCamera: {fileID: 0}
   grabbedEnemy: {fileID: 0}
+  hitActiveFrames: 5
 --- !u!1 &8362820426947322467
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,26 +1,32 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class HandAirMoveState : HandBaseState
+public class HandAirKickState : HandBaseState
 {
-    public HandAirMoveState(HandStateMachine context, HandStateFactory factory)
+    float _animationDuration;
+
+    public HandAirKickState(HandStateMachine context, HandStateFactory factory)
     : base(context, factory)
     {
-        StateName = "AirMove";
+        StateName = "AirKick";
         InitializeSubState();
     }
 
-    public override void EnterState() 
+    public override void EnterState()
     {
-        _context.CanPunch = true;
-        _context.Animator.speed = 1.0f;
-        _context.Animator.Play("HandIdle", -1, 0);
+        Debug.Log("Hand entered Air Kick state");
+        _context.CanPunch = false;
+        _context.Animator.speed = 1;
+        _context.Animator.Play("Kick", -1, 0);
+        _animationDuration = _context.Animator.GetCurrentAnimatorClipInfo(0).Length;
     }
     public override void UpdateState()
     {
+        _animationDuration -= Time.deltaTime;
         CheckSwitchStates();
     }
-    public override void FixedUpdateState() { }
+    public override void FixedUpdateState()
+    {
+    }
     public override void ExitState() { }
     public override void CheckSwitchStates()
     {
@@ -42,14 +48,14 @@ public class HandAirMoveState : HandBaseState
                 }
             }
         }
-        
+
+        if (_animationDuration <= 0)
+        {
+            SwitchState(_factory.AirMove());
+        }
     }
     public override void InitializeSubState()
     {
-        //if (_context.IsCrouchPressed)
-        //    SetSubState(_factory.AirCrouch());
-        //else
-        //    SetSubState(_factory.Freefall());
-        //currentSubState.EnterState();
+
     }
 }

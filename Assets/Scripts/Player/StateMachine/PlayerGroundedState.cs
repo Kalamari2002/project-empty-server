@@ -37,7 +37,11 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void InitializeSubState()
     {
-        if(_context.RollOnGrounded)
+        if (_context.DropKicking)
+        {
+            SetSubState(_factory.DropKickLand());
+        }
+        else if(_context.RollOnGrounded)
         {
             SetSubState(_factory.Roll());
             _context.RollOnGrounded = false;

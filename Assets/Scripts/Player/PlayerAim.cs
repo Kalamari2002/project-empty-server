@@ -79,7 +79,19 @@ public class PlayerAim : MonoBehaviour
         return mainCamera.transform.forward;
     }
 
-    public void CastHit(float punchRange, int damage, int damageAnimation)
+    public IEnumerator CastHitRoutine(float punchRange, int damage, int damageAnimation, int hitActiveFrames)
+    {
+        for (int i = 0; i < hitActiveFrames; i++)
+        {
+            if (CastHit(punchRange, damage, damageAnimation))
+            {
+                break;
+            }
+            yield return null;
+        }
+    }
+
+    bool CastHit(float punchRange, int damage, int damageAnimation)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
         Debug.DrawRay(ray.origin, ray.direction * punchRange, Color.blue);
@@ -103,10 +115,25 @@ public class PlayerAim : MonoBehaviour
             }
             ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
             HitStop(hitStopDuration * damage / 10);
+            return true;
+        }
+
+        return false;
+    }
+
+    public IEnumerator CastKickHitRoutine(float kickRange, int damage, int hitActiveFrames)
+    {
+        for (int i = 0; i < hitActiveFrames; i++)
+        {
+            if (CastKickHit(kickRange, damage))
+            {
+                break;
+            }
+            yield return null;
         }
     }
 
-    public void CastKickHit(float kickRange, int damage)
+    bool CastKickHit(float kickRange, int damage)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
         Debug.DrawRay(ray.origin, ray.direction * kickRange, Color.blue);
@@ -131,7 +158,9 @@ public class PlayerAim : MonoBehaviour
             float camShakeFactor = 20;
             ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
             HitStop(hitStopDuration * 2);
+            return true;
         }
+        return false;
     }
 
     public bool CastGrabHit(float grabRange)

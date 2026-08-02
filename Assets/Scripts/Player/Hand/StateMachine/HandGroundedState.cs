@@ -20,17 +20,31 @@ public class HandGroundedState : HandBaseState
     {
 
     }
-    public override void ExitState() { }
+    public override void ExitState() 
+    {
+        currentSubState?.ExitState();
+    }
     public override void CheckSwitchStates()
     {
-        //if (!_context.Grounded)
-        //{
-        //    SwitchState(_factory.Airborne());
-        //}
+        if (!_context.Grounded)
+        {
+            SwitchState(_factory.Airborne());
+        }
     }
     public override void InitializeSubState()
     {
-        SetSubState(_factory.Move());
+        if (_context.DropKicking)
+        {
+            SetSubState(_factory.DropKickLand());
+        }
+        else if (_context.Grabbing)
+        {
+            SetSubState(_factory.Grab());
+        }
+        else
+        {
+            SetSubState(_factory.Move());
+        }
         currentSubState.EnterState();
     }
 }
