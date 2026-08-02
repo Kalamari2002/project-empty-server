@@ -43,6 +43,8 @@ public class PlayerStateMachine : BaseStateMachine
     float _initCollisionPosY;
     float _initCollisionHeight;
 
+    bool _rollOnGrounded;
+
     Vector3 _initCameraPos;
 
     Rigidbody rb;
@@ -65,6 +67,7 @@ public class PlayerStateMachine : BaseStateMachine
     public bool IsCrouchPressed { get{ return Input.GetKey(KeyCode.LeftControl); } }
     public bool PressedCrouch { get { return Input.GetKeyDown(KeyCode.LeftControl); } }
     public bool ReleasedCrouch { get { return Input.GetKeyUp(KeyCode.LeftControl); } }
+    public bool RollOnGrounded { get { return _rollOnGrounded; } set { _rollOnGrounded = value; } }
     
     public float JumpForce { get{ return _jumpForce; } } 
     public float AirMultiplier { get{ return _airMultiplier; } }
@@ -122,6 +125,7 @@ public class PlayerStateMachine : BaseStateMachine
         _initCollisionPosY = collision.center.y;
         _initCollisionHeight = collision.height;
         _initCameraPos = cameraTransform.localPosition;
+        _rollOnGrounded = false;
         
         _states = new PlayerStateFactory(this);
         CurrentState = _states.Grounded();
