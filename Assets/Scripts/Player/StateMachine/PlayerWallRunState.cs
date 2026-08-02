@@ -3,8 +3,10 @@ using UnityEngine;
 public class PlayerWallRunState : PlayerBaseState
 {
     const float FORWARD_FORCE = 2.0f; 
+    const float AWAY_FORCE = 4.0f;
+    const float UP_FORCE = 4f;
     const float MIN_VELOCITY_TO_KEEP_RUN = 4.0f;
-    public float AWAY_FORCE = 4.0f;
+
     Vector3 wallNormal, adjacentNormal;
     public PlayerWallRunState(PlayerStateMachine context, PlayerStateFactory factory)
     :base(context, factory)
@@ -55,14 +57,14 @@ public class PlayerWallRunState : PlayerBaseState
         Vector3 directionVector = orientation.forward - wallNormal;
         Rigidbody rb = _context.PlayerRigidBody;
         rb.AddForce(directionVector.normalized * _context.AirSpeed * multiplier);
-        rb.AddForce(Vector3.up * _context.UP_FORCE);
+        rb.AddForce(Vector3.up * UP_FORCE);
     }
 
     void WallJump(Vector3 direction)
     {   
         Rigidbody rb = _context.PlayerRigidBody;
         rb.AddForce(wallNormal * AWAY_FORCE, ForceMode.Impulse);
-        rb.AddForce(Vector3.up * (_context.UP_FORCE / 1.2f), ForceMode.Impulse);
+        rb.AddForce(Vector3.up * (UP_FORCE / 1.2f), ForceMode.Impulse);
         rb.AddForce(direction * FORWARD_FORCE, ForceMode.Impulse);
         SwitchState(_factory.AirMove()); 
     }

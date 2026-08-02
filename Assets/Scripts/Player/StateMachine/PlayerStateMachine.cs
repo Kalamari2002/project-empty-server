@@ -1,6 +1,13 @@
 /**
 * CONTEXT
-* Contains variables needed for different states to work
+* Contains variables needed for different states to work.
+* Rule of thumb: 
+* Include a variable in the player context if:
+*   1. It is used in more than one state and/or in the context.
+*   2. A state is responsible for signaling an exception to another state 
+*      (e.g. Airborne state determines whether a roll was successful before Roll comes in).
+* Keep a variable local to a state if:
+*   1. It is only used in that state, unless you want to keep it Serialized for debugging purposes.
 */
 using UnityEngine;
 public class PlayerStateMachine : BaseStateMachine
@@ -12,7 +19,6 @@ public class PlayerStateMachine : BaseStateMachine
     [SerializeField] Transform wallCheckOrigin;
     [SerializeField] LayerMask wallLayers;
     [SerializeField] LayerMask groundLayer;
-    [SerializeField] CapsuleCollider collision;
     [SerializeField] Animator orientationAnimator;
 
     [Header ("Movement Settings")]
@@ -34,97 +40,112 @@ public class PlayerStateMachine : BaseStateMachine
     float _kickChargeTime = 0;
     bool _canPunch = true;
     bool _dropKicking = false;
+
+#region Components
+    // Animator
+    public Animator OrientationAnimator { get { return orientationAnimator; } }
+
+    // Rigidbody
+    Rigidbody rb;
+    public Rigidbody PlayerRigidBody { get{ return rb; } }
+
+    // Scripts
+    PlayerCamera playerCamera;
+    PlayerAim playerAim;
+    public PlayerCamera PlayerCamera { get { return playerCamera; } }
+    public PlayerAim Aim { get { return playerAim; } }
+
+    // Transforms
+    Transform orientation;
+    public Transform PlayerOrientation { get{ return orientation; } }
+    public Transform WallCheckOrigin { get { return wallCheckOrigin; } }
+#endregion
+
+#region Health
     [Header ("Helth")]
     [SerializeField] int _maxHealth = 100;
     int _currentHealth;
+    public int CurrentHealth { get { return _currentHealth; } }
+#endregion
 
-    float _currDrag;
-    float _initGroundCheckY;
-    float _initCollisionPosY;
-    float _initCollisionHeight;
-
-    bool _rollOnGrounded;
-
-    Vector3 _initCameraPos;
-
-    Rigidbody rb;
-    Transform orientation;
-    PlayerAim playerAim;
-    PlayerCamera playerCamera;
-
-    PlayerStateFactory _states;
-
-    GameStateManager _gameStateManager;
-
-    public Rigidbody PlayerRigidBody { get{ return rb; } }
-    public Transform PlayerOrientation { get{ return orientation; } }
-    public Transform WallCheckOrigin { get { return wallCheckOrigin; } }
-    public PlayerCamera PlayerCamera { get { return playerCamera; } }
-
-    public bool Grounded { get{ return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer); }}
-    public bool PressedJump { get { return Input.GetKeyDown(KeyCode.Space); } } 
-    public bool IsDirectionPressed { get { return Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0; } }
+#region Input Checks
+    // Crouch
     public bool IsCrouchPressed { get{ return Input.GetKey(KeyCode.LeftControl); } }
     public bool PressedCrouch { get { return Input.GetKeyDown(KeyCode.LeftControl); } }
-    public bool ReleasedCrouch { get { return Input.GetKeyUp(KeyCode.LeftControl); } }
-    public bool RollOnGrounded { get { return _rollOnGrounded; } set { _rollOnGrounded = value; } }
-    
-    public float JumpForce { get{ return _jumpForce; } } 
-    public float AirMultiplier { get{ return _airMultiplier; } }
-    public float CurrentDrag { get{ return _currDrag; } set{_currDrag = value;}}
-    public float GroundSpeed { get{ return _groundSpeed; } }
-    public float Drag { get{ return _drag; } }
-    public float SlideDrag { get { return _slideDrag; } }
-    public float InitGroundCheckY { get{ return _initGroundCheckY; } }
-    public float InitCollisionPosY { get {return _initCollisionPosY; } }
-    public float InitCollisionHeight { get {return _initCollisionHeight; } }
-    public float CrouchDrag { get{ return _crouchDrag; } }
-    public float AirSpeed { get{ return _airSpeed; } }
-    public float MaxGroundSpeed{ get{ return _maxGroundSpeed; } }
-    public float MaxAirSpeed{ get{ return _maxAirSpeed; } }
-    public float MinSpeedToSlide { get { return _minSpeedToSlide; } }
+
+    // Directions
+    public bool IsDirectionPressed { get { return Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0; } }
     public float HorizontalInput { get{ return Input.GetAxisRaw("Horizontal"); } }
     public float VerticalInput { get{ return Input.GetAxisRaw("Vertical"); } }
-    public float MinSpeedToWallRun { get { return _minSpeedToWallRun; } }
+
+    // Jump
+    public bool PressedJump { get { return Input.GetKeyDown(KeyCode.Space); } }
+#endregion
+
+
+#region Airborne Movement Variables
+    public float AirMultiplier { get{ return _airMultiplier; } }
+    public float AirSpeed { get{ return _airSpeed; } }
+    public float MaxAirSpeed{ get{ return _maxAirSpeed; } }
+#endregion
+
+#region Grounded Movement Variables
+    public float JumpForce { get{ return _jumpForce; } } 
+    public float Drag { get{ return _drag; } }
+    public float GroundSpeed { get{ return _groundSpeed; } }
+    public float MaxGroundSpeed{ get{ return _maxGroundSpeed; } }
+#endregion
+
+#region Combat Variables
     public float KickLaunchForce { get { return _kickLaunchForce; } }
     public float KickChargeTime { get { return _kickChargeTime; } }
     public float MaxKickChargeTime { get { return _maxKickChargeTime; } }
     public bool CanPunch { get { return _canPunch; } set { _canPunch = value; } }
     public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
-    public float CurrentHealth { get { return _currentHealth; } }
+#endregion
 
-    public float CROUCH_COLLISION_HEIGHT { get { return 1.36367f; } }
-    public float CROUCH_COLLISION_CENTER_Y { get { return 0.3181652f; } }
-    public float CROUCH_COOLDOWN { get { return .5f; } }
-    public float SLIDE_COLLISION_HEIGHT { get { return 1.0f; } } 
-    public float UP_FORCE { get { return 4f; } }
+#region Shared Movement Variables
+    float _currDrag;
+    public float CurrentDrag { get{ return _currDrag; } set{_currDrag = value;}}
+#endregion
 
-    public CapsuleCollider CollisionCapsule { get { return collision; } }
+#region State Machine Variables
+    PlayerStateFactory _states;
+#endregion
 
-    public Transform GroundCollision { get { return groundCheck; } } 
-    public Transform CameraTransform { get { return cameraTransform; } }
-    public Vector3 InitCameraPos { get { return _initCameraPos; } }
-    public Animator OrientationAnimator { get { return orientationAnimator; } }
-    public LayerMask WallLayers { get { return wallLayers; } }
 
-    public PlayerAim Aim { get { return playerAim; } }
+#region Context Variables
+    #region Crouch
+        public float CrouchDrag { get{ return _crouchDrag; } }
+    #endregion
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    #region Grounded
+        public bool Grounded { get{ return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer); }}
+    #endregion
+
+    #region Roll
+        bool _rollOnGrounded;
+        public bool RollOnGrounded { get { return _rollOnGrounded; } set { _rollOnGrounded = value; } }
+    #endregion
+
+    #region Slide
+        public float SlideDrag { get { return _slideDrag; } }
+        public float MinSpeedToSlide { get { return _minSpeedToSlide; } }
+    #endregion
+
+    #region Wall Run
+        public float MinSpeedToWallRun { get { return _minSpeedToWallRun; } }
+    #endregion
+#endregion
+
     void Awake()
     {
-
         playerAim = GetComponent<PlayerAim>();
         rb = GetComponent<Rigidbody>();
         orientation = transform.Find("Orientation");
         playerCamera = GetComponentInChildren<PlayerCamera>();
-        
-        _gameStateManager = FindFirstObjectByType<GameStateManager>();
 
         _currDrag = _drag;
-        _initGroundCheckY =  groundCheck.localPosition.y;
-        _initCollisionPosY = collision.center.y;
-        _initCollisionHeight = collision.height;
-        _initCameraPos = cameraTransform.localPosition;
         _rollOnGrounded = false;
         
         _states = new PlayerStateFactory(this);
@@ -172,6 +193,7 @@ public class PlayerStateMachine : BaseStateMachine
         if(WallRayCast(1).collider) return 1;
         return 0;
     }
+    
     public int IsTouchingWall(float distance)
     {
         if(WallRayCast(-1, distance).collider) return -1;
@@ -192,11 +214,12 @@ public class PlayerStateMachine : BaseStateMachine
             dir * PlayerOrientation.right,
             out RaycastHit hit,
             WALL_CHECK_DIST,
-            WallLayers
+            wallLayers
         );    
         
         return hit;
     }
+    
     public RaycastHit WallRayCast(int dir, float distance)
     {
         Physics.Raycast(
@@ -204,7 +227,7 @@ public class PlayerStateMachine : BaseStateMachine
             dir * PlayerOrientation.right,
             out RaycastHit hit,
             distance,
-            WallLayers
+            wallLayers
         );    
         
         return hit;
@@ -218,19 +241,4 @@ public class PlayerStateMachine : BaseStateMachine
             Debug.Log("Player is dead");
         }
     }
-
-    public void Heal(int healAmount)
-    {
-        _currentHealth += healAmount;
-        if (_currentHealth > _maxHealth)
-        {
-            _currentHealth = _maxHealth;
-        }
-    }
-
-    public void ResetHealth()
-    {
-        _currentHealth = _maxHealth;
-    }
-
 }
