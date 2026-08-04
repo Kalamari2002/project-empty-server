@@ -53,6 +53,7 @@ public class PlayerStateMachine : BaseStateMachine
     PlayerCamera playerCamera;
     PlayerAim playerAim;
     public PlayerCamera PlayerCamera { get { return playerCamera; } }
+    public Transform CameraTransform { get { return cameraTransform; } }
     public PlayerAim Aim { get { return playerAim; } }
 
     // Transforms

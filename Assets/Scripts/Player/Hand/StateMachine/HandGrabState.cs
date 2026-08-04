@@ -105,7 +105,7 @@ public class HandGrabState : HandBaseState
                 _context.ReleaseGrab();
                 SwitchStateWrapper(_context.Grounded ? _factory.Move() : _factory.AirMove());
             }
-            else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0 && _context.KickChargeTime >= _context.MaxKickChargeTime)
+            else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0 && !_context.Grounded && _context.KickChargeTime >= _context.MaxKickChargeTime)
             {
                 _context.ReleaseGrab();
                 SwitchStateWrapper(_factory.DropKick());

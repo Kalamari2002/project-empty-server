@@ -36,7 +36,7 @@ public class HandKickState : HandBaseState
             {
                 SwitchState(_factory.PunchOne());
             }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 SwitchState(_factory.Kick());
             }

@@ -121,11 +121,11 @@ public class PlayerAim : MonoBehaviour
         return false;
     }
 
-    public IEnumerator CastKickHitRoutine(float kickRange, int damage, int hitActiveFrames)
+    public IEnumerator CastKickHitRoutine(float kickRange, float launchForceMultiplier, int damage, int hitActiveFrames)
     {
         for (int i = 0; i < hitActiveFrames; i++)
         {
-            if (CastKickHit(kickRange, damage))
+            if (CastKickHit(kickRange, launchForceMultiplier, damage))
             {
                 break;
             }
@@ -133,7 +133,7 @@ public class PlayerAim : MonoBehaviour
         }
     }
 
-    bool CastKickHit(float kickRange, int damage)
+    bool CastKickHit(float kickRange, float launchForceMultiplier, int damage)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
         Debug.DrawRay(ray.origin, ray.direction * kickRange, Color.blue);
@@ -142,16 +142,15 @@ public class PlayerAim : MonoBehaviour
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Debug.Log("Enemy Kicked!");
                 EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
                 enemyPrototype.TakeDamage(damage);
-                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
+                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * launchForceMultiplier, 0, (cameraForward() * 2f + Vector3.up).normalized);
                 GoombaStomp();
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
             {
-                Debug.Log("Enemy Ragdoll Kicked!");
-                hit.transform.GetComponent<Rigidbody>().AddForce(enemyRagdollLaunchForce * 1.5f * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
+                hit.transform.GetComponent<Rigidbody>()
+                    .AddForce(enemyRagdollLaunchForce * launchForceMultiplier * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
                 hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
                 GoombaStomp();
             }
@@ -192,9 +191,9 @@ public class PlayerAim : MonoBehaviour
         LaunchGrabbedEnemy(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
     }
 
-    public void KickLaunchGrabbedEnemy()
+    public void KickLaunchGrabbedEnemy(float launchKickMultiplier)
     {
-        LaunchGrabbedEnemy(enemyRagdollLaunchForce * 1.5f, 0, (cameraForward() * 2f + Vector3.up).normalized);
+        LaunchGrabbedEnemy(enemyRagdollLaunchForce * launchKickMultiplier, 0, (cameraForward() * 2f + Vector3.up).normalized);
         GoombaStomp();
     }
 

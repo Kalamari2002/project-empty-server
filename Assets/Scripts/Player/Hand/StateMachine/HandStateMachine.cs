@@ -36,10 +36,7 @@ public class HandStateMachine : BaseStateMachine
     Transform playerCameraTransform;
 
     public bool Grounded { get { return playerStateMachine.Grounded; } }
-    public bool CanPunch { get { return playerStateMachine.CanPunch; } set {
-                Debug.Log("CHANGING CAN PUNCH FROM: " + playerStateMachine.CanPunch + ", TO: " + value);
-                playerStateMachine.CanPunch = value; } 
-    }
+    public bool CanPunch { get { return playerStateMachine.CanPunch; } set { playerStateMachine.CanPunch = value; } }
     public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
     public float KickLaunchForce { get { return kickLaunchForce; } }
     public float KickChargeTime { get { return _kickChargeTime; } }
@@ -76,10 +73,6 @@ public class HandStateMachine : BaseStateMachine
         {
             _kickChargeTime += Time.deltaTime;
             _kickChargeTime = Mathf.Clamp(_kickChargeTime, 0, maxKickChargeTime);
-        }
-        else
-        {
-            _kickChargeTime = 0;
         }
     }
 
@@ -120,7 +113,8 @@ public class HandStateMachine : BaseStateMachine
     {
         if (playerAim)
         {
-            StartCoroutine(playerAim.CastKickHitRoutine(kickRange, kickDamage, hitActiveFrames));
+            StartCoroutine(playerAim.CastKickHitRoutine(kickRange, GetKickLaunchMultiplier(), kickDamage, hitActiveFrames));
+            _kickChargeTime = 0;
         }
     }
 
@@ -151,7 +145,14 @@ public class HandStateMachine : BaseStateMachine
 
     void KickLaunchGrabbedEnemy()
     {
-        playerAim.KickLaunchGrabbedEnemy();
+        playerAim.KickLaunchGrabbedEnemy(GetKickLaunchMultiplier());
+        _kickChargeTime = 0;
+    }
+
+    float GetKickLaunchMultiplier()
+    {
+        float clampedMultiplier = Mathf.Clamp(_kickChargeTime, 0.35f, maxKickChargeTime);
+        return clampedMultiplier * 1.5f;
     }
 
     void SetGrabbingFalse()
