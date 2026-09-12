@@ -8445,10 +8445,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 540628890}
-  - component: {fileID: 540628891}
   - component: {fileID: 540628892}
   - component: {fileID: 540628893}
   - component: {fileID: 540628894}
+  - component: {fileID: 540628895}
   m_Layer: 7
   m_Name: EnemyPrototype
   m_TagString: Untagged
@@ -8472,28 +8472,6 @@ Transform:
   - {fileID: 992461348}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &540628891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540628889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06677ad3c4780f54fb41d79127c89ebc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
-  speed: 4
-  backOffDistance: 2
-  stopDistance: 3
-  animator: {fileID: 0}
-  Ragdoll: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
-  ragdollLaunchForce: 200
-  ragdollDuration: 5
-  ragdollMode: 0
-  ActiveRagdoll: {fileID: 0}
 --- !u!143 &540628892
 CharacterController:
   m_ObjectHideFlags: 0
@@ -8564,6 +8542,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &540628895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540628889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 830a2aa3dd2c658459b22178e9d12f9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 50
+  chaseSpeed: 4
+  backOffDistance: 2
+  stopDistance: 3
+  animator: {fileID: 0}
+  ragdoll: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
+  ragdollLaunchForce: 200
+  ragdollDuration: 5
 --- !u!43 &567463056
 Mesh:
   m_ObjectHideFlags: 0
@@ -41258,13 +41256,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2112766752224698714, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2846594166316540840, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 147472150}
     - target: {fileID: 2846594166316540840, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
       propertyPath: m_VersionIndex
-      value: 2186
+      value: 2195
       objectReference: {fileID: 0}
     - target: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
       propertyPath: m_Name
