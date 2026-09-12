@@ -7,19 +7,18 @@ public class EnemyRagdoll : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float ragdollDuration;
     public bool grounded;
-    [Header("Debugging")]
-    [SerializeField] float ragdollCountDown;
-    EnemyPrototype parentEnemy;
+    [SerializeField] EnemyStateMachine parentEnemy;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ragdollCountDown = ragdollDuration;
+
     }
 
-    public void SetUp(EnemyPrototype parentEnemy)
+    public void SetUp(EnemyStateMachine parentEnemy)
     {
         this.parentEnemy = parentEnemy;
+        parentEnemy.ResetRagdollCountDown();
     }
 
     // Update is called once per frame
@@ -27,11 +26,7 @@ public class EnemyRagdoll : MonoBehaviour
     {
         if (grounded)
         {
-            ragdollCountDown -= Time.deltaTime;
-        }
-        if (ragdollCountDown <= 0 && parentEnemy != null)
-        {
-            parentEnemy.WakeUpFromRagdoll();
+            parentEnemy.RagdollCountDown -= Time.deltaTime;
         }
     }
 
@@ -53,10 +48,10 @@ public class EnemyRagdoll : MonoBehaviour
 
     public void TakeHit()
     {
-        ragdollCountDown = ragdollDuration;
+        parentEnemy.RagdollCountDown = ragdollDuration;
     }
 
-    public EnemyPrototype GetParentEnemy()
+    public EnemyStateMachine GetParentEnemy()
     {
         return parentEnemy;
     }
