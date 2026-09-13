@@ -43,6 +43,11 @@ public abstract class BaseState
         }
     }
 
+    public virtual void InterruptState(BaseState newState)
+    {
+        SwitchState(newState);
+    }
+
     protected void SwitchState(BaseState newState) 
     {
         ExitState();

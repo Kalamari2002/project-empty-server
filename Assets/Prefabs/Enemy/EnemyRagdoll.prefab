@@ -2448,7 +2448,7 @@ GameObject:
   - component: {fileID: 2740121997181292478}
   - component: {fileID: 2112766752224698714}
   m_Layer: 9
-  m_Name: EnemyShadedModelV5
+  m_Name: EnemyRagdoll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -16,7 +16,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float goombaStompRotationThreshold;
     [SerializeField] float goombaStompLaunchForce = 10;
     [SerializeField] Transform playerCamera;
-    [SerializeField] EnemyPrototype grabbedEnemy;
+    [SerializeField] EnemyStateMachine grabbedEnemy;
 
     Coroutine camShakeRoutine;
     Transform orientation;
@@ -91,7 +91,7 @@ public class PlayerAim : MonoBehaviour
         }
     }
 
-    bool CastHit(float punchRange, int damage, int damageAnimation)
+    bool CastHit(float punchRange, int damage, int enemyHitstunAnimation)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
         Debug.DrawRay(ray.origin, ray.direction * punchRange, Color.blue);
@@ -100,11 +100,16 @@ public class PlayerAim : MonoBehaviour
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Debug.Log("Enemy Hit!"); EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
-                enemyPrototype.TakeDamage(damage, damageAnimation);
-                if (damageAnimation == 3)
+                Debug.Log("Enemy Hit!");
+                EnemyStateMachine enemyPrototype = hit.transform.GetComponent<EnemyStateMachine>();
+                enemyPrototype.TakeDamage(damage);
+                if (enemyHitstunAnimation < 3)
                 {
-                    enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
+                    enemyPrototype.EnterHitstun(enemyHitstunAnimation);
+                }
+                else
+                {
+                    enemyPrototype.EnterRagdoll(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
                 }
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
@@ -142,9 +147,9 @@ public class PlayerAim : MonoBehaviour
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                EnemyPrototype enemyPrototype = hit.transform.GetComponent<EnemyPrototype>();
+                EnemyStateMachine enemyPrototype = hit.transform.GetComponent<EnemyStateMachine>();
                 enemyPrototype.TakeDamage(damage);
-                enemyPrototype.SpawnRagdoll(enemyRagdollLaunchForce * launchForceMultiplier, 0, (cameraForward() * 2f + Vector3.up).normalized);
+                enemyPrototype.EnterRagdoll(enemyRagdollLaunchForce * launchForceMultiplier, 0, (cameraForward() * 2f + Vector3.up).normalized);
                 GoombaStomp();
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
@@ -162,6 +167,7 @@ public class PlayerAim : MonoBehaviour
         return false;
     }
 
+
     public bool CastGrabHit(float grabRange)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
@@ -172,14 +178,14 @@ public class PlayerAim : MonoBehaviour
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 Debug.Log("Enemy Grabbed!");
-                grabbedEnemy = hit.transform.GetComponent<EnemyPrototype>();
-                grabbedEnemy.DisableRendering();
+                grabbedEnemy = hit.transform.GetComponent<EnemyStateMachine>();
+                grabbedEnemy.EnterGrabbed();
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
             {
                 Debug.Log("Enemy Ragdoll Grabbed!");
                 grabbedEnemy = hit.transform.root.GetComponent<EnemyRagdoll>().GetParentEnemy();
-                grabbedEnemy.DestroyActiveRagdoll();
+                grabbedEnemy.EnterGrabbed();
             }
             return true;
         }
@@ -190,6 +196,12 @@ public class PlayerAim : MonoBehaviour
     {
         LaunchGrabbedEnemy(enemyRagdollLaunchForce, enemyRagdollLaunchForce, (cameraForward() + Vector3.up).normalized);
     }
+    public void LaunchGrabbedEnemy(float launchForce, float torque, Vector3 direction)
+    {
+        if (grabbedEnemy == null) return;
+        grabbedEnemy.EnterRagdoll(launchForce, torque, direction, GrabPoint());
+        grabbedEnemy = null;
+    }
 
     public void KickLaunchGrabbedEnemy(float launchKickMultiplier)
     {
@@ -197,17 +209,10 @@ public class PlayerAim : MonoBehaviour
         GoombaStomp();
     }
 
-    public void LaunchGrabbedEnemy(float launchForce, float torque, Vector3 direction)
-    {
-        if (grabbedEnemy == null) return;
-        grabbedEnemy.SpawnRagdoll(launchForce, torque, direction, GrabPoint());
-        grabbedEnemy = null;
-    }
-
     public void ReleaseGrabbedEnemy()
     {
         if (grabbedEnemy == null) return;
-        grabbedEnemy.SpawnRagdoll(10, 0, cameraForward(), GrabPoint()); 
+        grabbedEnemy.EnterRagdoll(10, 0, cameraForward(), GrabPoint()); 
         grabbedEnemy = null;
     }
 

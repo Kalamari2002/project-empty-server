@@ -42,26 +42,26 @@ public class EnemyPrototype : MonoBehaviour
         HandleRagdoll();
     }
 
-    public void SpawnRagdoll(float launchForce, float torque, Vector3 launchDirection)
-    {
-        SpawnRagdoll(launchForce, torque, launchDirection, transform.position);
-    }
+    //public void SpawnRagdoll(float launchForce, float torque, Vector3 launchDirection)
+    //{
+    //    SpawnRagdoll(launchForce, torque, launchDirection, transform.position);
+    //}
 
-    public void SpawnRagdoll(float launchForce, float torque, Vector3 launchDirection, Vector3 spawnPoint)
-    {
-        if (ActiveRagdoll == null)
-        {
-            ActiveRagdoll = Instantiate(Ragdoll, spawnPoint, Quaternion.identity);
-            ActiveRagdoll.GetComponent<EnemyRagdoll>().SetUp(this);
-            ActiveRagdoll.transform.forward = -launchDirection;
-        }
-        Rigidbody ragdollRb = ActiveRagdoll.GetComponent<Rigidbody>();
-        ragdollRb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
-        ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * torque, ForceMode.Impulse);
-        ragdollMode = true;
-        ragdollCountDown = ragdollDuration;
-        DisableRendering();
-    }
+    //public void SpawnRagdoll(float launchForce, float torque, Vector3 launchDirection, Vector3 spawnPoint)
+    //{
+    //    if (ActiveRagdoll == null)
+    //    {
+    //        ActiveRagdoll = Instantiate(Ragdoll, spawnPoint, Quaternion.identity);
+    //        ActiveRagdoll.GetComponent<EnemyRagdoll>().SetUp(this);
+    //        ActiveRagdoll.transform.forward = -launchDirection;
+    //    }
+    //    Rigidbody ragdollRb = ActiveRagdoll.GetComponent<Rigidbody>();
+    //    ragdollRb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
+    //    ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * torque, ForceMode.Impulse);
+    //    ragdollMode = true;
+    //    ragdollCountDown = ragdollDuration;
+    //    DisableRendering();
+    //}
 
     public void DisableRendering()
     {
