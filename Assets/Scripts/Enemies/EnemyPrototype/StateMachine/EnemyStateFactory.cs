@@ -33,4 +33,9 @@ public class EnemyStateFactory : BaseStateFactory
     {
         return new EnemyGrabbedState(_context, this);
     }
+
+    public BaseState Punch()
+    {
+        return new EnemyPunchState(_context, this);
+    }
 }
