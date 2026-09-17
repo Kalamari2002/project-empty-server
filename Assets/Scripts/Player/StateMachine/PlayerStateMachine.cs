@@ -39,6 +39,7 @@ public class PlayerStateMachine : BaseStateMachine
     [SerializeField] float _maxKickChargeTime = 1;
     float _kickChargeTime = 0;
     bool _canPunch = true;
+    bool _canDropKick = false;
     bool _dropKicking = false;
 
 #region Components
@@ -102,7 +103,9 @@ public class PlayerStateMachine : BaseStateMachine
     public float KickChargeTime { get { return _kickChargeTime; } }
     public float MaxKickChargeTime { get { return _maxKickChargeTime; } }
     public bool CanPunch { get { return _canPunch; } set { _canPunch = value; } }
+    public bool CanDropKick { get { return _canDropKick; } set { _canDropKick = value; } }
     public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
+    public bool GrabbingEnemy { get { return playerAim.GrabbedEnemy != null; } }
 #endregion
 
 #region Shared Movement Variables
@@ -152,7 +155,6 @@ public class PlayerStateMachine : BaseStateMachine
         _states = new PlayerStateFactory(this);
         CurrentState = _states.Grounded();
         CurrentState.EnterState();
-        Debug.Log(CurrentState);
         _currentHealth = _maxHealth;
     }
 
@@ -160,16 +162,19 @@ public class PlayerStateMachine : BaseStateMachine
     {
         base.Update();
         orientationAnimator.SetBool("CrouchPressed", IsCrouchPressed);
-        HandleKickCharge();
     }
 
-    void HandleKickCharge()
+    private void LateUpdate()
+    {
+        HandleKickCharge();   
+    }
+
+    public void HandleKickCharge()
     {
         if (Input.GetKey(KeyCode.LeftShift))
         {
             _kickChargeTime += Time.deltaTime;
             _kickChargeTime = Mathf.Clamp(_kickChargeTime, 0, _maxKickChargeTime);
-            Debug.Log("Kick Charge Time: " + _kickChargeTime);
         }
         else
         {
@@ -240,6 +245,24 @@ public class PlayerStateMachine : BaseStateMachine
         if (_currentHealth <= 0)
         {
             Debug.Log("Player is dead");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "EnemyHitbox")
+        {
+            TakeDamage(10);
+            Debug.Log("Trigger Punch Hitbox");
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "EnemyHitbox")
+        {
+            TakeDamage(10);
+            Debug.Log("Collision Punch Hitbox");
         }
     }
 }

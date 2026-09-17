@@ -29,7 +29,11 @@ public class HandAirPunchState : HandBaseState
     public override void ExitState() { }
     public override void CheckSwitchStates()
     {
-        if (_context.CanPunch)
+        if (_animationDuration <= 0)
+        {
+            SwitchState(_factory.AirMove());
+        }
+        else if (_context.CanPunch)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -37,20 +41,15 @@ public class HandAirPunchState : HandBaseState
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0)
             {
-                if (_context.KickChargeTime < _context.MaxKickChargeTime)
-                {
-                    SwitchState(_factory.AirKick());
-                }
-                else
+                if (_context.CanDropKick && _context.KickChargeTime >= _context.MaxKickChargeTime)
                 {
                     SwitchState(_factory.DropKick());
                 }
+                else
+                {
+                    SwitchState(_factory.AirKick(_context.KickChargeTime));
+                }
             }
-        }
-
-        if (_animationDuration <= 0)
-        {
-            SwitchState(_factory.AirMove());
         }
     }
     public override void InitializeSubState()

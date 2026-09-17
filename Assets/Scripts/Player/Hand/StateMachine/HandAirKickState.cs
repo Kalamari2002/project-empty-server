@@ -3,11 +3,13 @@ using UnityEngine;
 public class HandAirKickState : HandBaseState
 {
     float _animationDuration;
+    float _kickCharge;
 
-    public HandAirKickState(HandStateMachine context, HandStateFactory factory)
+    public HandAirKickState(HandStateMachine context, HandStateFactory factory, float kickCharge)
     : base(context, factory)
     {
         StateName = "AirKick";
+        _kickCharge = kickCharge;
         InitializeSubState();
     }
 
@@ -17,6 +19,7 @@ public class HandAirKickState : HandBaseState
         _context.CanPunch = false;
         _context.Animator.speed = 1;
         _context.Animator.Play("Kick", -1, 0);
+        _context.LastKickCharge = _kickCharge;
         _animationDuration = _context.Animator.GetCurrentAnimatorClipInfo(0).Length;
     }
     public override void UpdateState()
@@ -30,28 +33,20 @@ public class HandAirKickState : HandBaseState
     public override void ExitState() { }
     public override void CheckSwitchStates()
     {
-        if (_context.CanPunch)
+        if (_animationDuration <= 0)
+        {
+            SwitchState(_factory.AirMove());
+        }
+        else if (_context.CanPunch)
         {
             if (Input.GetMouseButtonDown(0))
             {
                 SwitchState(_factory.AirPunch());
             }
-            else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0)
+            else if (Input.GetKeyUp(KeyCode.LeftShift))
             {
-                if (_context.KickChargeTime < _context.MaxKickChargeTime)
-                {
-                    SwitchState(_factory.AirKick());
-                }
-                else
-                {
-                    SwitchState(_factory.DropKick());
-                }
+                SwitchState(_factory.AirKick(_context.KickChargeTime));
             }
-        }
-
-        if (_animationDuration <= 0)
-        {
-            SwitchState(_factory.AirMove());
         }
     }
     public override void InitializeSubState()

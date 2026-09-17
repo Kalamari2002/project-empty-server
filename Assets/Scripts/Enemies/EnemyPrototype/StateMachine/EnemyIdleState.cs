@@ -7,7 +7,6 @@ public class EnemyIdleState : EnemyBaseState
     {
         name = "Idle";
         isRootState = true;
-        //InitializeSubState();
     }
     public override void EnterState()
     {
@@ -34,6 +33,10 @@ public class EnemyIdleState : EnemyBaseState
         if (Vector3.Distance(_context.transform.position, _context.Player.position) > _context.StopDistance)
         {
             SwitchState(_factory.Chase());
+        }
+        else
+        {
+            SwitchState(_factory.Punch());
         }
     }
 

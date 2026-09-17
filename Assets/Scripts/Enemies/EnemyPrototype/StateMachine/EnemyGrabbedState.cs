@@ -11,6 +11,7 @@ public class EnemyGrabbedState : EnemyBaseState
     public override void EnterState()
     {
         _context.SetVisibility(false);
+        _context.Animator.Play("EnemyPrototypeIdle", -1, 0);
     }
 
     public override void InitializeSubState()

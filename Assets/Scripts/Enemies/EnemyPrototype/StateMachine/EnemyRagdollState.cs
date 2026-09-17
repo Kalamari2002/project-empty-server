@@ -21,6 +21,7 @@ public class EnemyRagdollState : EnemyBaseState
     {
         _context.SpawnRagdoll(_launchForce, _torque, _launchDirection, _spawnPoint);
         _context.SetVisibility(false);
+        _context.Animator.Play("EnemyPrototypeIdle", -1, 0);
     }
 
     public override void InitializeSubState()

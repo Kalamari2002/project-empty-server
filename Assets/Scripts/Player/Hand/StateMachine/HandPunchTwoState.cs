@@ -30,21 +30,20 @@ public class HandPunchTwoState : HandBaseState
     public override void ExitState() { }
     public override void CheckSwitchStates()
     {
-        if (_context.CanPunch)
+        if (_animationDuration <= 0)
+        {
+            SwitchState(_factory.Move());
+        }
+        else if (_context.CanPunch)
         {
             if (Input.GetMouseButtonDown(0))
             {
                 SwitchState(_factory.PunchThree());
             }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            else if (Input.GetKeyUp(KeyCode.LeftShift))
             {
-                SwitchState(_factory.Kick());
+                SwitchState(_factory.Kick(_context.KickChargeTime));
             }
-        }
-
-        if (_animationDuration <= 0)
-        {
-            SwitchState(_factory.Move());
         }
     }
     public override void InitializeSubState()

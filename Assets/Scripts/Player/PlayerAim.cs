@@ -23,6 +23,8 @@ public class PlayerAim : MonoBehaviour
     Vector3 originalPlayerCameraPosition;
     Rigidbody rb;
 
+    public EnemyStateMachine GrabbedEnemy { get { return grabbedEnemy; } }  
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();

@@ -32,13 +32,13 @@ public class HandAirMoveState : HandBaseState
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0)
             {
-                if (_context.KickChargeTime < _context.MaxKickChargeTime)
+                if (_context.CanDropKick && _context.KickChargeTime >= _context.MaxKickChargeTime)
                 {
-                    SwitchState(_factory.AirKick());
+                    SwitchState(_factory.DropKick());
                 }
                 else
                 {
-                    SwitchState(_factory.DropKick());
+                    SwitchState(_factory.AirKick(_context.KickChargeTime));
                 }
             }
         }
