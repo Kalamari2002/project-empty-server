@@ -100,7 +100,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 640
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -479,6 +479,7 @@ GameObject:
   - component: {fileID: 1088077972582368465}
   - component: {fileID: 5965988180505858191}
   - component: {fileID: 1419486856170676426}
+  - component: {fileID: 8428906810596564387}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -528,7 +529,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &1088077972582368465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,7 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundCheck: {fileID: 3144895975389547248}
-  cameraTransform: {fileID: 759467350592687854}
+  cameraTransform: {fileID: 147343476905857380}
   wallCheckOrigin: {fileID: 1875896232990815028}
   wallLayers:
     serializedVersion: 2
@@ -550,7 +551,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  collision: {fileID: 2916046406501991316}
   orientationAnimator: {fileID: 2982298283658833489}
   _groundSpeed: 60
   _airSpeed: 6
@@ -565,6 +565,7 @@ MonoBehaviour:
   _minSpeedToWallRun: 8
   _kickLaunchForce: 5
   _maxKickChargeTime: 1
+  _maxHealth: 100
 --- !u!114 &5965988180505858191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -590,27 +591,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db76d745ee791e41bc92e3c6bab4c62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundCheck: {fileID: 0}
+  groundCheck: {fileID: 3144895975389547248}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   mainCamera: {fileID: 8297509302159673110}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 640
   enemyRagdoll:
     serializedVersion: 2
     m_Bits: 0
-  camShakeMagnitude: 0.1
-  camShakeDuration: 0.2
+  camShakeMagnitude: 0.005
+  camShakeDuration: 0.01
   hitStopDuration: 0.05
-  punchImpulse: 40
+  punchImpulse: 30
   enemyRagdollLaunchForce: 200
-  goombaStompRotationThreshold: 0
+  goombaStompRotationThreshold: 25
   goombaStompLaunchForce: 10
   playerCamera: {fileID: 0}
   grabbedEnemy: {fileID: 0}
-  hitActiveFrames: 5
+--- !u!136 &8428906810596564387
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142240636484815424}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8362820426947322467
 GameObject:
   m_ObjectHideFlags: 0
