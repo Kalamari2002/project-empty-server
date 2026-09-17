@@ -52,6 +52,7 @@ public class PlayerAirborneState : PlayerBaseState
     public override void InitializeSubState()
     {
         SetSubState(_factory.AirMove());
+        currentSubState.EnterState();
     }
     void LimitSpeed()
     {

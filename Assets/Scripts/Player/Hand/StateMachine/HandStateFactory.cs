@@ -32,14 +32,14 @@ public class HandStateFactory : BaseStateFactory
         return new HandPunchThreeState(_context, this);
     }
 
-    public BaseState Kick()
+    public BaseState Kick(float kickCharge)
     {
-        return new HandKickState(_context, this);
+        return new HandKickState(_context, this, kickCharge);
     }
 
-    public BaseState AirKick()
+    public BaseState AirKick(float kickCharge)
     {
-        return new HandAirKickState(_context, this);
+        return new HandAirKickState(_context, this, kickCharge);
     }
 
     public BaseState DropKick()

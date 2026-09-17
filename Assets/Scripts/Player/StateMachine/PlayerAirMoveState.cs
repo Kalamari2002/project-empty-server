@@ -9,7 +9,11 @@ public class PlayerAirMoveState : PlayerBaseState
         InitializeSubState();
     }
 
-    public override void EnterState(){}
+    public override void EnterState() 
+    {
+        _context.CanDropKick = true;
+    }
+
     public override void UpdateState()
     {
         CheckSwitchStates();
@@ -18,7 +22,12 @@ public class PlayerAirMoveState : PlayerBaseState
     {
         Move();
     }
-    public override void ExitState(){}
+
+    public override void ExitState()
+    {
+        _context.CanDropKick = false;
+    }
+
     public override void CheckSwitchStates()
     {
         if (_context.IsTouchingWall() != 0)
@@ -36,9 +45,10 @@ public class PlayerAirMoveState : PlayerBaseState
                 SwitchState(_factory.WallRun());
             } 
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0 && _context.KickChargeTime >= _context.MaxKickChargeTime)
+        else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.KickChargeTime >= _context.MaxKickChargeTime && !_context.GrabbingEnemy)
         {
             Debug.Log("ENTERING DROP KICK STATE");
+            currentSubState.ExitState();
             SwitchState(_factory.DropKick());
         }
     }

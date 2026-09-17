@@ -33,13 +33,11 @@ public class HandMoveState : HandBaseState
         {
             SwitchState(_factory.PunchOne());
         }
-
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            SwitchState(_factory.Kick());
+            SwitchState(_factory.Kick(_context.KickChargeTime));
         }
-
-        if (Input.GetMouseButtonDown(1) && _context.CastGrabHit())
+        else if (Input.GetMouseButtonDown(1) && _context.CastGrabHit())
         {
             SwitchState(_factory.Grab());
         }

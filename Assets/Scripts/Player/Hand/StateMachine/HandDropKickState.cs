@@ -16,6 +16,7 @@ public class HandDropKickState : HandBaseState
         _context.CanPunch = false;
         _context.DropKicking = true;
         _context.Animator.speed = 1;
+        _context.LastKickCharge = _context.MaxKickChargeTime;
         _context.Animator.Play("DropKick", -1, 0);
     }
     public override void UpdateState()

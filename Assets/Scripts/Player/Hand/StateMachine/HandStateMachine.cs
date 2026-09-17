@@ -14,7 +14,6 @@ public class HandStateMachine : BaseStateMachine
     [SerializeField] float kickRange = 4;
     [SerializeField] int kickDamage = 5;
     [SerializeField] float kickLaunchForce = 5;
-    [SerializeField] float maxKickChargeTime = 1;
     float _kickChargeTime;
 
     [Header("Grab Settings")]
@@ -28,6 +27,11 @@ public class HandStateMachine : BaseStateMachine
     bool _dropKicking = false;
     bool _grabbing = false;
     int _grabPunchAnimation = 1;
+    float maxKickChargeTime;
+    /**
+     * This variable is set to the current _kickChargeTime at the start of the HandKickState and HandAirKickState. We can't just multiply the 
+     */
+    float _lastKickCharge;
 
     Animator animator;
     PlayerAim playerAim;
@@ -37,9 +41,11 @@ public class HandStateMachine : BaseStateMachine
 
     public bool Grounded { get { return playerStateMachine.Grounded; } }
     public bool CanPunch { get { return playerStateMachine.CanPunch; } set { playerStateMachine.CanPunch = value; } }
+    public bool CanDropKick { get { return playerStateMachine.CanDropKick; } }
     public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
     public float KickLaunchForce { get { return kickLaunchForce; } }
-    public float KickChargeTime { get { return _kickChargeTime; } }
+    public float KickChargeTime { get { return _kickChargeTime; } set { _kickChargeTime = value; } }
+    public float LastKickCharge { get { return _lastKickCharge; } set { _lastKickCharge = value; } }
     public float MaxKickChargeTime { get { return maxKickChargeTime; } }
     public bool Grabbing { get { return _grabbing; } set { _grabbing = value; } }
     public int GrabPunchAnimation { get { return _grabPunchAnimation; } set { _grabPunchAnimation = value; } }
@@ -55,6 +61,7 @@ public class HandStateMachine : BaseStateMachine
         playerStateMachine = player.GetComponent<PlayerStateMachine>();
         playerAim = player.GetComponent<PlayerAim>();
         playerCameraTransform = playerStateMachine.CameraTransform.Find("Camera");
+        maxKickChargeTime = playerStateMachine.MaxKickChargeTime;
 
         _states = new HandStateFactory(this);
         CurrentState = _states.Grounded();
@@ -64,16 +71,8 @@ public class HandStateMachine : BaseStateMachine
     protected override void Update()
     {
         base.Update();
-        HandleKickCharge();
-    }
-
-    void HandleKickCharge()
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            _kickChargeTime += Time.deltaTime;
-            _kickChargeTime = Mathf.Clamp(_kickChargeTime, 0, maxKickChargeTime);
-        }
+        _kickChargeTime = playerStateMachine.KickChargeTime;
+        //Debug.Log("Kick Charge Time: " + _kickChargeTime);
     }
 
     void AddAirPunchImpulse()
@@ -151,8 +150,7 @@ public class HandStateMachine : BaseStateMachine
 
     float GetKickLaunchMultiplier()
     {
-        float clampedMultiplier = Mathf.Clamp(_kickChargeTime, 0.35f, maxKickChargeTime);
-        return clampedMultiplier * 1.5f;
+        return _lastKickCharge * 1.5f;
     }
 
     void SetGrabbingFalse()
