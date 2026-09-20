@@ -37,9 +37,17 @@ public class HandMoveState : HandBaseState
         {
             SwitchState(_factory.Kick(_context.KickChargeTime));
         }
-        else if (Input.GetMouseButtonDown(1) && _context.CastGrabHit())
+        else if (Input.GetMouseButtonDown(1))
         {
-            SwitchState(_factory.Grab());
+            switch (_context.CastGrabHit())
+            {
+                case GrabActionsEnums.COUNTER:
+                    SwitchState(_factory.Counter());
+                    break;
+                case GrabActionsEnums.GRAB:
+                    SwitchState(_factory.Grab());
+                    break;
+            }
         }
 
         //if (_context.IsCrouchPressed && _context.VerticalInput == 1.0f)

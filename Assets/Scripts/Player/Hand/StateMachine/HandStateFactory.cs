@@ -62,6 +62,11 @@ public class HandStateFactory : BaseStateFactory
         return new HandGrabState(_context, this);
     }
 
+    public BaseState Counter()
+    {
+        return new HandCounterState(_context, this);
+    }
+
     public BaseState Airborne()
     {
         return new HandAirborneState(_context, this);

@@ -34,7 +34,7 @@ public class EnemyIdleState : EnemyBaseState
         {
             SwitchState(_factory.Chase());
         }
-        else
+        else if (_context.CanAtack)
         {
             SwitchState(_factory.Punch());
         }

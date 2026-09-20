@@ -94,9 +94,17 @@ public class HandGrabState : HandBaseState
                 {
                     SwitchStateWrapper(_context.Grounded ? _factory.Kick(_context.KickChargeTime) : _factory.AirKick(_context.KickChargeTime));
                 }
-                else if (Input.GetMouseButtonDown(1) && !_context.Grabbing && _context.CastGrabHit())
+                else if (Input.GetMouseButtonDown(1) && !_context.Grabbing)
                 {
-                    SwitchStateWrapper(_factory.Grab());
+                    switch (_context.CastGrabHit())
+                    {
+                        case GrabActionsEnums.COUNTER:
+                            SwitchState(_factory.Counter());
+                            break;
+                        case GrabActionsEnums.GRAB:
+                            SwitchState(_factory.Grab());
+                            break;
+                    }
                 }
             }
             else if (!Input.GetMouseButton(1))
