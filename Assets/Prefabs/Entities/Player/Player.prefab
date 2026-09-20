@@ -602,6 +602,9 @@ MonoBehaviour:
   enemyRagdoll:
     serializedVersion: 2
     m_Bits: 0
+  enemyHurtBoxLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   camShakeMagnitude: 0.005
   camShakeDuration: 0.01
   hitStopDuration: 0.05
