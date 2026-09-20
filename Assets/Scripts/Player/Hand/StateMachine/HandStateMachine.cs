@@ -72,7 +72,6 @@ public class HandStateMachine : BaseStateMachine
     {
         base.Update();
         _kickChargeTime = playerStateMachine.KickChargeTime;
-        //Debug.Log("Kick Charge Time: " + _kickChargeTime);
     }
 
     void AddAirPunchImpulse()
@@ -163,7 +162,7 @@ public class HandStateMachine : BaseStateMachine
         playerAim.ReleaseGrabbedEnemy();
     }
 
-    public bool CastGrabHit()
+    public GrabActionsEnums CastGrabHit()
     {
         return playerAim.CastGrabHit(grabRange);
     }

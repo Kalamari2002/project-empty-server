@@ -47,7 +47,6 @@ public class PlayerAirMoveState : PlayerBaseState
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.KickChargeTime >= _context.MaxKickChargeTime && !_context.GrabbingEnemy)
         {
-            Debug.Log("ENTERING DROP KICK STATE");
             currentSubState.ExitState();
             SwitchState(_factory.DropKick());
         }

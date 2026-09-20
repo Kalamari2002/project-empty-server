@@ -11,9 +11,8 @@ public class PlayerAirDropKickState : PlayerBaseState
 
     public override void EnterState() 
     {
-        Debug.Log("AirMoveDropKick ENTERED");
         _context.DropKicking = true;
-        _context.CanPunch = false;
+        _context.CanDropKick = true;
         _context.OrientationAnimator.SetBool("DropKicking", true);
     }
 
@@ -27,6 +26,7 @@ public class PlayerAirDropKickState : PlayerBaseState
     }
     public override void ExitState() 
     {
+        _context.CanDropKick = false;
         _context.OrientationAnimator.SetBool("DropKicking", false);
     }
     public override void CheckSwitchStates() 

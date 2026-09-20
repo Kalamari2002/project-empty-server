@@ -15,6 +15,10 @@ public class EnemyPunchState : EnemyBaseState
     {
         _context.Animator.speed = 0.5f;
         _context.Animator.Play("EnemyPrototypePunch", -1, 0);
+        _context.Attacking = true;
+        _context.CanAtack = false;
+        // _context.VulnerableToCounter will be set to true and back to false as animation events of EnemyPrototypePunch
+        _context.VulnerableToCounter = false;
         _animationDuration = _context.Animator.GetCurrentAnimatorClipInfo(0).Length / _context.Animator.speed;
     }
 
@@ -45,5 +49,7 @@ public class EnemyPunchState : EnemyBaseState
     public override void ExitState()
     {
         _context.Animator.speed = 1f;
+        _context.Attacking = false;
+        _context.StartAttackCoolDown();
     }
 }

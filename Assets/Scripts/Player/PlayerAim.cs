@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerAim : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] Camera mainCamera;
     [SerializeField] LayerMask enemyLayer;
     [SerializeField] LayerMask enemyRagdoll;
+    [SerializeField] LayerMask enemyHurtBoxLayer;
     [SerializeField] float camShakeMagnitude = 0.1f;
     [SerializeField] float camShakeDuration = 0.2f;
     [SerializeField] float hitStopDuration = 0.05f;
@@ -170,7 +172,7 @@ public class PlayerAim : MonoBehaviour
     }
 
 
-    public bool CastGrabHit(float grabRange)
+    public GrabActionsEnums CastGrabHit(float grabRange)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
         Debug.DrawRay(ray.origin, ray.direction * grabRange, Color.blueViolet);
@@ -179,19 +181,41 @@ public class PlayerAim : MonoBehaviour
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Debug.Log("Enemy Grabbed!");
-                grabbedEnemy = hit.transform.GetComponent<EnemyStateMachine>();
-                grabbedEnemy.EnterGrabbed();
+                EnemyStateMachine enemyStateMachine = hit.transform.GetComponent<EnemyStateMachine>();
+                if (enemyStateMachine != null)
+                {
+                    if (enemyStateMachine.Attacking)
+                    {
+                        if (enemyStateMachine.VulnerableToCounter)
+                        {
+                            grabbedEnemy = enemyStateMachine;
+                            grabbedEnemy.EnterGrabbed();
+                            return GrabActionsEnums.COUNTER;
+                        }
+                        else
+                        {
+                            return GrabActionsEnums.NOTHING;
+                        }
+                    }
+                    else
+                    {
+                        grabbedEnemy = enemyStateMachine;
+                        grabbedEnemy.EnterGrabbed();
+                        return GrabActionsEnums.GRAB;
+                    }
+                }
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
             {
-                Debug.Log("Enemy Ragdoll Grabbed!");
                 grabbedEnemy = hit.transform.root.GetComponent<EnemyRagdoll>().GetParentEnemy();
-                grabbedEnemy.EnterGrabbed();
+                if (grabbedEnemy != null)
+                {
+                    grabbedEnemy.EnterGrabbed();
+                    return GrabActionsEnums.GRAB;
+                }
             }
-            return true;
         }
-        return false;
+        return GrabActionsEnums.NOTHING;
     }
 
     public void LaunchGrabbedEnemy()

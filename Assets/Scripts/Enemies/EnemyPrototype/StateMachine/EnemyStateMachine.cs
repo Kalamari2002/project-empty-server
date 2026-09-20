@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EnemyStateMachine : BaseStateMachine
@@ -7,6 +8,7 @@ public class EnemyStateMachine : BaseStateMachine
     [SerializeField] float chaseSpeed;
     [SerializeField] float backOffDistance;
     [SerializeField] float stopDistance;
+    [SerializeField] float attackCoolDown = 3;
     [SerializeField] Animator animator;
 
     [Header("Ragdoll")]
@@ -23,6 +25,10 @@ public class EnemyStateMachine : BaseStateMachine
 
     EnemyStateFactory _states;
 
+    bool attacking = false;
+    bool vulnerableToCounter = false;
+    bool canAttack = true;
+
     public Transform Player { get { return player; } }
     public Animator Animator { get { return animator; } }
     public GameObject ActiveRagdoll { get { return activeRagdoll; } set { activeRagdoll = value; } }
@@ -32,6 +38,9 @@ public class EnemyStateMachine : BaseStateMachine
     public float ChaseSpeed { get { return chaseSpeed; } }
     public float StopDistance { get { return stopDistance; } }
     public float RagdollCountDown { get {  return ragdollCountDown; } set { ragdollCountDown = value; } }
+    public bool Attacking { get { return attacking; } set {  attacking = value; } }
+    public bool VulnerableToCounter { get {  return vulnerableToCounter; } set {  vulnerableToCounter = value; } }
+    public bool CanAtack { get { return canAttack; } set { canAttack = value; } }
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -90,6 +99,16 @@ public class EnemyStateMachine : BaseStateMachine
         CurrentState.InterruptState(_states.Grabbed());
     }
 
+    public void EnableVulnerableToCounter()
+    {
+        vulnerableToCounter = true;
+    }
+
+    public void DisableVulnerableToCounter()
+    {
+        vulnerableToCounter = false;
+    }
+
     public void DestroyActiveRagdoll()
     {
         if (activeRagdoll != null)
@@ -122,5 +141,16 @@ public class EnemyStateMachine : BaseStateMachine
         Rigidbody ragdollRb = activeRagdoll.GetComponent<Rigidbody>();
         ragdollRb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
         ragdollRb.AddTorque((Player.transform.forward + Vector3.up).normalized * torque, ForceMode.Impulse);
+    }
+
+    public void StartAttackCoolDown()
+    {
+        StartCoroutine(AttackCoolDownRoutine());
+    }
+
+    IEnumerator AttackCoolDownRoutine()
+    {
+        yield return new WaitForSeconds(attackCoolDown);
+        canAttack = true;
     }
 }

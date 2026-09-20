@@ -162,6 +162,7 @@ public class PlayerStateMachine : BaseStateMachine
     {
         base.Update();
         orientationAnimator.SetBool("CrouchPressed", IsCrouchPressed);
+        //Debug.Log("Player Kick Charge Time: " + _kickChargeTime);
     }
 
     private void LateUpdate()
