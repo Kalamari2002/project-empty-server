@@ -52,8 +52,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _DistortStrength: 0.747
-    - _Metallic: 0.912
-    - _NoiseScale: 13
+    - _Metallic: 0.83
+    - _NoiseScale: 0.01
     - _NormalStrength: 0.639
     - _QueueControl: 0
     - _QueueOffset: 0
