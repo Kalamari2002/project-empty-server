@@ -8688,7 +8688,8 @@ MonoBehaviour:
   health: 50
   chaseSpeed: 4
   backOffDistance: 2
-  stopDistance: 3
+  stopDistance: 1
+  attackCoolDown: 3
   animator: {fileID: 0}
   ragdoll: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
   ragdollLaunchForce: 200
