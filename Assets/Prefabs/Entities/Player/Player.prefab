@@ -598,7 +598,7 @@ MonoBehaviour:
   mainCamera: {fileID: 8297509302159673110}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 640
+    m_Bits: 4736
   enemyRagdoll:
     serializedVersion: 2
     m_Bits: 0
@@ -610,6 +610,7 @@ MonoBehaviour:
   hitStopDuration: 0.05
   punchImpulse: 30
   enemyRagdollLaunchForce: 200
+  weaponLaunchForce: 30
   goombaStompRotationThreshold: 25
   goombaStompLaunchForce: 10
   playerCamera: {fileID: 0}

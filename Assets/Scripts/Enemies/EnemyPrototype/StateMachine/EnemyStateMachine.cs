@@ -84,6 +84,12 @@ public class EnemyStateMachine : BaseStateMachine
         Transform target = player;
         foreach(GameObject weapon in GameObject.FindGameObjectsWithTag("Weapon"))
         {
+            const int MAX_WEAPON_VELOCITY = 5;
+            Rigidbody weaponRigidbody = weapon.GetComponent<Rigidbody>();
+            if (weapon.transform.parent != null || (weaponRigidbody != null && weaponRigidbody.linearVelocity.magnitude >= MAX_WEAPON_VELOCITY))
+            {
+                continue;
+            }
             target = GetClosestTransform(target, weapon.transform);
         }
         return target;

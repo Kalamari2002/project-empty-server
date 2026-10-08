@@ -2,8 +2,12 @@ using UnityEngine;
 
 public abstract class WeaponProp : MonoBehaviour
 {
-    [SerializeField] protected GameObject weaponMesh;
-    [SerializeField] protected Rigidbody rigidBody;
+    [Header("Settings")]
+    [SerializeField] float enemyLaunchForceMultiplier = 1;
+    [SerializeField] float bounceVerticalSpeed = 5;
+    [SerializeField] float bounceHorizontalSpeed = 5;
+
+    protected Rigidbody rigidBody;
 
     protected void Awake()
     {
@@ -41,5 +45,22 @@ public abstract class WeaponProp : MonoBehaviour
         rigidBody.AddTorque(torque);
     }
 
-    protected abstract WeaponBase InstantiateWeapon(GameObject weaponProp);
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Enemy" && rigidBody != null && rigidBody.linearVelocity.magnitude > 5)
+        {
+            EnemyStateMachine enemyStateMachine = other.GetComponent<EnemyStateMachine>();
+            if (enemyStateMachine != null) 
+            {
+                Vector3 normalizedVelocity = rigidBody.linearVelocity.normalized;
+                enemyStateMachine.EnterRagdoll(rigidBody.linearVelocity.magnitude * enemyLaunchForceMultiplier, 0, normalizedVelocity);
+                rigidBody.angularVelocity = Vector3.zero;
+                rigidBody.linearVelocity = (new Vector3(-normalizedVelocity.x, 0, -normalizedVelocity.z).normalized * bounceHorizontalSpeed) 
+                    + Vector3.up * bounceVerticalSpeed;
+                transform.forward = other.transform.forward;
+
+                rigidBody.AddTorque(-transform.forward * rigidBody.linearVelocity.magnitude/2);
+            }
+        }
+    }
 }
