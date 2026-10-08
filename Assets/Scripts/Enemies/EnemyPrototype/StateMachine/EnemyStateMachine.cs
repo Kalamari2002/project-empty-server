@@ -1,15 +1,21 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class EnemyStateMachine : BaseStateMachine
 {
+
+    [Header("References")]
+    [SerializeField] Animator animator;
+
     [Header("Settings")]
     [SerializeField] int health = 50;
     [SerializeField] float chaseSpeed;
     [SerializeField] float backOffDistance;
     [SerializeField] float stopDistance;
     [SerializeField] float attackCoolDown = 3;
-    [SerializeField] Animator animator;
+    [SerializeField] float weaponLaunchForce = 5;
+    [SerializeField] float weaponLaunchTorque = 10;
 
     [Header("Ragdoll")]
     [SerializeField] GameObject ragdoll;
@@ -22,8 +28,11 @@ public class EnemyStateMachine : BaseStateMachine
     CharacterController controller;
     CapsuleCollider capsuleCollider;
     SpriteRenderer spriteRenderer;
+    Transform weaponPosition;
 
     EnemyStateFactory _states;
+    [SerializeField] WeaponBase _currentWeapon;
+    GameObject _currentWeaponMesh;
 
     bool attacking = false;
     bool vulnerableToCounter = false;
@@ -35,6 +44,7 @@ public class EnemyStateMachine : BaseStateMachine
     public SpriteRenderer SpriteRenderer { get { return spriteRenderer; } }
     public CapsuleCollider CapsuleCollider { get { return capsuleCollider; } }
     public CharacterController Controller { get { return controller; } }
+    public WeaponBase CurrentWeapon { get { return _currentWeapon; } }
     public float ChaseSpeed { get { return chaseSpeed; } }
     public float StopDistance { get { return stopDistance; } }
     public float RagdollCountDown { get {  return ragdollCountDown; } set { ragdollCountDown = value; } }
@@ -52,6 +62,7 @@ public class EnemyStateMachine : BaseStateMachine
         capsuleCollider = GetComponent<CapsuleCollider>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         ragdollCountDown = ragdollDuration;
+        weaponPosition = transform.Find("WeaponHolder").Find("Weapon");
 
         _states = new EnemyStateFactory(this);
         CurrentState = _states.Idle();
@@ -62,6 +73,21 @@ public class EnemyStateMachine : BaseStateMachine
     protected override void Update()
     {
         base.Update();
+    }
+
+    Transform GetClosestTransform(Transform a, Transform b)
+    {
+        return Vector3.Distance(transform.position, a.position) < Vector3.Distance(transform.position, b.position) ? a : b;
+    } 
+
+    public Transform PickTarget()
+    {
+        Transform target = player;
+        foreach(GameObject weapon in GameObject.FindGameObjectsWithTag("Weapon"))
+        {
+            target = GetClosestTransform(target, weapon.transform);
+        }
+        return target;
     }
 
     public void MoveTowards(Transform target, Vector3 direction, float speed)
@@ -146,6 +172,18 @@ public class EnemyStateMachine : BaseStateMachine
     public void StartAttackCoolDown()
     {
         StartCoroutine(AttackCoolDownRoutine());
+    }
+
+    public void PickUpWeapon(WeaponProp weaponProp)
+    {
+        _currentWeapon = weaponProp.PickUp(weaponPosition);
+    }
+
+    public void DropWeapon()
+    {
+        if (_currentWeapon == null) return;
+        _currentWeapon.Drop(weaponPosition.position, Vector3.up * weaponLaunchForce, transform.right * weaponLaunchTorque);
+        _currentWeapon = null;
     }
 
     IEnumerator AttackCoolDownRoutine()

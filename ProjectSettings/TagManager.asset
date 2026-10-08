@@ -12,6 +12,7 @@ TagManager:
   - Hands
   - Ground
   - EnemyHitbox
+  - Weapon
   layers:
   - Default
   - TransparentFX
