@@ -10,14 +10,35 @@ public abstract class WeaponProp : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
     }
 
-    public virtual WeaponBase PickUp(Transform parent)
+    public virtual WeaponProp PickUp(Transform parent)
     {
-        GameObject mesh = Instantiate(weaponMesh, parent.transform.position, Quaternion.identity);
-        mesh.transform.SetParent(parent);
-        mesh.transform.localPosition = Vector3.zero;
-        mesh.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         Destroy(rigidBody);
-        return InstantiateWeapon(gameObject);
+        foreach(Collider collider in transform.Find("Mesh").GetComponentsInChildren<Collider>())
+        {
+            collider.enabled = false;
+        }
+        transform.SetParent(parent);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        return this;
+    }
+
+    public virtual void Drop(Vector3 dropPosition, Vector3 launchDirection, Vector3 torque)
+    {
+        transform.SetParent(null);
+        transform.position = dropPosition;
+        transform.up = launchDirection;
+        rigidBody = gameObject.AddComponent<Rigidbody>();
+        rigidBody.interpolation = RigidbodyInterpolation.Interpolate;
+        rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        rigidBody.linearVelocity = Vector3.zero;
+        rigidBody.angularVelocity = Vector3.zero;
+        foreach (Collider collider in transform.Find("Mesh").GetComponentsInChildren<Collider>())
+        {
+            collider.enabled = true;
+        }
+        rigidBody.AddForce(launchDirection, ForceMode.Impulse);
+        rigidBody.AddTorque(torque);
     }
 
     protected abstract WeaponBase InstantiateWeapon(GameObject weaponProp);

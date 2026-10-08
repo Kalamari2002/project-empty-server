@@ -31,8 +31,7 @@ public class EnemyStateMachine : BaseStateMachine
     Transform weaponPosition;
 
     EnemyStateFactory _states;
-    [SerializeField] WeaponBase _currentWeapon;
-    GameObject _currentWeaponMesh;
+    [SerializeField] WeaponProp _currentWeapon;
 
     bool attacking = false;
     bool vulnerableToCounter = false;
@@ -44,7 +43,7 @@ public class EnemyStateMachine : BaseStateMachine
     public SpriteRenderer SpriteRenderer { get { return spriteRenderer; } }
     public CapsuleCollider CapsuleCollider { get { return capsuleCollider; } }
     public CharacterController Controller { get { return controller; } }
-    public WeaponBase CurrentWeapon { get { return _currentWeapon; } }
+    public WeaponProp CurrentWeapon { get { return _currentWeapon; } }
     public float ChaseSpeed { get { return chaseSpeed; } }
     public float StopDistance { get { return stopDistance; } }
     public float RagdollCountDown { get {  return ragdollCountDown; } set { ragdollCountDown = value; } }
@@ -182,7 +181,7 @@ public class EnemyStateMachine : BaseStateMachine
     public void DropWeapon()
     {
         if (_currentWeapon == null) return;
-        _currentWeapon.Drop(weaponPosition.position, Vector3.up * weaponLaunchForce, transform.right * weaponLaunchTorque);
+        _currentWeapon.Drop(transform.position, Vector3.up * weaponLaunchForce, transform.forward * weaponLaunchTorque);
         _currentWeapon = null;
     }
 

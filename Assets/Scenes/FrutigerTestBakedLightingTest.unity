@@ -81244,8 +81244,8 @@ MonoBehaviour:
   backOffDistance: 2
   stopDistance: 2
   attackCoolDown: 3
-  weaponLaunchForce: 5
-  weaponLaunchTorque: 10
+  weaponLaunchForce: 7
+  weaponLaunchTorque: 60
   ragdoll: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
   ragdollLaunchForce: 200
   ragdollDuration: 5
@@ -178440,11 +178440,11 @@ GameObject:
   - component: {fileID: 1484104392}
   m_Layer: 0
   m_Name: BaseballMesh
-  m_TagString: Weapon
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1484104392
 Transform:
   m_ObjectHideFlags: 0
@@ -178849,7 +178849,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1494296045}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211147,7 +211147,7 @@ GameObject:
   - component: {fileID: 4518737648348029042}
   - component: {fileID: 4518737648348029043}
   - component: {fileID: 4518737648348029044}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BaseballProp
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -211231,7 +211231,7 @@ GameObject:
   - component: {fileID: 1759574373330051467}
   - component: {fileID: 1093235074045445622}
   - component: {fileID: 8137510426467729471}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Baseball_Bat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211312,7 +211312,7 @@ PrefabInstance:
       objectReference: {fileID: 8600000, guid: b910bf47ea453d54983b10cb0fdfba4a, type: 2}
     - target: {fileID: 8297509302159673110, guid: 05972ec44309dfd46ba20df3bddb773b, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 4063
+      value: 8159
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -211373,7 +211373,7 @@ GameObject:
   - component: {fileID: 214848283047978945}
   - component: {fileID: 4555033701500886939}
   - component: {fileID: 1664483381343344670}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
