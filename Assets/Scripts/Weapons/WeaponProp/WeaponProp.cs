@@ -9,6 +9,10 @@ public abstract class WeaponProp : MonoBehaviour
 
     protected Rigidbody rigidBody;
 
+    [SerializeField] bool grounded = false;
+
+    public bool Grounded { get { return grounded; } }
+
     protected void Awake()
     {
         rigidBody = GetComponent<Rigidbody>();
@@ -24,6 +28,7 @@ public abstract class WeaponProp : MonoBehaviour
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        grounded = false;
         return this;
     }
 
@@ -61,6 +66,19 @@ public abstract class WeaponProp : MonoBehaviour
 
                 rigidBody.AddTorque(-transform.forward * rigidBody.linearVelocity.magnitude/2);
             }
+        }
+
+        if (other.gameObject.tag == "Ground")
+        {
+            grounded = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Ground")
+        {
+            grounded = false;
         }
     }
 }

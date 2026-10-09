@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class PlayerAim : MonoBehaviour
 {
@@ -120,7 +119,11 @@ public class PlayerAim : MonoBehaviour
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Weapon") && hit.transform.GetComponent<Rigidbody>())
             {
-                hit.transform.forward = cameraForward();
+                WeaponProp weaponProp = hit.transform.GetComponent<WeaponProp>();
+                if (weaponProp != null && !weaponProp.Grounded)
+                {
+                    hit.transform.forward = cameraForward();
+                }
                 hit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * cameraForward(), ForceMode.Impulse);
             }
             ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
@@ -166,7 +169,11 @@ public class PlayerAim : MonoBehaviour
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Weapon") && hit.transform.GetComponent<Rigidbody>())
             {
-                hit.transform.forward = cameraForward();
+                WeaponProp weaponProp = hit.transform.GetComponent<WeaponProp>();
+                if (weaponProp != null && !weaponProp.Grounded)
+                {
+                    hit.transform.forward = cameraForward();
+                }
                 hit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * launchForceMultiplier * cameraForward(), ForceMode.Impulse);
                 GoombaStomp();
             }
