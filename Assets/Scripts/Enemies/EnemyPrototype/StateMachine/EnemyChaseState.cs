@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyChaseState : EnemyBaseState
 {
+    Transform target;
     public EnemyChaseState(EnemyStateMachine context, EnemyStateFactory factory)
     : base(context, factory)
     {
@@ -21,8 +22,9 @@ public class EnemyChaseState : EnemyBaseState
 
     public override void UpdateState()
     {
+        target = _context.CurrentWeapon == null ? _context.PickTarget() : _context.Player;
         CheckSwitchStates();
-        _context.MoveTowards(_context.Player, _context.transform.forward, _context.ChaseSpeed);
+        _context.MoveTowards(target, _context.transform.forward, _context.ChaseSpeed);
     }
 
     public override void FixedUpdateState()
@@ -32,9 +34,17 @@ public class EnemyChaseState : EnemyBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Vector3.Distance(_context.transform.position, _context.Player.position) <= _context.StopDistance)
+        if (Vector3.Distance(_context.transform.position, target.position) <= _context.StopDistance)
         {
-            SwitchState(_factory.Idle());
+            WeaponProp weaponProp = target.GetComponent<WeaponProp>();
+            if (_context.CurrentWeapon == null && weaponProp != null)
+            {
+                _context.PickUpWeapon(weaponProp);
+            }
+            else
+            {
+                SwitchState(_factory.Idle());
+            }
         }
     }
 
