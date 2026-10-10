@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class PlayerAim : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float hitStopDuration = 0.05f;
     [SerializeField] float punchImpulse = 40;
     [SerializeField] float enemyRagdollLaunchForce = 200;
+    [SerializeField] float weaponLaunchForce = 50;
     [SerializeField] float goombaStompRotationThreshold;
     [SerializeField] float goombaStompLaunchForce = 10;
     [SerializeField] Transform playerCamera;
@@ -33,7 +33,6 @@ public class PlayerAim : MonoBehaviour
         orientation = transform.Find("Orientation");
         playerCamera = orientation.Find("CameraHolder").Find("Camera");
         originalPlayerCameraPosition = playerCamera.localPosition;
-        Debug.Log("Original Cam Pos: " + originalPlayerCameraPosition);
     }
 
     void Update()
@@ -58,7 +57,6 @@ public class PlayerAim : MonoBehaviour
     IEnumerator CamShakeRoutine(float magnitude, float duration)
     {
         playerCamera.localPosition = originalPlayerCameraPosition;
-        Debug.Log("Shaking Cam Started: " + playerCamera.localPosition);
         float elapsed = 0;
         while (elapsed <= duration)
         {
@@ -67,7 +65,6 @@ public class PlayerAim : MonoBehaviour
             yield return null;
         }
         playerCamera.localPosition = originalPlayerCameraPosition;
-        Debug.Log("Shaking Cam Started: " + playerCamera.localPosition);
         camShakeRoutine = null;
     }
 
@@ -104,7 +101,6 @@ public class PlayerAim : MonoBehaviour
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Debug.Log("Enemy Hit!");
                 EnemyStateMachine enemyPrototype = hit.transform.GetComponent<EnemyStateMachine>();
                 enemyPrototype.TakeDamage(damage);
                 if (enemyHitstunAnimation < 3)
@@ -118,9 +114,17 @@ public class PlayerAim : MonoBehaviour
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
             {
-                Debug.Log("Enemy Ragdoll Hit!");
                 hit.transform.GetComponent<Rigidbody>().AddForce(enemyRagdollLaunchForce * (cameraForward() + Vector3.up).normalized, ForceMode.Impulse);
                 hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Weapon") && hit.transform.GetComponent<Rigidbody>())
+            {
+                WeaponProp weaponProp = hit.transform.GetComponent<WeaponProp>();
+                if (weaponProp != null && !weaponProp.Grounded)
+                {
+                    hit.transform.forward = cameraForward();
+                }
+                hit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * cameraForward(), ForceMode.Impulse);
             }
             ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
             HitStop(hitStopDuration * damage / 10);
@@ -161,6 +165,16 @@ public class PlayerAim : MonoBehaviour
                 hit.transform.GetComponent<Rigidbody>()
                     .AddForce(enemyRagdollLaunchForce * launchForceMultiplier * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
                 hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+                GoombaStomp();
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Weapon") && hit.transform.GetComponent<Rigidbody>())
+            {
+                WeaponProp weaponProp = hit.transform.GetComponent<WeaponProp>();
+                if (weaponProp != null && !weaponProp.Grounded)
+                {
+                    hit.transform.forward = cameraForward();
+                }
+                hit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * launchForceMultiplier * cameraForward(), ForceMode.Impulse);
                 GoombaStomp();
             }
             float camShakeFactor = 20;

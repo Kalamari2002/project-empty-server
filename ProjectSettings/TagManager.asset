@@ -12,6 +12,7 @@ TagManager:
   - Hands
   - Ground
   - EnemyHitbox
+  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -25,8 +26,8 @@ TagManager:
   - EnemyRagdoll
   - EnemyHurtBox
   - TestCube
-  - 
-  - 
+  - Weapon
+  - WeaponCollision
   - 
   - 
   - 
