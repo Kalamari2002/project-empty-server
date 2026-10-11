@@ -9,6 +9,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] LayerMask enemyLayer;
     [SerializeField] LayerMask enemyRagdoll;
     [SerializeField] LayerMask enemyHurtBoxLayer;
+    [SerializeField] LayerMask pickableLayer;
     [SerializeField] float camShakeMagnitude = 0.1f;
     [SerializeField] float camShakeDuration = 0.2f;
     [SerializeField] float hitStopDuration = 0.05f;
@@ -19,13 +20,16 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float goombaStompLaunchForce = 10;
     [SerializeField] Transform playerCamera;
     [SerializeField] EnemyStateMachine grabbedEnemy;
+    [SerializeField] Transform weaponHolder;
 
     Coroutine camShakeRoutine;
     Transform orientation;
     Vector3 originalPlayerCameraPosition;
     Rigidbody rb;
+    WeaponProp _currentWeapon;
 
     public EnemyStateMachine GrabbedEnemy { get { return grabbedEnemy; } }  
+    public WeaponProp CurrentWeapon { get { return _currentWeapon; } }
 
     private void Start()
     {
@@ -96,7 +100,7 @@ public class PlayerAim : MonoBehaviour
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
         Debug.DrawRay(ray.origin, ray.direction * punchRange, Color.blue);
-
+        bool punchHit = false;
         if (Physics.Raycast(ray, out RaycastHit hit, punchRange, enemyLayer))
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
@@ -117,21 +121,27 @@ public class PlayerAim : MonoBehaviour
                 hit.transform.GetComponent<Rigidbody>().AddForce(enemyRagdollLaunchForce * (cameraForward() + Vector3.up).normalized, ForceMode.Impulse);
                 hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
             }
-            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Weapon") && hit.transform.GetComponent<Rigidbody>())
+            punchHit = true;
+        }
+        else if (Physics.Raycast(ray, out RaycastHit pickHit, punchRange, pickableLayer))
+        {
+            if (pickHit.transform.GetComponent<Rigidbody>())
             {
-                WeaponProp weaponProp = hit.transform.GetComponent<WeaponProp>();
+                WeaponProp weaponProp = pickHit.transform.GetComponent<WeaponProp>();
                 if (weaponProp != null && !weaponProp.Grounded)
                 {
-                    hit.transform.forward = cameraForward();
+                    pickHit.transform.forward = cameraForward();
                 }
-                hit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * cameraForward(), ForceMode.Impulse);
+                pickHit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * cameraForward(), ForceMode.Impulse);
             }
+            punchHit = true;
+        }
+        if (punchHit)
+        {
             ShakeCamera(camShakeMagnitude * damage, camShakeDuration * damage);
             HitStop(hitStopDuration * damage / 10);
-            return true;
         }
-
-        return false;
+        return punchHit;
     }
 
     public IEnumerator CastKickHitRoutine(float kickRange, float launchForceMultiplier, int damage, int hitActiveFrames)
@@ -146,10 +156,68 @@ public class PlayerAim : MonoBehaviour
         }
     }
 
+    public IEnumerator CastWeaponHitRoutine()
+    {
+        for (int i = 0; i < CurrentWeapon.HitActiveFrames; i++)
+        {
+            if (CastWeaponHit())
+            {
+                break;
+            }
+            yield return null;
+        }
+    }
+
+    bool CastWeaponHit()
+    {
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
+        Debug.DrawRay(ray.origin, ray.direction * CurrentWeapon.WeaponRange, Color.blue);
+
+        bool weaponHit = false;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, CurrentWeapon.WeaponRange, enemyLayer))
+        {
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                EnemyStateMachine enemyPrototype = hit.transform.GetComponent<EnemyStateMachine>();
+                enemyPrototype.TakeDamage(CurrentWeapon.WeaponDamage);
+                enemyPrototype.EnterRagdoll(CurrentWeapon.EnemyLaunchForce, 0, (cameraForward() * 2f + Vector3.up).normalized);
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
+            {
+                hit.transform.GetComponent<Rigidbody>()
+                    .AddForce(CurrentWeapon.EnemyLaunchForce * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
+                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+            }
+            weaponHit = true;
+        }
+        else if (Physics.Raycast(ray, out RaycastHit pickHit, CurrentWeapon.WeaponRange, pickableLayer))
+        {
+            if (pickHit.transform.GetComponent<Rigidbody>())
+            {
+                WeaponProp weaponProp = pickHit.transform.GetComponent<WeaponProp>();
+                if (weaponProp != null && !weaponProp.Grounded)
+                {
+                    pickHit.transform.forward = cameraForward();
+                }
+                pickHit.transform.GetComponent<Rigidbody>().AddForce(CurrentWeapon.ObjectLaunchForce * cameraForward(), ForceMode.Impulse);
+            }
+            weaponHit = true;
+        }
+        if (weaponHit)
+        {
+            ShakeCamera(CurrentWeapon.CamShakeMagnitude, CurrentWeapon.CamShakeDuration);
+            HitStop(CurrentWeapon.HitStopDuration);
+        }
+        return weaponHit;
+    }
+
     bool CastKickHit(float kickRange, float launchForceMultiplier, int damage)
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
         Debug.DrawRay(ray.origin, ray.direction * kickRange, Color.blue);
+
+        bool kickHit = false;
 
         if (Physics.Raycast(ray, out RaycastHit hit, kickRange, enemyLayer))
         {
@@ -158,31 +226,36 @@ public class PlayerAim : MonoBehaviour
                 EnemyStateMachine enemyPrototype = hit.transform.GetComponent<EnemyStateMachine>();
                 enemyPrototype.TakeDamage(damage);
                 enemyPrototype.EnterRagdoll(enemyRagdollLaunchForce * launchForceMultiplier, 0, (cameraForward() * 2f + Vector3.up).normalized);
-                GoombaStomp();
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
             {
                 hit.transform.GetComponent<Rigidbody>()
                     .AddForce(enemyRagdollLaunchForce * launchForceMultiplier * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
                 hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
-                GoombaStomp();
             }
-            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Weapon") && hit.transform.GetComponent<Rigidbody>())
+            kickHit = true;
+        }
+        else if (Physics.Raycast(ray, out RaycastHit pickHit, kickRange, pickableLayer))
+        {
+            if(pickHit.transform.GetComponent<Rigidbody>())
             {
-                WeaponProp weaponProp = hit.transform.GetComponent<WeaponProp>();
+                WeaponProp weaponProp = pickHit.transform.GetComponent<WeaponProp>();
                 if (weaponProp != null && !weaponProp.Grounded)
                 {
-                    hit.transform.forward = cameraForward();
+                    pickHit.transform.forward = cameraForward();
                 }
-                hit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * launchForceMultiplier * cameraForward(), ForceMode.Impulse);
-                GoombaStomp();
+                pickHit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * launchForceMultiplier * cameraForward(), ForceMode.Impulse);
             }
+            kickHit = true;
+        }
+        if (kickHit)
+        {
+            GoombaStomp();
             float camShakeFactor = 20;
             ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
             HitStop(hitStopDuration * 2);
-            return true;
         }
-        return false;
+        return kickHit;
     }
 
 
@@ -193,6 +266,7 @@ public class PlayerAim : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, grabRange, enemyLayer))
         {
+            Debug.Log("Enemy Layer Grabbed");
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 EnemyStateMachine enemyStateMachine = hit.transform.GetComponent<EnemyStateMachine>();
@@ -227,6 +301,16 @@ public class PlayerAim : MonoBehaviour
                     grabbedEnemy.EnterGrabbed();
                     return GrabActionsEnums.GRAB;
                 }
+            }
+        }
+        else if (Physics.Raycast(ray, out RaycastHit pickHit, grabRange, pickableLayer))
+        {
+            Debug.Log("Pickable Layer Grabbed");
+            _currentWeapon = pickHit.transform.GetComponent<WeaponProp>();
+            if (_currentWeapon != null)
+            {
+                _currentWeapon.PickUp(weaponHolder);
+                return GrabActionsEnums.PICKABLE;
             }
         }
         return GrabActionsEnums.NOTHING;
@@ -279,5 +363,12 @@ public class PlayerAim : MonoBehaviour
     bool Grounded()
     {
         return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer);
+    }
+
+    public void DropCurrentWeapon()
+    {
+        _currentWeapon.Drop(mainCamera.transform.position + cameraForward() * 1.2f + mainCamera.transform.up * 0.25f, playerCamera.up, 
+            cameraForward() * 1.5f * rb.linearVelocity.magnitude, Vector3.zero);
+        _currentWeapon = null;
     }
 }

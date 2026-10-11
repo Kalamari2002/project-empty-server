@@ -76,4 +76,19 @@ public class HandStateFactory : BaseStateFactory
     {
         return new HandAirMoveState(_context, this);
     }
+
+    public BaseState Pickup()
+    {
+        return new HandPickupState(_context, this);
+    }
+
+    public BaseState PickupIdle()
+    {
+        return new HandPickupIdleState(_context, this);
+    }
+
+    public BaseState PickupPrimaryAction()
+    {
+        return new HandPickupPrimaryActionState(_context, this);
+    }
 }

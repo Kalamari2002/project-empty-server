@@ -47,6 +47,9 @@ public class HandMoveState : HandBaseState
                 case GrabActionsEnums.GRAB:
                     SwitchState(_factory.Grab());
                     break;
+                case GrabActionsEnums.PICKABLE:
+                    _context.EnterPickUpState();
+                    break;
             }
         }
 

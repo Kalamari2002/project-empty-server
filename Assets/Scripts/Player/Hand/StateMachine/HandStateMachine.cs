@@ -38,6 +38,7 @@ public class HandStateMachine : BaseStateMachine
     PlayerStateMachine playerStateMachine;
     HandStateFactory _states;
     Transform playerCameraTransform;
+    GameObject hands;
 
     public bool Grounded { get { return playerStateMachine.Grounded; } }
     public bool CanPunch { get { return playerStateMachine.CanPunch; } set { playerStateMachine.CanPunch = value; } }
@@ -51,6 +52,9 @@ public class HandStateMachine : BaseStateMachine
     public int GrabPunchAnimation { get { return _grabPunchAnimation; } set { _grabPunchAnimation = value; } }
 
     public Animator Animator { get { return animator; } }
+    public GameObject Hands { get { return hands; } }
+    public PlayerAim PlayerAim { get { return playerAim; } }
+    public WeaponProp CurrentWeapon { get { return playerAim.CurrentWeapon; } }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -62,6 +66,7 @@ public class HandStateMachine : BaseStateMachine
         playerAim = player.GetComponent<PlayerAim>();
         playerCameraTransform = playerStateMachine.CameraTransform.Find("Camera");
         maxKickChargeTime = playerStateMachine.MaxKickChargeTime;
+        hands = transform.Find("Hands").gameObject;
 
         _states = new HandStateFactory(this);
         CurrentState = _states.Grounded();
@@ -113,6 +118,14 @@ public class HandStateMachine : BaseStateMachine
         {
             StartCoroutine(playerAim.CastKickHitRoutine(kickRange, GetKickLaunchMultiplier(), kickDamage, hitActiveFrames));
             _kickChargeTime = 0;
+        }
+    }
+
+    void CastWeaponHit()
+    {
+        if (CurrentWeapon != null)
+        {
+            StartCoroutine(playerAim.CastWeaponHitRoutine());
         }
     }
 
@@ -170,6 +183,11 @@ public class HandStateMachine : BaseStateMachine
     public int IsTouchingWall()
     {
         return playerStateMachine.IsTouchingWall();
+    }
+
+    public void EnterPickUpState()
+    {
+        CurrentState.InterruptState(_states.Pickup());
     }
 
 }
