@@ -887,6 +887,10 @@ PrefabInstance:
       propertyPath: airPunchLaunchForce
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 739978408577692361, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.10498047
+      objectReference: {fileID: 0}
     - target: {fileID: 3358368625349218717, guid: e1fa399566c9a46478908e8971f6f5d3, type: 3}
       propertyPath: m_Type
       value: 3

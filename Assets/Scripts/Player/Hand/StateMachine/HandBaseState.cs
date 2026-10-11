@@ -10,4 +10,9 @@ public abstract class HandBaseState : BaseState
         _factory = factory;
         _stateName = "";
     }
+
+    public override string ToString()
+    {
+        return StateName;
+    }
 }
