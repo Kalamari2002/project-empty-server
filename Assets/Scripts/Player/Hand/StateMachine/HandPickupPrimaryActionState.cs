@@ -5,34 +5,41 @@ public class HandPickupPrimaryActionState : HandBaseState
     public HandPickupPrimaryActionState(HandStateMachine context, HandStateFactory factory)
     : base(context, factory)
     {
-        StateName = "Primary Action";
+        StateName = "PrimaryAction";
         InitializeSubState();
     }
 
     public override void EnterState()
     {
-        _context.CurrentWeapon.PrimaryAction.ActionDuration = _context.CurrentWeapon.PrimaryAction.ActionInitialDuration;
+        _context.CanPunch = false;
+        _context.CanDropWeapon = false;
         _context.CurrentWeapon.PrimaryAction.ExecutingAction = true;
-        _context.CurrentWeapon.PrimaryAction.Action(_context);
+        Debug.Log("Primary Action Entered!");
     }
     public override void UpdateState()
     {
+        _context.CurrentWeapon.PrimaryAction.Action(_context);
         CheckSwitchStates();
-        _context.CurrentWeapon.PrimaryAction.ActionDuration -= Time.deltaTime;
     }
     public override void FixedUpdateState()
     {
     }
     public override void ExitState()
     {
-        _context.CurrentWeapon.PrimaryAction.ActionDuration = _context.CurrentWeapon.PrimaryAction.ActionInitialDuration;
+        _context.CanPunch = true;
+        _context.CanDropWeapon = true;
         _context.CurrentWeapon.PrimaryAction.ExecutingAction = false;
+        _context.CurrentWeapon.PrimaryAction.ResetAction();
     }
     public override void CheckSwitchStates()
     {
-        if (_context.CurrentWeapon.PrimaryAction.ActionDuration <= 0)
+        if (_context.CurrentWeapon.PrimaryAction.EndAction)
         {
             SwitchState(_factory.PickupIdle());
+        }
+        else if (_context.CurrentWeapon.PrimaryAction.CanInterruptAction && Input.GetMouseButtonDown(0))
+        {
+            SwitchState(_factory.PickupPrimaryAction());
         }
     }
     public override void InitializeSubState()

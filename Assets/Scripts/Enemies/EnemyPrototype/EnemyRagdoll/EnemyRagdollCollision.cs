@@ -24,6 +24,17 @@ public class EnemyRagdollCollision : MonoBehaviour
         {
             parentRagdoll.grounded = true;
         }
+
+        if (collision.gameObject.tag == "Enemy" && parentRagdoll.RigidBody != null && parentRagdoll.RigidBody.linearVelocity.magnitude > 1)
+        {
+            EnemyStateMachine enemyStateMachine = collision.transform.GetComponent<EnemyStateMachine>();
+            if (enemyStateMachine != null)
+            {
+                Vector3 normalizedVelocity = parentRagdoll.RigidBody.linearVelocity.normalized;
+                float nudge = 5f;
+                enemyStateMachine.EnterRagdoll(parentRagdoll.RigidBody.linearVelocity.magnitude * nudge, 0, normalizedVelocity);
+            }
+        }
     }
 
     private void OnCollisionExit(Collision collision)

@@ -18,7 +18,7 @@ public class HandKickState : HandBaseState
         Debug.Log("Hand entered Kick state");
         _context.CanPunch = false;
         _context.Animator.speed = 1;
-        _context.Animator.Play("Kick", -1, 0);
+        _context.Animator.Play(_context.CurrentWeapon == null ? "Kick" : "HandPickupKick", -1, 0);
         _context.LastKickCharge = _kickCharge;
         _animationDuration = _context.Animator.GetCurrentAnimatorClipInfo(0).Length;
     }
@@ -35,13 +35,13 @@ public class HandKickState : HandBaseState
     {
         if (_animationDuration <= 0)
         {
-            SwitchState(_factory.Move());
+            SwitchState(_context.CurrentWeapon == null ? _factory.Move() : _factory.PickupIdle());
         }
         else if (_context.CanPunch)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                SwitchState(_factory.PunchOne());
+                SwitchState(_context.CurrentWeapon == null ? _factory.PunchOne() : _factory.PickupPrimaryAction());
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift))
             {

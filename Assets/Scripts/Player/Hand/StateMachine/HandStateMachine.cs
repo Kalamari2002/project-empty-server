@@ -26,6 +26,7 @@ public class HandStateMachine : BaseStateMachine
 
     bool _dropKicking = false;
     bool _grabbing = false;
+    bool _canDropWeapon = true;
     int _grabPunchAnimation = 1;
     float maxKickChargeTime;
     /**
@@ -49,6 +50,7 @@ public class HandStateMachine : BaseStateMachine
     public float LastKickCharge { get { return _lastKickCharge; } set { _lastKickCharge = value; } }
     public float MaxKickChargeTime { get { return maxKickChargeTime; } }
     public bool Grabbing { get { return _grabbing; } set { _grabbing = value; } }
+    public bool CanDropWeapon { get { return _canDropWeapon; } set { _canDropWeapon = value; } }
     public int GrabPunchAnimation { get { return _grabPunchAnimation; } set { _grabPunchAnimation = value; } }
 
     public Animator Animator { get { return animator; } }
@@ -168,6 +170,11 @@ public class HandStateMachine : BaseStateMachine
     void SetGrabbingFalse()
     {
         _grabbing = false;
+    }
+
+    void EnableInterruptAction()
+    {
+        CurrentWeapon.EnableInterruptAction();
     }
 
     public void ReleaseGrab()

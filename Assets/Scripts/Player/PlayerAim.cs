@@ -171,46 +171,52 @@ public class PlayerAim : MonoBehaviour
     bool CastWeaponHit()
     {
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
-        Debug.DrawRay(ray.origin, ray.direction * CurrentWeapon.WeaponRange, Color.blue);
-
-        bool weaponHit = false;
-
-        if (Physics.Raycast(ray, out RaycastHit hit, CurrentWeapon.WeaponRange, enemyLayer))
-        {
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-            {
-                EnemyStateMachine enemyPrototype = hit.transform.GetComponent<EnemyStateMachine>();
-                enemyPrototype.TakeDamage(CurrentWeapon.WeaponDamage);
-                enemyPrototype.EnterRagdoll(CurrentWeapon.EnemyLaunchForce, 0, (cameraForward() * 2f + Vector3.up).normalized);
-            }
-            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
-            {
-                hit.transform.GetComponent<Rigidbody>()
-                    .AddForce(CurrentWeapon.EnemyLaunchForce * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
-                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
-            }
-            weaponHit = true;
-        }
-        else if (Physics.Raycast(ray, out RaycastHit pickHit, CurrentWeapon.WeaponRange, pickableLayer))
-        {
-            if (pickHit.transform.GetComponent<Rigidbody>())
-            {
-                WeaponProp weaponProp = pickHit.transform.GetComponent<WeaponProp>();
-                if (weaponProp != null && !weaponProp.Grounded)
-                {
-                    pickHit.transform.forward = cameraForward();
-                }
-                pickHit.transform.GetComponent<Rigidbody>().AddForce(CurrentWeapon.ObjectLaunchForce * cameraForward(), ForceMode.Impulse);
-            }
-            weaponHit = true;
-        }
-        if (weaponHit)
-        {
-            ShakeCamera(CurrentWeapon.CamShakeMagnitude, CurrentWeapon.CamShakeDuration);
-            HitStop(CurrentWeapon.HitStopDuration);
-        }
-        return weaponHit;
+        return CurrentWeapon.CastWeaponHit(ray, (cameraForward() * 3f + Vector3.up).normalized, cameraForward(), this);
     }
+
+    //bool CastWeaponHit()
+    //{
+    //    Ray ray = mainCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0.0f));
+    //    Debug.DrawRay(ray.origin, ray.direction * CurrentWeapon.WeaponRange, Color.blue);
+
+    //    bool weaponHit = false;
+
+    //    if (Physics.Raycast(ray, out RaycastHit hit, CurrentWeapon.WeaponRange, enemyLayer))
+    //    {
+    //        if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+    //        {
+    //            EnemyStateMachine enemyPrototype = hit.transform.GetComponent<EnemyStateMachine>();
+    //            enemyPrototype.TakeDamage(CurrentWeapon.WeaponDamage);
+    //            enemyPrototype.EnterRagdoll(CurrentWeapon.EnemyLaunchForce, 0, (cameraForward() * 2f + Vector3.up).normalized);
+    //        }
+    //        else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
+    //        {
+    //            hit.transform.GetComponent<Rigidbody>()
+    //                .AddForce(CurrentWeapon.EnemyLaunchForce * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
+    //            hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+    //        }
+    //        weaponHit = true;
+    //    }
+    //    else if (Physics.Raycast(ray, out RaycastHit pickHit, CurrentWeapon.WeaponRange, pickableLayer))
+    //    {
+    //        if (pickHit.transform.GetComponent<Rigidbody>())
+    //        {
+    //            WeaponProp weaponProp = pickHit.transform.GetComponent<WeaponProp>();
+    //            if (weaponProp != null && !weaponProp.Grounded)
+    //            {
+    //                pickHit.transform.forward = cameraForward();
+    //            }
+    //            pickHit.transform.GetComponent<Rigidbody>().AddForce(CurrentWeapon.ObjectLaunchForce * cameraForward(), ForceMode.Impulse);
+    //        }
+    //        weaponHit = true;
+    //    }
+    //    if (weaponHit)
+    //    {
+    //        ShakeCamera(CurrentWeapon.CamShakeMagnitude, CurrentWeapon.CamShakeDuration);
+    //        HitStop(CurrentWeapon.HitStopDuration);
+    //    }
+    //    return weaponHit;
+    //}
 
     bool CastKickHit(float kickRange, float launchForceMultiplier, int damage)
     {
