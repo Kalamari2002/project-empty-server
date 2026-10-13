@@ -13,6 +13,7 @@ TagManager:
   - Ground
   - EnemyHitbox
   - Weapon
+  - EnemyRagdoll
   layers:
   - Default
   - TransparentFX
