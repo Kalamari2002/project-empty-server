@@ -44,18 +44,6 @@ public class HandPickupIdleState : HandBaseState
                 SwitchState(_factory.Kick(_context.KickChargeTime));
             }
         }
-
-        else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0)
-        {
-            if (_context.CanDropKick && _context.KickChargeTime >= _context.MaxKickChargeTime)
-            {
-                SwitchState(_factory.DropKick());
-            }
-            else
-            {
-                SwitchState(_factory.AirKick(_context.KickChargeTime));
-            }
-        }
     }
     public override void InitializeSubState()
     {
