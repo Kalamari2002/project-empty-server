@@ -379,7 +379,7 @@ GameObject:
   - component: {fileID: 5327983116910383044}
   m_Layer: 9
   m_Name: mixamorig:Spine1
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1001,7 +1001,7 @@ GameObject:
   - component: {fileID: 8540749186430466434}
   m_Layer: 9
   m_Name: mixamorig:Spine
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1426,7 +1426,7 @@ GameObject:
   - component: {fileID: 7995178016077124962}
   m_Layer: 9
   m_Name: mixamorig:Hips
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1568,7 +1568,7 @@ GameObject:
   - component: {fileID: 1447478451267799137}
   m_Layer: 9
   m_Name: SimplifiedHair
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1658,7 +1658,7 @@ GameObject:
   - component: {fileID: 1778154106340511203}
   m_Layer: 9
   m_Name: mixamorig:LeftToeBase
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1690,7 +1690,7 @@ GameObject:
   - component: {fileID: 6827973946086583869}
   m_Layer: 9
   m_Name: mixamorig:RightShoulder
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1789,7 +1789,7 @@ GameObject:
   - component: {fileID: 1432582187913302513}
   m_Layer: 9
   m_Name: mixamorig:RightFoot
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2285,7 +2285,7 @@ GameObject:
   - component: {fileID: 1590040538433787375}
   m_Layer: 9
   m_Name: mixamorig:LeftUpLeg
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2449,7 +2449,7 @@ GameObject:
   - component: {fileID: 2112766752224698714}
   m_Layer: 9
   m_Name: EnemyRagdoll
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2624,7 +2624,7 @@ MonoBehaviour:
     m_Bits: 64
   ragdollDuration: 5
   grounded: 0
-  ragdollCountDown: 0
+  parentEnemy: {fileID: 0}
 --- !u!1 &5048863860045780925
 GameObject:
   m_ObjectHideFlags: 0
@@ -3185,7 +3185,7 @@ GameObject:
   - component: {fileID: 4488755641185624655}
   m_Layer: 9
   m_Name: mixamorig:RightToeBase
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3220,7 +3220,7 @@ GameObject:
   - component: {fileID: 8697971475069302971}
   m_Layer: 9
   m_Name: mixamorig:Head
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3637,7 +3637,7 @@ GameObject:
   - component: {fileID: 736444793080797391}
   m_Layer: 9
   m_Name: mixamorig:Spine2
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3674,7 +3674,7 @@ GameObject:
   - component: {fileID: 4875408140325486322}
   m_Layer: 9
   m_Name: mixamorig:RightLeg
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3836,7 +3836,7 @@ GameObject:
   - component: {fileID: 4241250743656176019}
   m_Layer: 9
   m_Name: mixamorig:LeftLeg
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3964,7 +3964,7 @@ GameObject:
   - component: {fileID: 9210822762902106726}
   m_Layer: 9
   m_Name: mixamorig:Neck
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4091,7 +4091,7 @@ GameObject:
   - component: {fileID: 564898213144139073}
   m_Layer: 9
   m_Name: mixamorig:RightToe_End
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4122,7 +4122,7 @@ GameObject:
   - component: {fileID: 5039914218017649942}
   m_Layer: 9
   m_Name: mixamorig:LeftShoulder
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4157,7 +4157,7 @@ GameObject:
   - component: {fileID: 7293398315400219373}
   m_Layer: 9
   m_Name: mixamorig:LeftFoot
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4288,7 +4288,7 @@ GameObject:
   - component: {fileID: 6092249298514731030}
   m_Layer: 9
   m_Name: mixamorig:RightUpLeg
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4452,7 +4452,7 @@ GameObject:
   - component: {fileID: 3847236463366707572}
   m_Layer: 9
   m_Name: mixamorig:LeftToe_End
-  m_TagString: Untagged
+  m_TagString: EnemyRagdoll
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

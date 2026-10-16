@@ -8,11 +8,14 @@ public class EnemyRagdoll : MonoBehaviour
     [SerializeField] float ragdollDuration;
     public bool grounded;
     [SerializeField] EnemyStateMachine parentEnemy;
+    Rigidbody rigidBody;
+
+    public Rigidbody RigidBody { get { return rigidBody; } }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     public void SetUp(EnemyStateMachine parentEnemy)

@@ -217,17 +217,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52aafcb91a7fbdc4db1977d9e6136402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyLaunchForceMultiplier: 1
-  bounceVerticalSpeed: 7
-  bounceHorizontalSpeed: 4
-  camShakeMagnitude: 0.2
-  camShakeDuration: 0.3
-  hitStopDuration: 0.2
-  enemyLaunchForce: 500
-  objectLaunchForce: 40
-  weaponRange: 4
-  weaponDamage: 30
-  hitActiveFrames: 7
+  _enemyLaunchForceMultiplier: 1
+  _bounceVerticalSpeed: 7
+  _bounceHorizontalSpeed: 7
+  _camShakeMagnitude: 0.3
+  _camShakeDuration: 0.2
+  _hitStopDuration: 0.2
+  _enemyLaunchForce: 500
+  _objectLaunchForce: 50
+  _weaponRange: 4
+  _weaponDamage: 20
+  _hitActiveFrames: 7
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 640
+  _objectLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  _lightHitLaunchForce: 150
+  _lightObjectHitLaunchForce: 7
+  _lightHitDamage: 10
 --- !u!65 &1834623486631911647
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -247,7 +256,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.55, y: 3.53, z: 0.55}
+  m_Size: {x: 0.65, y: 3.53, z: 0.65}
   m_Center: {x: 0, y: 0.52, z: 0}
 --- !u!1 &8842857966862594662
 GameObject:

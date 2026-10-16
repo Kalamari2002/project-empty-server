@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.Barracuda;
 using UnityEngine;
 
 public class HandPickupState : HandBaseState
@@ -35,7 +34,7 @@ public class HandPickupState : HandBaseState
     }
     public override void CheckSwitchStates()
     {
-        if (Input.GetMouseButtonUp(1))
+        if (!Input.GetMouseButton(1) && _context.CanDropWeapon)
         {
             SwitchState(_context.Grounded ? _factory.Grounded() : _factory.Airborne());
         }
