@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class EnemyStateMachine : BaseStateMachine
 {
@@ -16,6 +15,7 @@ public class EnemyStateMachine : BaseStateMachine
     [SerializeField] float attackCoolDown = 3;
     [SerializeField] float weaponLaunchForce = 5;
     [SerializeField] float weaponLaunchTorque = 10;
+    [SerializeField] float minimumChaseDistance = 10;
 
     [Header("Ragdoll")]
     [SerializeField] GameObject ragdoll;
@@ -47,9 +47,11 @@ public class EnemyStateMachine : BaseStateMachine
     public float ChaseSpeed { get { return chaseSpeed; } }
     public float StopDistance { get { return stopDistance; } }
     public float RagdollCountDown { get {  return ragdollCountDown; } set { ragdollCountDown = value; } }
+    public float MinimumChaseDistance { get { return minimumChaseDistance; } }
     public bool Attacking { get { return attacking; } set {  attacking = value; } }
     public bool VulnerableToCounter { get {  return vulnerableToCounter; } set {  vulnerableToCounter = value; } }
     public bool CanAtack { get { return canAttack; } set { canAttack = value; } }
+    public int Health { get { return health; } set { health = value; } }
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

@@ -128,6 +128,7 @@ MonoBehaviour:
   attackCoolDown: 3
   weaponLaunchForce: 6
   weaponLaunchTorque: 60
+  minimumChaseDistance: 30
   ragdoll: {fileID: 4709689210286265707, guid: bc9ceccd88dd7a74081da103a53cadec, type: 3}
   ragdollLaunchForce: 200
   ragdollDuration: 5

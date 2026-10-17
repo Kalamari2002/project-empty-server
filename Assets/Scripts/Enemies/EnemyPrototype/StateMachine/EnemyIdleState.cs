@@ -30,13 +30,17 @@ public class EnemyIdleState : EnemyBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Vector3.Distance(_context.transform.position, _context.Player.position) > _context.StopDistance)
+        float distanceFromPlayer = Vector3.Distance(_context.transform.position, _context.Player.position);
+        if (distanceFromPlayer <= _context.MinimumChaseDistance)
         {
-            SwitchState(_factory.Chase());
-        }
-        else if (_context.CanAtack)
-        {
-            SwitchState(_factory.Punch());
+            if (_context.StopDistance < distanceFromPlayer)
+            {
+                SwitchState(_factory.Chase());
+            }
+            else if (_context.CanAtack)
+            {
+                SwitchState(_factory.Punch());
+            }
         }
     }
 
