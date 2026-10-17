@@ -10,6 +10,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] LayerMask enemyRagdoll;
     [SerializeField] LayerMask enemyHurtBoxLayer;
     [SerializeField] LayerMask pickableLayer;
+    [SerializeField] LayerMask interactableLayer;
     [SerializeField] float camShakeMagnitude = 0.1f;
     [SerializeField] float camShakeDuration = 0.2f;
     [SerializeField] float hitStopDuration = 0.05f;
@@ -119,7 +120,7 @@ public class PlayerAim : MonoBehaviour
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyRagdoll"))
             {
                 hit.transform.GetComponent<Rigidbody>().AddForce(enemyRagdollLaunchForce * (cameraForward() + Vector3.up).normalized, ForceMode.Impulse);
-                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit(damage);
             }
             punchHit = true;
         }
@@ -133,6 +134,15 @@ public class PlayerAim : MonoBehaviour
                     pickHit.transform.forward = cameraForward();
                 }
                 pickHit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * cameraForward(), ForceMode.Impulse);
+            }
+            punchHit = true;
+        }
+        else if (Physics.Raycast(ray, out RaycastHit interactableHit, punchRange, interactableLayer))
+        {
+            InteractableBase interactableScript = interactableHit.transform.GetComponent<InteractableBase>();
+            if (interactableScript != null)
+            {
+                interactableScript.Action();
             }
             punchHit = true;
         }
@@ -193,7 +203,7 @@ public class PlayerAim : MonoBehaviour
             {
                 hit.transform.GetComponent<Rigidbody>()
                     .AddForce(enemyRagdollLaunchForce * launchForceMultiplier * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
-                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit(damage);
             }
             kickHit = true;
         }
@@ -207,6 +217,15 @@ public class PlayerAim : MonoBehaviour
                     pickHit.transform.forward = cameraForward();
                 }
                 pickHit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * launchForceMultiplier * cameraForward(), ForceMode.Impulse);
+            }
+            kickHit = true;
+        }
+        else if (Physics.Raycast(ray, out RaycastHit interactableHit, kickRange, interactableLayer))
+        {
+            InteractableBase interactableScript = interactableHit.transform.GetComponent<InteractableBase>();
+            if (interactableScript != null)
+            {
+                interactableScript.Action();
             }
             kickHit = true;
         }
