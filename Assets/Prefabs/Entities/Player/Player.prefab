@@ -344,7 +344,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 16351
+    m_Bits: 32735
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8600000, guid: b910bf47ea453d54983b10cb0fdfba4a, type: 2}
   m_TargetDisplay: 0
@@ -841,6 +841,9 @@ MonoBehaviour:
   pickableLayer:
     serializedVersion: 2
     m_Bits: 4096
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 16384
   camShakeMagnitude: 0.005
   camShakeDuration: 0.01
   hitStopDuration: 0.05

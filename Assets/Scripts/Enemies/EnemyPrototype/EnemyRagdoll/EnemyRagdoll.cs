@@ -27,7 +27,7 @@ public class EnemyRagdoll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (grounded)
+        if (grounded && parentEnemy.Health > 0)
         {
             parentEnemy.RagdollCountDown -= Time.deltaTime;
         }
@@ -49,9 +49,10 @@ public class EnemyRagdoll : MonoBehaviour
         }
     }
 
-    public void TakeHit()
+    public void TakeHit(int damage)
     {
         parentEnemy.RagdollCountDown = ragdollDuration;
+        parentEnemy.Health -= damage;
     }
 
     public EnemyStateMachine GetParentEnemy()

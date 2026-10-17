@@ -22,7 +22,7 @@ public abstract class WeaponProp : MonoBehaviour
     protected WeaponActionBase _primaryAction;
 
     bool grounded = false;
-    BoxCollider boxCollider;
+    Collider trigger;
 
     public bool Grounded { get { return grounded; } }
     public WeaponActionBase PrimaryAction { get { return _primaryAction; } }
@@ -38,7 +38,7 @@ public abstract class WeaponProp : MonoBehaviour
     protected virtual void Awake()
     {
         rigidBody = GetComponent<Rigidbody>();
-        boxCollider = GetComponent<BoxCollider>();
+        trigger = GetComponent<Collider>();
         _primaryAction = new DefaultWeaponPrimaryAction();
     }
 
@@ -49,7 +49,7 @@ public abstract class WeaponProp : MonoBehaviour
         {
             collider.enabled = false;
         }
-        boxCollider.enabled = false;
+        trigger.enabled = false;
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
@@ -72,7 +72,7 @@ public abstract class WeaponProp : MonoBehaviour
         rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rigidBody.linearVelocity = Vector3.zero;
         rigidBody.angularVelocity = Vector3.zero;
-        boxCollider.enabled = true;
+        trigger.enabled = true;
         foreach (Collider collider in transform.Find("Mesh").GetComponentsInChildren<Collider>())
         {
             collider.enabled = true;
@@ -111,7 +111,7 @@ public abstract class WeaponProp : MonoBehaviour
             {
                 hit.transform.GetComponent<Rigidbody>()
                     .AddForce(enemyLaunchForce * enemyLaunchDirection, ForceMode.Impulse);
-                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit();
+                hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit(damage);
             }
             weaponHit = true;
         }
