@@ -21,7 +21,7 @@ public class PlayerStateMachine : BaseStateMachine
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Animator orientationAnimator;
 
-    [Header ("Movement Settings")]
+    [Header("Movement Settings")]
     [SerializeField] float _groundSpeed;
     [SerializeField] float _airSpeed;
     [SerializeField] float _jumpForce;
@@ -34,21 +34,23 @@ public class PlayerStateMachine : BaseStateMachine
     [SerializeField] float _minSpeedToSlide;
     [SerializeField] float _minSpeedToWallRun;
 
-    [Header ("Combat Settings")]
+    [Header("Combat Settings")]
     [SerializeField] float _kickLaunchForce = 5;
     [SerializeField] float _maxKickChargeTime = 1;
+
     float _kickChargeTime = 0;
     bool _canPunch = true;
     bool _canDropKick = false;
     bool _dropKicking = false;
+    bool _wallRunning = false;
 
-#region Components
+    #region Components
     // Animator
     public Animator OrientationAnimator { get { return orientationAnimator; } }
 
     // Rigidbody
     Rigidbody rb;
-    public Rigidbody PlayerRigidBody { get{ return rb; } }
+    public Rigidbody PlayerRigidBody { get { return rb; } }
 
     // Scripts
     PlayerCamera playerCamera;
@@ -59,46 +61,46 @@ public class PlayerStateMachine : BaseStateMachine
 
     // Transforms
     Transform orientation;
-    public Transform PlayerOrientation { get{ return orientation; } }
+    public Transform PlayerOrientation { get { return orientation; } }
     public Transform WallCheckOrigin { get { return wallCheckOrigin; } }
-#endregion
+    #endregion
 
-#region Health
-    [Header ("Helth")]
+    #region Health
+    [Header("Helth")]
     [SerializeField] int _maxHealth = 100;
     int _currentHealth;
     public int CurrentHealth { get { return _currentHealth; } }
-#endregion
+    #endregion
 
-#region Input Checks
+    #region Input Checks
     // Crouch
-    public bool IsCrouchPressed { get{ return Input.GetKey(KeyCode.LeftControl); } }
+    public bool IsCrouchPressed { get { return Input.GetKey(KeyCode.LeftControl); } }
     public bool PressedCrouch { get { return Input.GetKeyDown(KeyCode.LeftControl); } }
 
     // Directions
     public bool IsDirectionPressed { get { return Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0; } }
-    public float HorizontalInput { get{ return Input.GetAxisRaw("Horizontal"); } }
-    public float VerticalInput { get{ return Input.GetAxisRaw("Vertical"); } }
+    public float HorizontalInput { get { return Input.GetAxisRaw("Horizontal"); } }
+    public float VerticalInput { get { return Input.GetAxisRaw("Vertical"); } }
 
     // Jump
     public bool PressedJump { get { return Input.GetKeyDown(KeyCode.Space); } }
-#endregion
+    #endregion
 
 
-#region Airborne Movement Variables
-    public float AirMultiplier { get{ return _airMultiplier; } }
-    public float AirSpeed { get{ return _airSpeed; } }
-    public float MaxAirSpeed{ get{ return _maxAirSpeed; } }
-#endregion
+    #region Airborne Movement Variables
+    public float AirMultiplier { get { return _airMultiplier; } }
+    public float AirSpeed { get { return _airSpeed; } }
+    public float MaxAirSpeed { get { return _maxAirSpeed; } }
+    #endregion
 
-#region Grounded Movement Variables
-    public float JumpForce { get{ return _jumpForce; } } 
-    public float Drag { get{ return _drag; } }
-    public float GroundSpeed { get{ return _groundSpeed; } }
-    public float MaxGroundSpeed{ get{ return _maxGroundSpeed; } }
-#endregion
+    #region Grounded Movement Variables
+    public float JumpForce { get { return _jumpForce; } }
+    public float Drag { get { return _drag; } }
+    public float GroundSpeed { get { return _groundSpeed; } }
+    public float MaxGroundSpeed { get { return _maxGroundSpeed; } }
+    #endregion
 
-#region Combat Variables
+    #region Combat Variables
     public float KickLaunchForce { get { return _kickLaunchForce; } }
     public float KickChargeTime { get { return _kickChargeTime; } }
     public float MaxKickChargeTime { get { return _maxKickChargeTime; } }
@@ -106,39 +108,40 @@ public class PlayerStateMachine : BaseStateMachine
     public bool CanDropKick { get { return _canDropKick; } set { _canDropKick = value; } }
     public bool DropKicking { get { return _dropKicking; } set { _dropKicking = value; } }
     public bool GrabbingEnemy { get { return playerAim.GrabbedEnemy != null; } }
-#endregion
+    #endregion
 
-#region Shared Movement Variables
+    #region Shared Movement Variables
     float _currDrag;
-    public float CurrentDrag { get{ return _currDrag; } set{_currDrag = value;}}
-#endregion
+    public float CurrentDrag { get { return _currDrag; } set { _currDrag = value; } }
+    #endregion
 
-#region State Machine Variables
+    #region State Machine Variables
     PlayerStateFactory _states;
-#endregion
+    #endregion
 
 
-#region Context Variables
+    #region Context Variables
     #region Crouch
-        public float CrouchDrag { get{ return _crouchDrag; } }
+    public float CrouchDrag { get { return _crouchDrag; } }
     #endregion
 
     #region Grounded
-        public bool Grounded { get{ return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer); }}
+    public bool Grounded { get { return Physics.CheckSphere(groundCheck.position, groundCheck.GetComponent<SphereCollider>().radius, groundLayer); } }
     #endregion
 
     #region Roll
-        bool _rollOnGrounded;
-        public bool RollOnGrounded { get { return _rollOnGrounded; } set { _rollOnGrounded = value; } }
+    bool _rollOnGrounded;
+    public bool RollOnGrounded { get { return _rollOnGrounded; } set { _rollOnGrounded = value; } }
     #endregion
 
     #region Slide
-        public float SlideDrag { get { return _slideDrag; } }
-        public float MinSpeedToSlide { get { return _minSpeedToSlide; } }
+    public float SlideDrag { get { return _slideDrag; } }
+    public float MinSpeedToSlide { get { return _minSpeedToSlide; } }
     #endregion
 
     #region Wall Run
-        public float MinSpeedToWallRun { get { return _minSpeedToWallRun; } }
+    public float MinSpeedToWallRun { get { return _minSpeedToWallRun; } }
+    public bool WallRunning { get { return _wallRunning; } set { _wallRunning = value; } }
     #endregion
 #endregion
 
@@ -162,7 +165,6 @@ public class PlayerStateMachine : BaseStateMachine
     {
         base.Update();
         orientationAnimator.SetBool("CrouchPressed", IsCrouchPressed);
-        //Debug.Log("Player Kick Charge Time: " + _kickChargeTime);
     }
 
     private void LateUpdate()

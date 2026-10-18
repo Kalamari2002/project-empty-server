@@ -52,6 +52,7 @@ public class HandStateMachine : BaseStateMachine
     public bool Grabbing { get { return _grabbing; } set { _grabbing = value; } }
     public bool CanDropWeapon { get { return _canDropWeapon; } set { _canDropWeapon = value; } }
     public int GrabPunchAnimation { get { return _grabPunchAnimation; } set { _grabPunchAnimation = value; } }
+    public bool WallRunning { get { return playerStateMachine.WallRunning; } }
 
     public Animator Animator { get { return animator; } }
     public GameObject Hands { get { return hands; } }
@@ -185,11 +186,6 @@ public class HandStateMachine : BaseStateMachine
     public GrabActionsEnums CastGrabHit()
     {
         return playerAim.CastGrabHit(grabRange);
-    }
-
-    public int IsTouchingWall()
-    {
-        return playerStateMachine.IsTouchingWall();
     }
 
     public void EnterPickUpState()

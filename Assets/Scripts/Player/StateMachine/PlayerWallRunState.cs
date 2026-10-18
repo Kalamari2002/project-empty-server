@@ -20,7 +20,11 @@ public class PlayerWallRunState : PlayerBaseState
         SetBounds();
     }
 
-    public override void EnterState(){}
+    public override void EnterState()
+    {
+        // this is just a flag for the Hand states to know the player is wall running
+        _context.WallRunning = true;
+    }
 
     public override void UpdateState()
     {
@@ -33,6 +37,7 @@ public class PlayerWallRunState : PlayerBaseState
     }
     public override void ExitState()
     {
+        _context.WallRunning = false;
         _context.PlayerCamera.RemoveHorizontalBounds();
     }
     public override void CheckSwitchStates()

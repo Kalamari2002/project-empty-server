@@ -50,7 +50,7 @@ public class HandGrabState : HandBaseState
                 _context.CanPunch = false;
             }
 
-            if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0 && _context.CanPunch)
+            if (Input.GetKeyUp(KeyCode.LeftShift) && !_context.WallRunning && _context.CanPunch)
             {
                 _context.Animator.Play("HandGrabKick", -1, 0);
                 _animationDuration = _context.Animator.GetCurrentAnimatorClipInfo(0).Length;
@@ -90,7 +90,7 @@ public class HandGrabState : HandBaseState
                 {
                     SwitchStateWrapper(_context.Grounded ? _factory.PunchOne() : _factory.AirPunch());
                 }
-                else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0)
+                else if (Input.GetKeyUp(KeyCode.LeftShift) && !_context.WallRunning)
                 {
                     SwitchStateWrapper(_context.Grounded ? _factory.Kick(_context.KickChargeTime) : _factory.AirKick(_context.KickChargeTime));
                 }

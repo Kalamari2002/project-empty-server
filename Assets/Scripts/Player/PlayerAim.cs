@@ -11,6 +11,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] LayerMask enemyHurtBoxLayer;
     [SerializeField] LayerMask pickableLayer;
     [SerializeField] LayerMask interactableLayer;
+    [SerializeField] LayerMask wallLayer;
     [SerializeField] float camShakeMagnitude = 0.1f;
     [SerializeField] float camShakeDuration = 0.2f;
     [SerializeField] float hitStopDuration = 0.05f;
@@ -19,6 +20,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] float weaponLaunchForce = 50;
     [SerializeField] float goombaStompRotationThreshold;
     [SerializeField] float goombaStompLaunchForce = 10;
+    [SerializeField] float wallKickForce = 15;
     [SerializeField] Transform playerCamera;
     [SerializeField] EnemyStateMachine grabbedEnemy;
     [SerializeField] Transform weaponHolder;
@@ -205,6 +207,7 @@ public class PlayerAim : MonoBehaviour
                     .AddForce(enemyRagdollLaunchForce * launchForceMultiplier * (cameraForward() * 2f + Vector3.up).normalized, ForceMode.Impulse);
                 hit.transform.root.GetComponent<EnemyRagdoll>().TakeHit(damage);
             }
+            GoombaStomp();
             kickHit = true;
         }
         else if (Physics.Raycast(ray, out RaycastHit pickHit, kickRange, pickableLayer))
@@ -218,6 +221,7 @@ public class PlayerAim : MonoBehaviour
                 }
                 pickHit.transform.GetComponent<Rigidbody>().AddForce(weaponLaunchForce * launchForceMultiplier * cameraForward(), ForceMode.Impulse);
             }
+            GoombaStomp();
             kickHit = true;
         }
         else if (Physics.Raycast(ray, out RaycastHit interactableHit, kickRange, interactableLayer))
@@ -228,10 +232,15 @@ public class PlayerAim : MonoBehaviour
                 interactableScript.Action();
             }
             kickHit = true;
+            GoombaStomp();
+        }
+        else if (Physics.Raycast(ray, out RaycastHit wallHit, kickRange, wallLayer))
+        {
+            GoombaStomp((wallHit.normal + Vector3.up * 1.5f).normalized, wallKickForce);
+            kickHit = true;
         }
         if (kickHit)
         {
-            GoombaStomp();
             float camShakeFactor = 20;
             ShakeCamera(camShakeMagnitude * camShakeFactor, camShakeDuration * camShakeFactor);
             HitStop(hitStopDuration * 2);
@@ -328,8 +337,14 @@ public class PlayerAim : MonoBehaviour
 
     void GoombaStomp()
     {
+        GoombaStomp(Vector3.up, goombaStompLaunchForce);
+    }
+
+    void GoombaStomp(Vector3 direction, float force)
+    {
         if (Mathf.Rad2Deg * mainCamera.transform.localRotation.x < goombaStompRotationThreshold || Grounded()) return;
-        rb.AddForce(Vector3.up * goombaStompLaunchForce, ForceMode.Impulse);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        rb.AddForce(direction * force, ForceMode.Impulse);
     }
 
     public void Impulse(float impulse)
