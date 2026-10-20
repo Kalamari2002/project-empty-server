@@ -36,6 +36,7 @@ public class HandPickupState : HandBaseState
     {
         if (!Input.GetMouseButton(1) && _context.CanDropWeapon)
         {
+            _context.StopAllCoroutines();
             SwitchState(_context.Grounded ? _factory.Grounded() : _factory.Airborne());
         }
     }

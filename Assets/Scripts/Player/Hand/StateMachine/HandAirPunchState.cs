@@ -39,7 +39,7 @@ public class HandAirPunchState : HandBaseState
             {
                 SwitchState(_factory.AirPunch());
             }
-            else if (Input.GetKeyUp(KeyCode.LeftShift) && _context.IsTouchingWall() == 0)
+            else if (Input.GetKeyUp(KeyCode.LeftShift) && !_context.WallRunning)
             {
                 if (_context.CanDropKick && _context.KickChargeTime >= _context.MaxKickChargeTime)
                 {

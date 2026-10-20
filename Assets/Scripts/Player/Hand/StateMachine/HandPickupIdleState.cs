@@ -35,11 +35,11 @@ public class HandPickupIdleState : HandBaseState
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            if (!_context.Grounded && _context.CanDropKick && _context.KickChargeTime >= _context.MaxKickChargeTime && _context.IsTouchingWall() == 0)
+            if (!_context.Grounded && _context.CanDropKick && _context.KickChargeTime >= _context.MaxKickChargeTime && !_context.WallRunning)
             {
                 SwitchState(_factory.DropKick());
             }
-            else if (_context.Grounded || _context.IsTouchingWall() == 0)
+            else if (_context.Grounded || !_context.WallRunning)
             {
                 SwitchState(_factory.Kick(_context.KickChargeTime));
             }

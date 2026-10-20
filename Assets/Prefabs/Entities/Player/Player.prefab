@@ -844,6 +844,9 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 16384
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
   camShakeMagnitude: 0.005
   camShakeDuration: 0.01
   hitStopDuration: 0.05
@@ -852,6 +855,7 @@ MonoBehaviour:
   weaponLaunchForce: 30
   goombaStompRotationThreshold: 25
   goombaStompLaunchForce: 10
+  wallKickForce: 10
   playerCamera: {fileID: 0}
   grabbedEnemy: {fileID: 0}
   weaponHolder: {fileID: 8642521697275299996}
