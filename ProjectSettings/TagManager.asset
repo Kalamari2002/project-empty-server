@@ -30,8 +30,8 @@ TagManager:
   - Weapon
   - WeaponCollision
   - Interactable
-  - 
-  - 
+  - PlayerGroundCollisionCapsule
+  - PlayerCollisionCapsule
   - 
   - 
   - 
